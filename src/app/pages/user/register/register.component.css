@@ -1,0 +1,246 @@
+/* Estilos base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+/* Fondo con imagen y cuerpo */
+body, html {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+/* Fondo con imagen */
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background: url('/assets/fondoApp.png') no-repeat center center/cover;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+/* Contenedor principal */
+.login-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    width: 100%;
+    height: 100%;
+    margin-top: 35px;
+}
+
+/* Caja del formulario con efecto de elevación */
+.login-box {
+    background: rgba(77, 77, 77, 0.322);
+    padding: 40px;
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    width: 350px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Efecto al pasar el mouse */
+.login-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 15px 35px rgba(0, 0, 0, 0.4);
+}
+
+/* Estilos para centrar el logo */
+.logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100px;
+    height: auto;
+    margin: 0 auto;
+    transition: transform 0.5s ease-in-out, filter 0.5s ease-in-out;
+}
+
+/* Efecto cuando pasas el cursor */
+.logo:hover {
+    transform: rotateY(360deg) scale(1.1);
+    filter: drop-shadow(0 0 10px #00d9ff);
+}
+
+/* Formularios */
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Grupo de input */
+.input-group {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+/* Campos de entrada */
+input {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-bottom: 2px solid rgba(109, 109, 109, 0.5);
+    outline: none;
+    font-size: 16px;
+    background: transparent;
+    color: white;
+    transition: all 0.3s ease;
+}
+
+/* Efecto al enfocar */
+input:focus {
+    border-bottom: 2px solid white;
+}
+
+/* Efecto en los labels */
+label {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 14px;
+    color: rgba(34, 34, 34, 0.7);
+    transition: 0.3s ease;
+    pointer-events: none;
+}
+
+/* Efecto al escribir en los inputs */
+input:focus + label,
+input:valid + label {
+    top: 5px;
+    left: 10px;
+    font-size: 12px;
+    color: white;
+}
+
+/* Botón de Ingreso */
+.btn-login {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(145deg, #00b7ff, #007bff); /* Gradiente de azules */
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 50px; /* Bordes redondeados para un estilo moderno */
+    cursor: pointer;
+    margin-top: 10px;
+    transition: all 0.4s ease;
+    backdrop-filter: blur(5px);
+    margin-bottom: 10%;
+    box-shadow: 0 5px 15px rgba(0, 123, 255, 0.2);
+}
+
+/* Efecto al pasar el mouse */
+.btn-login:hover {
+    background: linear-gradient(145deg, #007bff, #0056b3); /* Gradiente más oscuro */
+    transform: translateY(-3px); /* Levanta el botón un poco */
+    box-shadow: 0 8px 20px rgba(0, 123, 255, 0.4);
+}
+
+/* Efecto cuando se hace clic */
+.btn-login:active {
+    transform: scale(0.98); /* Efecto de presión */
+}
+
+.register-prompt label {
+    position: static;
+    transform: none;
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.8);
+    pointer-events: auto;
+}
+
+/* Estilo para el contenedor del label y el botón */
+.register-prompt {
+    margin-top: 15px;
+    text-align: center;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px; /* Espacio entre el label y el botón */
+}
+
+/* Estilo para el botón "Regístrate aquí" */
+.register-prompt button {
+    background: transparent;
+    border: none;
+    color: #00b7ff; /* Azul igual al botón de login */
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 14px;
+    text-decoration: none;
+    transition: color 0.3s ease, text-decoration 0.3s ease;
+}
+
+/* Efecto al pasar el cursor sobre el botón "Regístrate aquí" */
+.register-prompt button:hover {
+    color: #007bff; /* Azul más oscuro al hacer hover */
+    text-decoration: underline;
+}
+
+/* Efecto cuando se hace clic en el botón "Regístrate aquí" */
+.register-prompt button:active {
+    transform: scale(0.98);
+}
+
+
+
+/* Estilos para el combo box (select) */
+.select-box {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-bottom: 2px solid rgba(109, 109, 109, 0.5);
+    outline: none;
+    font-size: 16px;
+    background: transparent;
+    color: white;
+    transition: all 0.3s ease;
+}
+
+/* Efecto al enfocar el select */
+.select-box:focus {
+    border-bottom: 2px solid white;
+}
+
+/* Estilos para el label del select */
+.select-box + label {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 14px;
+    color: rgba(34, 34, 34, 0.7);
+    transition: 0.3s ease;
+    pointer-events: none;
+}
+
+/* Efecto cuando se selecciona o enfoca el select */
+.select-box:focus + label,
+.select-box:valid + label {
+    top: 5px;
+    left: 10px;
+    font-size: 12px;
+    color: white;
+}
+
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 10px;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.7);
+}
