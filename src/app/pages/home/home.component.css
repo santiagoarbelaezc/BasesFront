@@ -6,14 +6,12 @@
     font-family: Arial, sans-serif;
 }
 
-/* Fondo con imagen */
 body, html {
     height: 100%;
     margin: 0;
     padding: 0;
 }
 
-/* Fondo con imagen */
 body {
     display: flex;
     flex-direction: column;
@@ -30,9 +28,9 @@ header {
     flex-direction: column;
     align-items: center;
     padding: 20px;
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba(0, 0, 0, 0.87);
     backdrop-filter: blur(10px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 /* Logo */
@@ -45,13 +43,14 @@ header {
 }
 
 .logo {
-    width: 60px;
+    width: 80px;
     height: auto;
     transition: transform 0.5s ease-in-out, filter 0.5s ease-in-out;
 }
 
+/* Efecto cuando pasas el cursor */
 .logo:hover {
-    transform: rotate(360deg);
+    transform: rotateY(360deg) scale(1.1);
     filter: drop-shadow(0 0 10px #00d9ff);
 }
 
@@ -69,29 +68,32 @@ h1 {
     gap: 20px;
     width: 100%;
     margin-top: 20px;
+    /* Ya no tiene fondo blanco ni sombra */
 }
 
+/* Contenedor de cada botón y su submenú */
 .nav-item {
-    position: relative;
+    position: relative; /* Esto hace que el submenú se posicione relativo a su botón */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
-
 /* Botones principales de la barra */
 .btn-nav {
-    background: transparent;
-    color: white;
-    border: 2px solid #00b7ff;
+    background: white;
+    color: black;
+    border: 2px solid black;
     padding: 12px 20px;
     font-size: 16px;
     cursor: pointer;
     border-radius: 30px;
     font-weight: 500;
-    transition: background-color 0.3s ease, transform 0.3s ease;
-    backdrop-filter: blur(5px);
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
 }
 
 /* Efecto al pasar el mouse */
 .btn-nav:hover {
-    background-color: #00b7ff;
+    background-color: black;
     color: white;
     transform: translateY(-3px);
 }
@@ -101,7 +103,7 @@ h1 {
     position: absolute;
     top: 100%;
     left: 0;
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: white;
     border-radius: 10px;
     width: 180px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
@@ -119,8 +121,8 @@ h1 {
 
 /* Botones dentro de los submenús */
 .sub-menu button {
-    background: transparent;
-    color: white;
+    background: white;
+    color: black;
     border: none;
     padding: 10px 20px;
     font-size: 14px;
@@ -128,12 +130,13 @@ h1 {
     width: 100%;
     cursor: pointer;
     border-radius: 5px;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Efecto al pasar el mouse sobre los botones del submenú */
 .sub-menu button:hover {
-    background-color: #00b7ff;
+    background-color: black;
+    color: white;
 }
 
 /* Botón Salir */
@@ -147,7 +150,7 @@ footer {
     padding: 10px;
     font-size: 14px;
     color: rgba(255, 255, 255, 0.7);
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(0, 0, 0, 0.87);
     position: fixed;
     bottom: 0;
     width: 100%;
