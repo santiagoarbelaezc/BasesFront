@@ -1,0 +1,150 @@
+===Trigger: evitar roles duplicados por nombre===
+CREATE OR REPLACE TRIGGER trg_prevent_rol_duplicado
+BEFORE INSERT OR UPDATE ON ROL
+FOR EACH ROW
+DECLARE
+  v_count NUMBER;
+BEGIN
+  SELECT COUNT(*) INTO v_count FROM ROL WHERE UPPER(nombre) = UPPER(:NEW.nombre) AND rol_id != :NEW.rol_id;
+  IF v_count > 0 THEN
+    RAISE_APPLICATION_ERROR(-20001, '❌ Ya existe un rol con ese nombre');
+  END IF;
+END;
+/
+===Función: obtener nombre del rol por ID====
+CREATE OR REPLACE FUNCTION obtener_nombre_rol(p_rol_id IN NUMBER)
+RETURN VARCHAR2
+IS
+  v_nombre VARCHAR2(20);
+BEGIN
+  SELECT nombre INTO v_nombre FROM ROL WHERE rol_id = p_rol_id;
+  RETURN v_nombre;
+EXCEPTION
+  WHEN NO_DATA_FOUND THEN
+    RETURN NULL;
+END;
+/
+===Procedimiento adicional: resetear nombre por ID (ejemplo de mantenimiento)
+CREATE OR REPLACE PROCEDURE resetear_nombre_rol(p_rol_id IN NUMBER)
+AS
+BEGIN
+  UPDATE ROL SET nombre = 'Sin nombre' WHERE rol_id = p_rol_id;
+END;
+/
+===Valida si un rol ya existe, útil si deseas llamar a esta función antes de insertar o desde otro proceso.====
+CREATE OR REPLACE FUNCTION existe_rol(p_nombre IN VARCHAR2)
+RETURN BOOLEAN
+IS
+  v_count NUMBER;
+BEGIN
+  SELECT COUNT(*) INTO v_count FROM ROL WHERE UPPER(nombre) = UPPER(p_nombre);
+  RETURN v_count > 0;
+END;
+/
+===Verificar existencia de correo===
+CREATE OR REPLACE FUNCTION existe_usuario(
+  p_correo IN VARCHAR2
+) RETURN BOOLEAN
+IS
+  v_count NUMBER;
+BEGIN
+  SELECT COUNT(*) INTO v_count FROM USUARIO WHERE LOWER(correo) = LOWER(p_correo);
+  RETURN v_count > 0;
+END;
+/
+===Prevenir correos duplicados===
+CREATE OR REPLACE TRIGGER trg_prevent_usuario_duplicado
+BEFORE INSERT OR UPDATE ON USUARIO
+FOR EACH ROW
+DECLARE
+  v_count NUMBER;
+BEGIN
+  SELECT COUNT(*) INTO v_count
+  FROM USUARIO
+  WHERE LOWER(correo) = LOWER(:NEW.correo)
+    AND usuario_id != :NEW.usuario_id;
+
+  IF v_count > 0 THEN
+    RAISE_APPLICATION_ERROR(-20002, '❌ Ya existe un usuario con ese correo');
+  END IF;
+END;
+/
+
+
+===MODULO GRUPO===
+CREATE SEQUENCE GRUPO_SEQ START WITH 1 INCREMENT BY 1;
+
+CREATE OR REPLACE PROCEDURE INSERTAR_GRUPO (
+  p_nombre IN GRUPO.NOMBRE%TYPE,
+  p_curso_id IN GRUPO.CURSO_ID%TYPE
+) AS
+BEGIN
+  INSERT INTO GRUPO (GRUPO_ID, NOMBRE, CURSO_ID)
+  VALUES (GRUPO_SEQ.NEXTVAL, p_nombre, p_curso_id);
+END;
+
+
+CREATE OR REPLACE PROCEDURE ACTUALIZAR_GRUPO (
+  p_grupo_id IN GRUPO.GRUPO_ID%TYPE,
+  p_nombre IN GRUPO.NOMBRE%TYPE,
+  p_curso_id IN GRUPO.CURSO_ID%TYPE
+) AS
+BEGIN
+  UPDATE GRUPO
+  SET NOMBRE = p_nombre,
+      CURSO_ID = p_curso_id
+  WHERE GRUPO_ID = p_grupo_id;
+END;
+
+
+CREATE OR REPLACE PROCEDURE ELIMINAR_GRUPO (
+  p_grupo_id IN GRUPO.GRUPO_ID%TYPE
+) AS
+BEGIN
+  DELETE FROM GRUPO WHERE GRUPO_ID = p_grupo_id;
+END;
+
+✔️ EXISTE_GRUPO
+Valida si existe un grupo por su ID (para control interno de lógica).
+CREATE OR REPLACE FUNCTION EXISTE_GRUPO (
+  p_grupo_id IN GRUPO.GRUPO_ID%TYPE
+) RETURN BOOLEAN IS
+  v_existe NUMBER;
+BEGIN
+  SELECT COUNT(*) INTO v_existe
+  FROM GRUPO
+  WHERE GRUPO_ID = p_grupo_id;
+
+  RETURN v_existe > 0;
+END;
+
+🧾 OBTENER_NOMBRE_GRUPO
+Devuelve el nombre del grupo por su ID (por ejemplo, para auditorías, mensajes, referencias cruzadas).
+CREATE OR REPLACE FUNCTION OBTENER_NOMBRE_GRUPO (
+  p_grupo_id IN GRUPO.GRUPO_ID%TYPE
+) RETURN VARCHAR2 IS
+  v_nombre GRUPO.NOMBRE%TYPE;
+BEGIN
+  SELECT NOMBRE INTO v_nombre
+  FROM GRUPO
+  WHERE GRUPO_ID = p_grupo_id;
+
+  RETURN v_nombre;
+END;
+
+🚫 Trigger antirepetidos
+Evita insertar un grupo con el mismo nombre dos veces.
+CREATE OR REPLACE TRIGGER TRG_PREVENT_GRUPO_DUPLICADO
+BEFORE INSERT ON GRUPO
+FOR EACH ROW
+DECLARE
+  v_count NUMBER;
+BEGIN
+  SELECT COUNT(*) INTO v_count
+  FROM GRUPO
+  WHERE UPPER(NOMBRE) = UPPER(:NEW.NOMBRE);
+
+  IF v_count > 0 THEN
+    RAISE_APPLICATION_ERROR(-20001, 'Ya existe un grupo con ese nombre.');
+  END IF;
+END;
