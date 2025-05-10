@@ -9,11 +9,13 @@ app.use(express.json());
 const rolRoutes = require('./routes/rol.routes');
 const usuarioRoutes = require('./routes/usuario.routes');
 const grupoRoutes = require('./routes/grupo.routes');
+const unidadRoutes = require('./routes/unidad.routes');
 
 // Usar rutas
 app.use('/api/roles', rolRoutes);
 app.use('/api/usuarios', usuarioRoutes);
 app.use('/api/grupos', grupoRoutes);
+app.use('/api/unidades', unidadRoutes);
 
 // Puerto de escucha
 app.listen(3000, () => console.log('✅ Backend corriendo en http://localhost:3000'));
