@@ -1,7 +1,8 @@
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { UsuarioService } from '../../services/usuario.service'; // Ajusta el path si es necesario
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
@@ -11,18 +12,33 @@ import { Router } from '@angular/router';
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
-
   username: string = '';
   password: string = '';
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private usuarioService: UsuarioService) {}
 
   onLogin(): void {
-    this.router.navigate(['/home']); // Redirige después de login exitoso
+    this.usuarioService.login(this.username, this.password).subscribe({
+      next: res => {
+        console.log(res);
+        this.router.navigate(['/home']);
+      },
+      error: err => {
+        alert('Credenciales incorrectas');
+        console.error(err);
+      }
+    });
   }
 
   onRegister(): void {
-    this.router.navigate(['/register']); // Redirige al componente de registro
+    this.usuarioService.register(this.username, this.password).subscribe({
+      next: res => {
+        alert('Usuario registrado');
+      },
+      error: err => {
+        alert('Error al registrar');
+        console.error(err);
+      }
+    });
   }
-
 }
