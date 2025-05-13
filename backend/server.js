@@ -14,6 +14,8 @@ const contenidoRoutes = require('./routes/contenido.routes');
 const temaRoutes = require('./routes/tema.routes');
 const categoriaRoutes = require('./routes/categoria.routes');
 const dificultadRoutes = require('./routes/dificultad.routes');
+const examenRoutes = require('./routes/examen.routes');
+const bancoPreguntasRoutes = require('./routes/bancopreguntas.routes');
 
 // Usar rutas
 app.use('/api/roles', rolRoutes);
@@ -24,6 +26,8 @@ app.use('/api/contenidos', contenidoRoutes);
 app.use('/api/temas', temaRoutes);
 app.use('/api/categorias', categoriaRoutes);
 app.use('/api/dificultades', dificultadRoutes);
+app.use('/api/examenes', examenRoutes);
+app.use('/api/preguntas', bancoPreguntasRoutes);
 
 // Puerto de escucha
 app.listen(3000, () => console.log('✅ Backend corriendo en http://localhost:3000'));
