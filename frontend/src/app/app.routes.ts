@@ -10,6 +10,7 @@ import { QuestionBankComponent } from './pages/question/question-bank/question-b
 import { QuestionFormComponent } from './pages/question/question-form/question-form.component';
 import { QuestionPreviewComponent } from './pages/question/question-preview/question-preview.component';
 import { ReportsComponent } from './pages/reports/reports.component';
+import { ProfileComponent } from './pages/user/profile/profile.component';
 
 export const routes: Routes = [
 
@@ -25,6 +26,7 @@ export const routes: Routes = [
     { path: 'ques-create', component: QuestionFormComponent },
     { path: 'ques-prev', component: QuestionPreviewComponent},
     { path: 'reports', component: ReportsComponent },
+    { path: 'profile', component: ProfileComponent },
 
     {path: '**', redirectTo: 'login'}
 ];

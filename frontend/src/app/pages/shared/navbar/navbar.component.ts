@@ -13,6 +13,10 @@ export class NavbarComponent {
   showExamen = false;
   showPreguntas = false;
 
+
+  isLoading: boolean = false;
+  progressValue: number = 0;
+
   constructor(private router: Router) {}
 
   toggleSubMenu(menu: string) {
@@ -73,11 +77,24 @@ export class NavbarComponent {
 
   accionPerfil() {
     console.log('Acción seleccionada para Perfil');
+    this.router.navigate(['/profile']);
   }
 
   accionSalir() {
-    console.log('Acción seleccionada para Salir');
-    // Aquí podrías redirigir a login y limpiar sesión
-    this.router.navigate(['/login']);
-  }
+  console.log('Acción seleccionada para Salir');
+  this.isLoading = true;
+  this.progressValue = 0;
+
+  const interval = setInterval(() => {
+    this.progressValue += 1;
+    if (this.progressValue >= 100) {
+      clearInterval(interval);
+      setTimeout(() => {
+        this.isLoading = false; // Oculta el indicador después del redireccionamiento
+        this.router.navigate(['/login']);
+      }, 500);
+    }
+  }, 30);
+}
+
 }

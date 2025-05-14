@@ -1,226 +1,211 @@
-/* Estilos base */
+/* --- ESTRUCTURA BÁSICA GENERAL (sin cambios mayores) --- */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body, html {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    background: url('/assets/fondoApp2.png') no-repeat center center fixed;
-    background-size: cover;
-    color: white;
-    animation: fadeIn 1s ease-out forwards;
+  height: 100%;
+  background-color: #1c1c1c;
+  color: #ffffff;
+  font-size: 0.8rem;
+  line-height: 1.6;
+  animation: fadeIn 1s ease-out forwards;
 }
 
-/* Header */
-.header {
-    background: rgba(30, 30, 30, 0.85);
-    backdrop-filter: blur(10px);
-    padding: 15px 30px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    position: relative;
-    z-index: 100;
+/* --- HOME --- */
+.home-content {
+  padding: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-.logo-container {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+.home-content h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #e4e4e4;
+  text-align: center;
+  margin-bottom: 30px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
-.logo-container:hover {
-    transform: translateX(5px);
+.home-content p {
+  font-size: 1rem;
+  color: #bbbbbb;
+  text-align: center;
+  margin-bottom: 50px;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.logo {
-    width: 50px;
-    height: auto;
-    filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.3));
-    transition: all 0.3s ease;
+/* --- CARRUSEL --- */
+.carousel-container {
+  background: #111;
+  padding: 30px;
+  border-radius: 15px;
+  margin-bottom: 50px;
+  position: relative;
 }
 
-.logo:hover {
-    transform: scale(1.1) rotate(-5deg);
-    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.4));
+.carousel-container h3 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #e4e4e4;
+  margin-bottom: 20px;
+  text-align: center;
+  letter-spacing: 1px;
 }
 
-h1 {
-    font-size: 1.8rem;
-    font-weight: 300;
-    
-    background: linear-gradient(90deg, #ffffff, #b8d8ff);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    font-family: Arial, sans-serif;
-    margin: 0;
+/* Envuelve carrusel y navegación */
+.carousel-wrapper {
+  position: relative;
 }
 
-/* Barra de navegación */
-.nav-buttons {
-    display: flex;
-    gap: 15px;
-    align-items: center;
+.carousel {
+  display: flex;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
 }
 
-.nav-item {
-    position: relative;
+.carousel::-webkit-scrollbar {
+  display: none;
 }
 
-.btn-nav {
-    background: transparent;
-    color: white;
-    border: none;
-    padding: 12px 20px;
-    font-size: 1rem;
-    cursor: pointer;
-    border-radius: 6px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    position: relative;
-    overflow: hidden;
-    font-family: Arial, sans-serif;
+.carousel-item {
+  background: #1a1a1a;
+  padding: 20px;
+  border-radius: 10px;
+  margin-right: 25px;
+  flex-shrink: 0;
+  width: 250px;
+  transition: transform 0.3s ease;
 }
 
-.btn-nav::before {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 0;
-    height: 2px;
-    background: linear-gradient(90deg, #00b7ff, #007bff);
-    transition: width 0.3s ease;
+.carousel-item h4 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #e4e4e4;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.btn-nav:hover {
-    background: rgba(255, 255, 255, 0.1);
-    transform: translateY(-2px);
+.carousel-item p {
+  font-size: 0.9rem;
+  color: #ffffff;
+  margin-bottom: 10px;
 }
 
-.btn-nav:hover::before {
-    width: 80%;
+.carousel-item .fecha,
+.carousel-item .calificacion,
+.carousel-item .dificultad {
+  font-size: 0.8rem;
+  color: #aaa;
 }
 
-.btn-nav i {
-    font-size: 1.1rem;
+/* --- NAVEGACIÓN --- */
+.carousel-navigation {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 10px;
+  transform: translateY(-50%);
+  pointer-events: none; /* permite clic solo en botones */
 }
 
-/* Submenús */
-.sub-menu {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    background: rgba(40, 40, 40, 0.95);
-    backdrop-filter: blur(15px);
-    border-radius: 8px;
-    padding: 10px 0;
-    min-width: 200px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    opacity: 0;
-    transform: translateY(10px);
-    visibility: hidden;
-    transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-    z-index: 200;
+.carousel-nav {
+  background: rgba(51, 51, 51, 0.8);
+  border: none;
+  color: #fff;
+  font-size: 2rem;
+  padding: 10px 15px;
+  cursor: pointer;
+  border-radius: 50%;
+  z-index: 5;
+  transition: background 0.3s ease;
+  pointer-events: all; /* los botones sí deben poder recibir clic */
 }
 
-.nav-item:hover .sub-menu, 
-.sub-menu[style*="display: block"] {
-    opacity: 1;
-    transform: translateY(0);
-    visibility: visible;
+.carousel-nav:hover {
+  background: rgba(85, 85, 85, 0.9);
 }
 
-.sub-menu button {
-    width: 100%;
-    padding: 10px 20px;
-    text-align: left;
-    background: transparent;
-    border: none;
-    color: rgba(255, 255, 255, 0.9);
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-family: Arial, sans-serif;
+
+/* --- OTROS CONTENEDORES --- */
+.contenedor-general {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  padding: 20px;
+  margin-bottom: 50px;
 }
 
-.sub-menu button:hover {
-    background: rgba(0, 123, 255, 0.2);
-    color: white;
-    padding-left: 25px;
+.contenedor-box {
+  flex: 0 0 300px;
+  background: #222;
+  color: #fff;
+  padding: 30px;
+  border-radius: 15px;
+  text-align: center;
+  transition: transform 0.3s ease;
 }
 
-.sub-menu button::before {
-    content: '→';
-    opacity: 0;
-    transition: all 0.2s ease;
+.contenedor-box h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #e4e4e4;
+  margin-bottom: 20px;
+  text-transform: uppercase;
 }
 
-.sub-menu button:hover::before {
-    opacity: 1;
-    margin-right: 5px;
+.contenedor-box p {
+  font-size: 1rem;
+  color: #bbb;
 }
 
-/* Footer */
-footer {
-    text-align: center;
-    padding: 20px;
-    font-size: 0.9rem;
-    color: rgba(255, 255, 255, 0.7);
-    background: rgba(20, 20, 20, 0.7);
-    backdrop-filter: blur(5px);
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    animation: fadeIn 1s ease-out 0.3s forwards;
-    opacity: 0;
-    font-family: Arial, sans-serif;
+/* --- BOTONES DE ACCIÓN GENERALES (NO interfieren con carrusel-nav) --- */
+button:not(.carousel-nav) {
+  background: #444;
+  border: none;
+  color: #fff;
+  padding: 15px 30px;
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background 0.3s ease, transform 0.3s ease;
+  margin-top: 15px;
 }
 
-/* Animaciones */
+button:not(.carousel-nav):hover {
+  background: #666;
+  transform: translateY(-2px);
+}
+
+/* --- ANIMACIONES --- */
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
-
-/* Efecto de aparición para los elementos del nav */
-.nav-item {
-    opacity: 0;
-    transform: translateY(10px);
-    animation: fadeUp 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-}
-
-.nav-item:nth-child(1) { animation-delay: 0.2s; }
-.nav-item:nth-child(2) { animation-delay: 0.3s; }
-.nav-item:nth-child(3) { animation-delay: 0.4s; }
-.nav-item:nth-child(4) { animation-delay: 0.5s; }
-.nav-item:nth-child(5) { animation-delay: 0.6s; }
 
 @keyframes fadeUp {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
+

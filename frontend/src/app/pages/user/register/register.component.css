@@ -338,3 +338,56 @@ footer {
 .loading-message::before {
     border-top-color: #ff4d4d; /* spinner rojo */
 }
+
+
+.select-box {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-bottom: 2px solid rgba(109, 109, 109, 0.5);
+    outline: none;
+    font-size: 16px;
+    background: transparent;
+    color: white;
+    appearance: none; /* quita la flecha por defecto */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    position: relative;
+    z-index: 1;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+/* Pseudoelemento para flecha custom */
+.select-box::after {
+    content: '▼';
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: white;
+    font-size: 12px;
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* Label para el select */
+.input-group select:focus,
+.input-group select:valid {
+    border-bottom: 2px solid white;
+}
+
+.input-group select:focus + label,
+.input-group select:valid + label {
+    top: 5px;
+    left: 10px;
+    font-size: 12px;
+    color: white;
+}
+
+/* Opciones del select */
+select option {
+    background-color: #2c2c2c;
+    color: white;
+    padding: 10px;
+}

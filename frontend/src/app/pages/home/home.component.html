@@ -1,8 +1,87 @@
-<app-navbar></app-navbar>
+<body>
+  <app-navbar></app-navbar>
 
-<section class="home-content">
-  <!-- Aquí irá el contenido específico de la lista de exámenes -->
-  <h2>Bienvenido al Inicio de Bases Project</h2>
-  <!-- Ejemplo de contenido dinámico o estático futuro -->
-  <p>Selecciona una opcion</p>
-</section>
+  <section class="home-content">
+    <h2>Bienvenido a Bases Project</h2>
+
+    <!-- Primer Carrusel: Exámenes recientes -->
+<div class="carousel-container">
+  <h3>Exámenes Creados Recientemente</h3>
+
+    <div class="carousel-wrapper">
+    <div class="carousel-navigation">
+      <button class="carousel-nav prev" (click)="scrollCarousel('examenCarousel', 'left')" aria-label="Anterior examen">‹</button>
+      <button class="carousel-nav next" (click)="scrollCarousel('examenCarousel', 'right')" aria-label="Siguiente examen">›</button>
+    </div>
+
+    <div class="carousel examenCarousel" #examenCarousel>
+      <div class="carousel-item" *ngFor="let examen of examenesRecientes">
+        <h4>{{ examen.nombre }}</h4>
+        <p>{{ examen.descripcion }}</p>
+        <span class="fecha">{{ examen.fecha }}</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+    <!-- Contenedor general que agrupa los tres boxes -->
+<div class="contenedor-general">
+  <!-- Crear nuevo grupo -->
+  <div class="contenedor-box" id="grupoBox">
+    <h3>Crear Nuevo Grupo</h3>
+    <p>Organiza a tus estudiantes en grupos para una gestión más eficiente de los exámenes y tareas.</p>
+  </div>
+
+  <!-- Crear nueva unidad -->
+  <div class="contenedor-box" id="unidadBox">
+    <h3>Crear Nueva Unidad</h3>
+    <p>Organiza los temas en unidades para una mejor estructuración de los exámenes y el material de estudio.</p>
+  </div>
+
+  <!-- Crear nueva materia -->
+  <div class="contenedor-box" id="materiaBox">
+    <h3>Crear Nueva Materia</h3>
+    <p>Agrega nuevas materias para organizar los exámenes y tareas de manera más estructurada.</p>
+  </div>
+</div>
+
+    <!-- Segundo Carrusel: Respuestas de Exámenes -->
+    <div class="carousel-container">
+      <h3>Respuestas Recientes de Exámenes</h3>
+      <div class="carousel-navigation">
+        <button class="carousel-nav prev" id="prevBtnRespuestas" aria-label="Anterior respuesta">‹</button>
+        <button class="carousel-nav next" id="nextBtnRespuestas" aria-label="Siguiente respuesta">›</button>
+      </div>
+      <div class="carousel respuestasCarousel">
+        <div class="carousel-item" *ngFor="let respuesta of respuestasRecientes">
+          <h4>Examen: {{ respuesta.examenNombre }}</h4>
+          <p>Respuesta: {{ respuesta.respuesta }}</p>
+          <span class="calificacion">Calificación: {{ respuesta.calificacion }}</span>
+        </div>
+      </div>
+    </div>
+
+   
+
+    <!-- Tercer Carrusel: Banco de Preguntas -->
+    <div class="carousel-container">
+      <h3>Banco de Preguntas</h3>
+      <div class="carousel-navigation">
+        <button class="carousel-nav prev" id="prevBtnBanco" aria-label="Anterior pregunta">‹</button>
+        <button class="carousel-nav next" id="nextBtnBanco" aria-label="Siguiente pregunta">›</button>
+      </div>
+      <div class="carousel bancoCarousel">
+        <div class="carousel-item" *ngFor="let pregunta of bancoPreguntas">
+          <h4>{{ pregunta.tema }}</h4>
+          <p>{{ pregunta.pregunta }}</p>
+          <span class="dificultad">Dificultad: {{ pregunta.dificultad }}</span>
+        </div>
+      </div>
+    </div>
+
+    
+
+  </section>
+</body>
