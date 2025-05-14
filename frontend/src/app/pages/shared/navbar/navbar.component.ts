@@ -80,6 +80,11 @@ export class NavbarComponent {
     this.router.navigate(['/rol']);
   }
 
+  accionUsuarios() {
+    console.log('Acción seleccionada para Reportes');
+    this.router.navigate(['/register']);
+  }
+
   accionPerfil() {
     console.log('Acción seleccionada para Perfil');
     this.router.navigate(['/profile']);
