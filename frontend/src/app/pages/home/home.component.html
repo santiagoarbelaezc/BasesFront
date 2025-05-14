@@ -22,7 +22,6 @@
       </div>
     </div>
   </div>
-
 </div>
 
 
@@ -45,43 +44,43 @@
     <h3>Crear Nueva Materia</h3>
     <p>Agrega nuevas materias para organizar los exámenes y tareas de manera más estructurada.</p>
   </div>
+
+  <div class="contenedor-box" id="temaBox">
+    <h3>Crear Nueva Tema</h3>
+    <p>Agrega nuevas materias para organizar los exámenes y tareas de manera más estructurada.</p>
+  </div>
 </div>
-
-    <!-- Segundo Carrusel: Respuestas de Exámenes -->
-    <div class="carousel-container">
-      <h3>Respuestas Recientes de Exámenes</h3>
-      <div class="carousel-navigation">
-        <button class="carousel-nav prev" id="prevBtnRespuestas" aria-label="Anterior respuesta">‹</button>
-        <button class="carousel-nav next" id="nextBtnRespuestas" aria-label="Siguiente respuesta">›</button>
-      </div>
-      <div class="carousel respuestasCarousel">
-        <div class="carousel-item" *ngFor="let respuesta of respuestasRecientes">
-          <h4>Examen: {{ respuesta.examenNombre }}</h4>
-          <p>Respuesta: {{ respuesta.respuesta }}</p>
-          <span class="calificacion">Calificación: {{ respuesta.calificacion }}</span>
-        </div>
-      </div>
-    </div>
-
-   
-
-    <!-- Tercer Carrusel: Banco de Preguntas -->
-    <div class="carousel-container">
-      <h3>Banco de Preguntas</h3>
-      <div class="carousel-navigation">
-        <button class="carousel-nav prev" id="prevBtnBanco" aria-label="Anterior pregunta">‹</button>
-        <button class="carousel-nav next" id="nextBtnBanco" aria-label="Siguiente pregunta">›</button>
-      </div>
-      <div class="carousel bancoCarousel">
-        <div class="carousel-item" *ngFor="let pregunta of bancoPreguntas">
-          <h4>{{ pregunta.tema }}</h4>
-          <p>{{ pregunta.pregunta }}</p>
-          <span class="dificultad">Dificultad: {{ pregunta.dificultad }}</span>
-        </div>
-      </div>
-    </div>
-
-    
-
   </section>
+
+  <footer class="footer">
+  <div class="footer-content">
+    <div class="footer-section about">
+      <h4>Sobre el Proyecto</h4>
+      <p>Sistema inteligente para la creación, gestión y presentación de exámenes en línea. Optimiza el rendimiento docente y estudiantil con herramientas modernas y eficientes.</p>
+    </div>
+
+    <div class="footer-section contact">
+      <h4>Contacto</h4>
+      <p>Email: contacto&#64;basesproject.edu</p>
+      <p>Teléfono: +57 123 456 7890</p>
+      <p>Universidad XYZ – Facultad de Ingeniería</p>
+    </div>
+
+    <div class="footer-section links">
+      <h4>Enlaces Útiles</h4>
+      <ul>
+        <li><a href="#">Banco de Preguntas</a></li>
+        <li><a href="#">Exámenes Presentados</a></li>
+        <li><a href="#">Estudiantes</a></li>
+        <li><a href="#">Materias Activas</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>&copy; 2025 Bases Project. Todos los derechos reservados.</p>
+  </div>
+</footer>
+
+
 </body>

@@ -26,22 +26,15 @@ export class HomeComponent implements OnInit {
     { nombre: 'Examen de Filosofía', descripcion: 'Filosofía clásica.', fecha: '2025-05-23' }
   ];
 
-  respuestasRecientes = [
-    {
-      examenNombre: 'Examen de Algrebra - Primer Parcial',
-      respuesta: 'Respuesta a la pregunta de álgebra...',
-      calificacion: '85'
-    },
-    {
-      examenNombre: 'Examen de Historia - Segundo Parcial',
-      respuesta: 'Respuesta sobre la Segunda Guerra Mundial...',
-      calificacion: '92'
-    },
-    {
-      examenNombre: 'Examen de Física - Tercer Parcial',
-      respuesta: 'Explicación sobre las leyes de movimiento...',
-      calificacion: '78'
-    }
+  examenesPresentados = [
+    { nombre: 'Examen de Algebra - Primer Parcial', descripcion: 'Álgebra y cálculo básico.', fecha: '2025-05-10' },
+    { nombre: 'Examen de Historia - Segundo Parcial', descripcion: 'Segunda Guerra Mundial.', fecha: '2025-05-12' },
+    { nombre: 'Examen de Física - Tercer Parcial', descripcion: 'Mecánica y movimiento.', fecha: '2025-05-15' },
+    { nombre: 'Examen de Química - Cuarto Parcial', descripcion: 'Tabla periódica y enlaces químicos.', fecha: '2025-05-18' },
+    { nombre: 'Examen de Literatura', descripcion: 'Autores del siglo XX.', fecha: '2025-05-19' },
+    { nombre: 'Examen de Geografía', descripcion: 'Regiones naturales y países.', fecha: '2025-05-20' },
+    { nombre: 'Examen de Biología', descripcion: 'Célula y reproducción.', fecha: '2025-05-22' },
+    { nombre: 'Examen de Filosofía', descripcion: 'Filosofía clásica.', fecha: '2025-05-23' }
   ];
 
   bancoPreguntas = [
