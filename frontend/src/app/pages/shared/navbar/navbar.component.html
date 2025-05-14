@@ -1,0 +1,41 @@
+<header class="header">
+  <div class="logo-container">
+    <img src="assets/BasesIcon.png" alt="Logo School Bases" class="logo">
+    <h1>School Bases</h1>
+  </div>
+
+  <nav class="nav-buttons">
+    <div class="nav-item">
+      <button class="btn-nav" (click)="toggleSubMenu('examen')">Examen</button>
+      <div class="sub-menu" *ngIf="showExamen">
+        <button (click)="accionExamen('detalles')">Detalles Examen</button>
+        <button (click)="accionExamen('lista')">Lista Exámenes</button>
+        <button (click)="accionExamen('presentados')">Exámenes Presentados</button>
+        <button (click)="accionExamen('resultados')">Resultados Exámenes</button>
+      </div>
+    </div>
+
+    <div class="nav-item">
+      <button class="btn-nav" (click)="toggleSubMenu('preguntas')">Preguntas</button>
+      <div class="sub-menu" *ngIf="showPreguntas">
+        <button (click)="accionPreguntas('banco')">Banco de Preguntas</button>
+        <button (click)="accionPreguntas('crear')">Crear Preguntas</button>
+        <button (click)="accionPreguntas('vista')">Vista Previa Preguntas</button>
+      </div>
+    </div>
+
+    <div class="nav-item">
+      <button class="btn-nav" (click)="accionReportes()">Reportes</button>
+    </div>
+
+    <div class="nav-item">
+      <button class="btn-nav" (click)="accionPerfil()">Perfil</button>
+    </div>
+
+    <div class="nav-item">
+      <button class="btn-nav" (click)="accionSalir()">
+        <i class="bi bi-box-arrow-right"></i> Salir
+      </button>
+    </div>
+  </nav>
+</header>

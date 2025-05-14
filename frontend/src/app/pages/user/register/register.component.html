@@ -10,7 +10,7 @@
 
   <main class="login-container">
     <div class="login-box">
-      <img src="assets/IconBases.png" alt="Logo School Bases" class="logo">
+      <img src="assets/BasesIcon.png" alt="Logo School Bases" class="logo">
       <form (ngSubmit)="onRegister()">
         <!-- Campo Nombre -->
         <div class="input-group">
@@ -79,7 +79,7 @@
 
         <div class="input-group">
           <div class="register-prompt">
-            <label for="register">Volver</label>
+            
             <button type="button" class="btn-register" (click)="onLogin()">Inicia sesión</button>
           </div>
         </div>
@@ -91,6 +91,12 @@
   <footer>
     © 2025 School Bases - Todos los derechos reservados.
   </footer>
+
+  <div class="loading-indicator" *ngIf="isLoading" [style.--progress-width]="progressValue + '%'">
+  <div class="loading-container">
+    <div class="loading-message">Registrando</div>
+  </div>
+</div>
 
 </body>
 </html>

@@ -18,23 +18,32 @@ export class RegisterComponent {
   password: string = '';
   grupo: string = '';
 
+  isLoading: boolean = false;
+  progressValue: number = 0;
+
   constructor(private router: Router) {}
 
   // Método que se ejecuta cuando el usuario envía el formulario
-  onRegister(): void {
-    // Validar los campos antes de enviarlos
-    if (this.nombre && this.rol && this.correo && this.password && this.grupo) {
-      // Aquí agregarías la lógica para enviar los datos al servidor, por ejemplo:
-      // this.authService.register(this.nombre, this.rol, this.correo, this.password, this.grupo).subscribe(response => {
-      //     console.log('Usuario registrado', response);
-      // });
+ onRegister(): void {
+  // Aquí agregarías la lógica para enviar los datos al servidor, por ejemplo:
+  // this.authService.register(this.nombre, this.rol, this.correo, this.password, this.grupo).subscribe(response => {
+  //     console.log('Usuario registrado', response);
+  // });
 
-      // Redirigir al login después del registro exitoso
-      this.router.navigate(['/login']);
-    } else {
-      alert('Por favor completa todos los campos.');
+  // Activar barra de progreso
+  this.isLoading = true;
+  this.progressValue = 0;
+
+  const interval = setInterval(() => {
+    this.progressValue += 1;
+    if (this.progressValue >= 100) {
+      clearInterval(interval);
+      setTimeout(() => {
+        this.router.navigate(['/login']);
+      }, 500); // Pequeño delay para la animación de salida
     }
-  }
+  }, 30); // Actualiza cada 30ms para completar en ~3 segundos
+}
 
   // Método que redirige al login si el usuario ya tiene cuenta
   onLogin(): void {

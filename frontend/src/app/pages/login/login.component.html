@@ -4,13 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login - School Bases</title>
-  <link rel="stylesheet" href="login.component.css"> <!-- Ruta ejemplo -->
+  <link rel="stylesheet" href="login.component.css">
 </head>
 <body>
 
   <main class="login-container">
     <div class="login-box">
-      <img src="assets/IconBases.png" alt="Logo School Bases" class="logo">
+      <img src="assets/BasesIcon.png" alt="Logo School Bases" class="logo">
       <form (ngSubmit)="onLogin()">
         <div class="input-group">
           <input 
@@ -19,7 +19,8 @@
             name="usuario" 
             required 
             [(ngModel)]="username"
-            placeholder=" ">
+            placeholder=" "
+            [disabled]="isLoading">
           <label for="usuario">Usuario</label>
         </div>
 
@@ -30,26 +31,39 @@
             name="password" 
             required 
             [(ngModel)]="password"
-            placeholder=" ">
+            placeholder=" "
+            [disabled]="isLoading">
           <label for="password">Contraseña</label>
         </div>
 
-        <button type="submit" class="btn-login">Ingresar</button>
+        <button type="submit" class="btn-login" [disabled]="isLoading">
+          <span *ngIf="!isLoading">Ingresar</span>
+          <span *ngIf="isLoading">Ingresando...</span>
+        </button>
+
+      
 
         <div class="input-group">
-            <div class="register-prompt">
-              <label for="register">¿No estás registrado?</label>
-              <button type="button" class="btn-register" (click)="onRegister()">Regístrate aquí</button>
-            </div>
+          <div class="register-prompt">
+            <label for="register">¿No estás registrado?</label>
+            <button type="button" class="btn-register" (click)="onRegister()" [disabled]="isLoading">
+              Regístrate aquí
+            </button>
           </div>
-
+        </div>
       </form>
     </div>
   </main>
 
+  <!-- Fuera del formulario, justo antes del footer -->
+<div class="loading-indicator" *ngIf="isLoading" [style.--progress-width]="progressValue + '%'">
+  <div class="loading-container">
+    <div class="loading-message">Ingresando</div>
+  </div>
+</div>
+
   <footer>
     © 2025 School Bases - Todos los derechos reservados.
   </footer>
-
 </body>
 </html>
