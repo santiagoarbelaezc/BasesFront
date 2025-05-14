@@ -22,7 +22,7 @@ export class LoginComponent {
   onLogin(): void {
   this.isLoading = true;
   this.progressValue = 0;
-  
+
   const interval = setInterval(() => {
     this.progressValue += 1;
     if (this.progressValue >= 100) {
@@ -34,7 +34,4 @@ export class LoginComponent {
   }, 30); // Actualiza cada 30ms para completar en ~3 segundos
 }
 
-  onRegister(): void {
-    this.router.navigate(['/register']);
-  }
 }

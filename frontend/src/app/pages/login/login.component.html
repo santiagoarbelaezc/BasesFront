@@ -13,11 +13,11 @@
       <img src="assets/BasesIcon.png" alt="Logo School Bases" class="logo">
       <form (ngSubmit)="onLogin()">
         <div class="input-group">
-          <input 
-            type="text" 
-            id="usuario" 
-            name="usuario" 
-            required 
+          <input
+            type="text"
+            id="usuario"
+            name="usuario"
+            required
             [(ngModel)]="username"
             placeholder=" "
             [disabled]="isLoading">
@@ -25,11 +25,11 @@
         </div>
 
         <div class="input-group">
-          <input 
-            type="password" 
-            id="password" 
-            name="password" 
-            required 
+          <input
+            type="password"
+            id="password"
+            name="password"
+            required
             [(ngModel)]="password"
             placeholder=" "
             [disabled]="isLoading">
@@ -41,16 +41,8 @@
           <span *ngIf="isLoading">Ingresando...</span>
         </button>
 
-      
 
-        <div class="input-group">
-          <div class="register-prompt">
-            <label for="register">¿No estás registrado?</label>
-            <button type="button" class="btn-register" (click)="onRegister()" [disabled]="isLoading">
-              Regístrate aquí
-            </button>
-          </div>
-        </div>
+
       </form>
     </div>
   </main>

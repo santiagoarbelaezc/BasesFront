@@ -6,6 +6,12 @@
 
 
   <nav class="nav-buttons">
+
+    <div class="nav-item">
+      <button class="btn-nav" (click)="accionUsuarios()">Usuarios</button>
+    </div>
+
+
     <div class="nav-item">
       <button class="btn-nav" (click)="toggleSubMenu('examen')">Examen</button>
       <div class="sub-menu" *ngIf="showExamen">
