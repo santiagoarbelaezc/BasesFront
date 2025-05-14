@@ -15,12 +15,16 @@ exports.insertarRol = async (req, res) => {
     if (connection) await connection.close();
   }
 };
-
 exports.listarRoles = async (req, res) => {
   let connection;
   try {
     connection = await oracledb.getConnection(dbConfig);
-    const result = await connection.execute(`SELECT ROL_ID, NOMBRE FROM ROL`);
+    // Agrega outFormat para devolver objetos
+    const result = await connection.execute(
+        `SELECT ROL_ID, NOMBRE FROM ROL`,
+        [],
+        { outFormat: oracledb.OUT_FORMAT_OBJECT }  // <-- Esta línea es clave
+    );
     res.json(result.rows);
   } catch (err) {
     console.error(err);
@@ -34,9 +38,28 @@ exports.actualizarRol = async (req, res) => {
   const { nombre } = req.body;
   const rol_id = req.params.id;
   let connection;
+
   try {
     connection = await oracledb.getConnection(dbConfig);
-    await connection.execute(`BEGIN actualizar_rol(:rol_id, :nombre); END;`, { rol_id, nombre }, { autoCommit: true });
+
+    // Validación: nombre duplicado (excluyendo el actual)
+    const result = await connection.execute(
+        `SELECT COUNT(*) AS TOTAL FROM ROL WHERE UPPER(nombre) = UPPER(:nombre) AND rol_id != :rol_id`,
+        { nombre, rol_id },
+        { outFormat: oracledb.OUT_FORMAT_OBJECT }
+    );
+
+    if (result.rows[0].TOTAL > 0) {
+      return res.status(400).json({ error: '❌ Ya existe un rol con ese nombre' });
+    }
+
+    // Actualizar
+    await connection.execute(
+        `BEGIN actualizar_rol(:rol_id, :nombre); END;`,
+        { rol_id, nombre },
+        { autoCommit: true }
+    );
+
     res.json({ mensaje: '✅ Rol actualizado' });
   } catch (err) {
     console.error(err);

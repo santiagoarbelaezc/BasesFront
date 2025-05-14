@@ -11,6 +11,7 @@ import { QuestionFormComponent } from './pages/question/question-form/question-f
 import { QuestionPreviewComponent } from './pages/question/question-preview/question-preview.component';
 import { ReportsComponent } from './pages/reports/reports.component';
 import { ProfileComponent } from './pages/user/profile/profile.component';
+import {RolComponent} from './pages/user/rol/rol.component';
 
 export const routes: Routes = [
 
@@ -27,6 +28,7 @@ export const routes: Routes = [
     { path: 'ques-prev', component: QuestionPreviewComponent},
     { path: 'reports', component: ReportsComponent },
     { path: 'profile', component: ProfileComponent },
+    { path: 'rol', component: RolComponent },
 
     {path: '**', redirectTo: 'login'}
 ];

@@ -1,0 +1,129 @@
+.container {
+  max-width: 600px;
+  margin: 60px auto;
+  background-color: #111;
+  border: 1px solid rgba(255, 0, 0, 0.2);
+  border-radius: 16px;
+  padding: 30px 40px;
+  box-shadow: 0 8px 30px rgba(255, 0, 0, 0.1);
+  animation: fadeIn 0.8s ease-out forwards;
+}
+
+h1 {
+  font-size: 2rem;
+  margin-bottom: 25px;
+  background: linear-gradient(90deg, #ff416c, #ff4b2b);
+  -webkit-background-clip: text;
+  color: transparent;
+  text-align: center;
+  animation: glow 2s ease-in-out infinite alternate;
+}
+
+.form-group {
+  margin-bottom: 25px;
+}
+
+label {
+  display: block;
+  font-size: 1rem;
+  margin-bottom: 10px;
+  color: #fff;
+}
+
+input[type="text"] {
+  width: 100%;
+  padding: 12px 15px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: #222;
+  color: #fff;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+input[type="text"]:focus {
+  outline: none;
+  border-color: #ff4b2b;
+  box-shadow: 0 0 8px rgba(255, 75, 43, 0.4);
+}
+
+.button-group {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+}
+
+.button-group button {
+  flex: 1;
+  padding: 12px 20px;
+  border: none;
+  background: linear-gradient(90deg, #ff416c, #ff4b2b);
+  color: white;
+  font-weight: bold;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(255, 75, 43, 0.3);
+}
+
+.button-group button:hover:not(:disabled) {
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(255, 75, 43, 0.5);
+}
+
+.button-group button:disabled {
+  background: #444;
+  color: #aaa;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+#rolesList {
+  background-color: #191919;
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#rolesList h2 {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  color: #fff;
+}
+
+ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+li {
+  padding: 12px 15px;
+  margin-bottom: 8px;
+  background-color: #222;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #f0f0f0;
+}
+
+li:hover {
+  background-color: rgba(255, 0, 0, 0.2);
+}
+
+li.selected {
+  background: linear-gradient(90deg, #ff416c, #ff4b2b);
+  color: white;
+  font-weight: bold;
+  box-shadow: 0 0 10px rgba(255, 75, 43, 0.6);
+}
+
+.loading {
+  font-style: italic;
+  color: #00b7ff;
+}
+
+.error {
+  color: #ff4b2b;
+  font-weight: bold;
+}

@@ -75,6 +75,11 @@ export class NavbarComponent {
     this.router.navigate(['/reports']);
   }
 
+  accionRoles() {
+    console.log('Acción seleccionada para Reportes');
+    this.router.navigate(['/rol']);
+  }
+
   accionPerfil() {
     console.log('Acción seleccionada para Perfil');
     this.router.navigate(['/profile']);
