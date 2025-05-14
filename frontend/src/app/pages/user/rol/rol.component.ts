@@ -71,31 +71,31 @@ export class RolComponent implements OnInit {
   }
 
   async actualizarRol() {
-    if (!this.rolSeleccionado || !this.nombreRol) return;
+    if (!this.rolSeleccionado || !this.nombreRol || this.nombreRol.trim() === '') {
+      this.error = 'El nombre del rol no puede estar vacío.';
+      return;
+    }
 
     try {
       const rolActualizado = {
-        NOMBRE: this.nombreRol
+        nombre: this.nombreRol.trim()
       };
-
       await this.rolService.actualizarRol(this.rolSeleccionado.ROL_ID, rolActualizado);
-
       // Cargar de nuevo todos los roles
       await this.cargarRoles();
-
       // Buscar el rol actualizado en la nueva lista
       const rolRecargado = this.roles.find(r => r.ROL_ID === this.rolSeleccionado.ROL_ID);
       if (rolRecargado) {
-        this.seleccionarRol(rolRecargado);  // <-- vuelve a asignar nombreRol
+        this.seleccionarRol(rolRecargado); // ← vuelve a asignar this.nombreRol
       }
-
-      this.mostrarMensaje('Rol actualizado correctamente');
-
+      this.mostrarMensaje('✅ Rol actualizado correctamente');
+      this.error = ''; // Limpia el error si todo sale bien
     } catch (error) {
       console.error('Error al actualizar:', error);
-      this.error = 'Error al actualizar el rol. Verifica la consola para más detalles.';
+      this.error = '❌ Error al actualizar el rol. Verifica la consola para más detalles.';
     }
   }
+
 
 
 // Método para eliminar rol

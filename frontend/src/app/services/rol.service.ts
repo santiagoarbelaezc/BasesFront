@@ -42,28 +42,32 @@ export class RolService {
   // Método para actualizar rol
   async actualizarRol(rolId: number, rolData: any): Promise<any> {
     try {
+      // ✅ Validación previa
+      if (!rolData.nombre || rolData.nombre.trim() === '') {
+        throw new Error('El nombre del rol no puede estar vacío');
+      }
+      // 🔍 Mostrar datos para verificar
+      console.log('📤 Enviando datos para actualizar:', rolData);
       const response = await fetch(`${this.apiUrl}/${rolId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          // Añade esto si tu API requiere autenticación
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         },
         body: JSON.stringify(rolData)
       });
-
       if (!response.ok) {
         const errorData = await response.json();
-        console.error('Detalles del error:', errorData);
+        console.error('❌ Detalles del error en backend:', errorData);
         throw new Error(errorData.message || 'Error al actualizar el rol');
       }
-
       return await response.json();
     } catch (error) {
-      console.error('Error en la solicitud:', error);
+      console.error('🚨 Error en la solicitud de actualización:', error);
       throw error;
     }
   }
+
 
   // Eliminar un rol
   // Método para eliminar rol
