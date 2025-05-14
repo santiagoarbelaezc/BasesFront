@@ -1,0 +1,115 @@
+# === JetBrains (IntelliJ IDEA, WebStorm, etc.) ===
+.idea/
+*.iws
+*.iml
+*.ipr
+/out/
+# Son las configuraciones del IDE
+/shelf/
+workspace.xml
+/tasks.xml
+/httpRequests/
+/dataSources/
+/dataSources.local.xml
+/.idea_modules/
+
+# === VSCode ===
+.vscode/
+.history/
+.code-workspace
+
+# === macOS ===
+.DS_Store
+.AppleDouble
+.LSOverride
+__MACOSX/
+
+# === Windows ===
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# === Node.js ===
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+dist/
+coverage/
+.env
+.env.local
+.env.*.local
+
+# === Java (Maven / Gradle) ===
+target/
+build/
+*.class
+*.jar
+*.war
+*.ear
+*.log
+*.javadoc
+*.hprof
+*.exec
+*.ser
+
+# === Python ===
+_pycache_/
+*.py[cod]
+*.pyo
+*.pyd
+*.pdb
+.Python
+env/
+venv/
+ENV/
+.venv/
+
+# === Logs ===
+*.log
+.log.
+
+# === OS-generated files ===
+Icon?
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# === IDEs / Tools ===
+*.swp
+*.swo
+*.swn
+*.bak
+*.tmp
+
+# === Git ===
+.git/
+
+# === Test reports ===
+test-output/
+test-results/
+surefire-reports/
+jacoco.exec
+
+# === Database dumps and configs ===
+*.sql
+*.sqlite
+*.db
+dump.rdb
+
+# === Package managers ===
+*.lock
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# === Others ===
+*.orig
+*.rej
+*.sublime-workspace
+*.sublime-project
+
+# Angular cache
+frontend/.angular/
