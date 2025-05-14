@@ -1,53 +1,93 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { NavbarComponent } from '../shared/navbar/navbar.component';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  imports: [FormsModule,CommonModule], // Aquí puedes importar otros módulos si es necesario
+  imports: [FormsModule,CommonModule, NavbarComponent], // Aquí puedes importar otros módulos si es necesario
   standalone: true,
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent {
-  // Variables para controlar la visibilidad de los submenús
-  showExamen = false;
-  showPreguntas = false;
+export class HomeComponent implements OnInit {
 
-  // Función para mostrar u ocultar submenú
-  toggleSubMenu(menu: string) {
-    if (menu === 'examen') {
-      this.showExamen = !this.showExamen;
-      this.showPreguntas = false; // Ocultar el submenú de preguntas si se abre el de examen
-    } else if (menu === 'preguntas') {
-      this.showPreguntas = !this.showPreguntas;
-      this.showExamen = false; // Ocultar el submenú de examen si se abre el de preguntas
+  @ViewChild('examenCarousel') examenCarouselRef!: ElementRef;
+
+   // Inicializando las listas de exámenes, respuestas y recursos generales con algunos datos de ejemplo
+   examenesRecientes = [
+    { nombre: 'Examen de Algebra - Primer Parcial', descripcion: 'Álgebra y cálculo básico.', fecha: '2025-05-10' },
+    { nombre: 'Examen de Historia - Segundo Parcial', descripcion: 'Segunda Guerra Mundial.', fecha: '2025-05-12' },
+    { nombre: 'Examen de Física - Tercer Parcial', descripcion: 'Mecánica y movimiento.', fecha: '2025-05-15' },
+    { nombre: 'Examen de Química - Cuarto Parcial', descripcion: 'Tabla periódica y enlaces químicos.', fecha: '2025-05-18' },
+    { nombre: 'Examen de Literatura', descripcion: 'Autores del siglo XX.', fecha: '2025-05-19' },
+    { nombre: 'Examen de Geografía', descripcion: 'Regiones naturales y países.', fecha: '2025-05-20' },
+    { nombre: 'Examen de Biología', descripcion: 'Célula y reproducción.', fecha: '2025-05-22' },
+    { nombre: 'Examen de Filosofía', descripcion: 'Filosofía clásica.', fecha: '2025-05-23' }
+  ];
+
+  examenesPresentados = [
+    { nombre: 'Examen de Algebra - Primer Parcial', descripcion: 'Álgebra y cálculo básico.', fecha: '2025-05-10' },
+    { nombre: 'Examen de Historia - Segundo Parcial', descripcion: 'Segunda Guerra Mundial.', fecha: '2025-05-12' },
+    { nombre: 'Examen de Física - Tercer Parcial', descripcion: 'Mecánica y movimiento.', fecha: '2025-05-15' },
+    { nombre: 'Examen de Química - Cuarto Parcial', descripcion: 'Tabla periódica y enlaces químicos.', fecha: '2025-05-18' },
+    { nombre: 'Examen de Literatura', descripcion: 'Autores del siglo XX.', fecha: '2025-05-19' },
+    { nombre: 'Examen de Geografía', descripcion: 'Regiones naturales y países.', fecha: '2025-05-20' },
+    { nombre: 'Examen de Biología', descripcion: 'Célula y reproducción.', fecha: '2025-05-22' },
+    { nombre: 'Examen de Filosofía', descripcion: 'Filosofía clásica.', fecha: '2025-05-23' }
+  ];
+
+  bancoPreguntas = [
+    {
+      tema: 'Álgebra',
+      pregunta: '¿Cuál es la fórmula para resolver una ecuación cuadrática?',
+      dificultad: 'Media'
+    },
+    {
+      tema: 'Historia Universal',
+      pregunta: '¿Cuáles fueron las causas principales de la Primera Guerra Mundial?',
+      dificultad: 'Alta'
+    },
+    {
+      tema: 'Física',
+      pregunta: '¿Qué establece la ley de Newton de la gravitación universal?',
+      dificultad: 'Baja'
     }
-  }
+  ];
 
-  // Acciones específicas para cada botón
-  accionExamen(accion: string) {
-    console.log(`Acción seleccionada para Examen: ${accion}`);
-    // Lógica específica para cada acción de examen
-  }
+  recursosGenerales = [
+    {
+      titulo: 'Guía de Exámenes de Matemáticas',
+      descripcion: 'Un recurso completo para estudiar álgebra y cálculo.',
+      fecha: '2025-05-09'
+    },
+    {
+      titulo: 'Historia Moderna: Segunda Guerra Mundial',
+      descripcion: 'Artículo detallado sobre los eventos claves de la Segunda Guerra Mundial.',
+      fecha: '2025-05-08'
+    },
+    {
+      titulo: 'Guía para Resolver Problemas de Física',
+      descripcion: 'Conjunto de recursos para resolver problemas de dinámica.',
+      fecha: '2025-05-07'
+    }
+  ];
 
-  accionPreguntas(accion: string) {
-    console.log(`Acción seleccionada para Preguntas: ${accion}`);
-    // Lógica específica para cada acción de preguntas
-  }
+  constructor() { }
 
-  accionReportes() {
-    console.log('Acción seleccionada para Reportes');
-    // Lógica para los reportes
+  ngOnInit(): void {
+    // Cualquier lógica adicional de inicialización si es necesario.
   }
+  
 
-  accionPerfil() {
-    console.log('Acción seleccionada para Perfil');
-    // Lógica para el perfil
-  }
+  scrollCarousel(carouselClass: string, direction: 'left' | 'right') {
+    const element = this.examenCarouselRef.nativeElement as HTMLElement;
+    const scrollAmount = 300;
 
-  accionSalir() {
-    console.log('Acción seleccionada para Salir');
-    // Lógica para cerrar sesión o salir
+    if (direction === 'left') {
+      element.scrollLeft -= scrollAmount;
+    } else {
+      element.scrollLeft += scrollAmount;
+    }
   }
 }

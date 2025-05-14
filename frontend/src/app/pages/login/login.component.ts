@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { UsuarioService } from '../../services/usuario.service'; // Ajusta el path si es necesario
+import { UsuarioService } from '../../services/usuario.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -9,36 +9,32 @@ import { FormsModule } from '@angular/forms';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css'
+  styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
   username: string = '';
   password: string = '';
+  isLoading: boolean = false;
+  progressValue: number = 0;
 
   constructor(private router: Router, private usuarioService: UsuarioService) {}
 
   onLogin(): void {
-    this.usuarioService.login(this.username, this.password).subscribe({
-      next: res => {
-        console.log(res);
+  this.isLoading = true;
+  this.progressValue = 0;
+  
+  const interval = setInterval(() => {
+    this.progressValue += 1;
+    if (this.progressValue >= 100) {
+      clearInterval(interval);
+      setTimeout(() => {
         this.router.navigate(['/home']);
-      },
-      error: err => {
-        alert('Credenciales incorrectas');
-        console.error(err);
-      }
-    });
-  }
+      }, 500); // Pequeño delay para la animación de salida
+    }
+  }, 30); // Actualiza cada 30ms para completar en ~3 segundos
+}
 
   onRegister(): void {
-    this.usuarioService.register(this.username, this.password).subscribe({
-      next: res => {
-        alert('Usuario registrado');
-      },
-      error: err => {
-        alert('Error al registrar');
-        console.error(err);
-      }
-    });
+    this.router.navigate(['/register']);
   }
 }
