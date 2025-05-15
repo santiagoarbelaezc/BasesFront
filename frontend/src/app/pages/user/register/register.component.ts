@@ -37,12 +37,24 @@ export class RegisterComponent implements OnInit {
   isSubmitting = false;
   errorRegistro: string | null = null;
   registroExitoso = false;
+  usuarioSeleccionado: UsuarioDTO | null = null;
 
   constructor(
     private router: Router,
     private rolService: RolService,
     private usuarioService: UsuarioService
   ) {}
+
+  seleccionarUsuario(usuario: any): void {
+  this.usuarioSeleccionado = usuario;
+
+  // Setear valores en los inputs
+  this.nombre = usuario.nombre;
+  this.apellido = usuario.apellido;
+  this.correo = usuario.correo;
+  this.password = ''; // Por seguridad, no mostrar contraseña real
+  this.rolSeleccionado = usuario.rol_id;
+}
 
   async ngOnInit() {
     await Promise.all([
@@ -74,6 +86,7 @@ export class RegisterComponent implements OnInit {
 
 
       this.usuariosRegistrados = usuarios.map((u: any[]) => ({
+        id: u[0],
         nombre: u[1],
         apellido: u[2],
         correo: u[3],
@@ -155,51 +168,103 @@ export class RegisterComponent implements OnInit {
     }
   }
 
-  editarUsuario(usuario: UsuarioDTO) {
-    // Lógica para editar usuario
-    console.log('Editar usuario:', usuario);
-    // Puedes implementar:
-    // - Abrir un modal de edición
-    // - Redirigir a una página de edición
-    // - Cargar los datos en el formulario principal
+  editarUsuario(): void {
+  console.log('Iniciando editarUsuario');
+
+  if (!this.usuarioSeleccionado) {
+    console.error('No hay usuario seleccionado');
+    return;
+  }
+  console.log('Usuario seleccionado:', this.usuarioSeleccionado);
+
+  const id = this.usuarioSeleccionado.id; // o el campo que identifique al usuario
+  console.log('ID usuario extraído:', id, 'Tipo:', typeof id);
+  if (typeof id !== 'number') {
+    console.error('ID de usuario inválido');
+    return;
   }
 
-  async eliminarUsuario(usuario: UsuarioDTO) {
-    // Verificación robusta del ID
-    if (typeof usuario.id !== 'number' || usuario.id <= 0) {
-      console.error('ID de usuario inválido');
-      return;
-    }
-
-    if (!confirm(`¿Estás seguro de eliminar a ${usuario.nombre} ${usuario.apellido}?`)) {
-      return;
-    }
-
-    try {
-      this.isLoading = true;
-      this.errorRegistro = null;
-
-      // Llamada correcta al servicio
-      const response = await firstValueFrom(
-        this.usuarioService.eliminarUsuario(usuario.id)
-      );
-
-      console.log('Respuesta del servidor:', response);
-
-      // Recargar lista y mostrar feedback
-      await this.cargarUsuarios();
-      this.registroExitoso = true;
-      setTimeout(() => this.registroExitoso = false, 3000);
-
-    } catch (error: any) {
-      console.error('Error al eliminar usuario:', error);
-      this.errorRegistro = error.error?.message ||
-        error.message ||
-        'Error al eliminar el usuario';
-    } finally {
-      this.isLoading = false;
-    }
+  console.log('Rol seleccionado:', this.rolSeleccionado);
+  if (this.rolSeleccionado === null || this.rolSeleccionado === undefined) {
+    console.error('Debe seleccionar un rol válido');
+    return;
   }
+
+  const data = {
+    nombre: this.nombre,
+    apellido: this.apellido,
+    correo: this.correo,
+    contrasena: this.password,
+    rol_id: this.rolSeleccionado,
+  };
+  console.log('Datos para actualizar:', data);
+
+  this.usuarioService.actualizarUsuario(id, data).subscribe({
+    next: (response) => {
+      console.log('Usuario actualizado con éxito:', response);
+      // Opcional: refrescar la lista o limpiar formulario
+      this.cargarUsuarios();
+    },
+    error: (error) => {
+      console.error('Error al actualizar usuario:', error);
+      if (error.status) {
+        console.error('Status HTTP:', error.status);
+      }
+      if (error.error) {
+        console.error('Mensaje de error del backend:', error.error);
+      }
+    }
+  });
+}
+
+
+
+  async eliminarUsuario() {
+  if (!this.usuarioSeleccionado) {
+    console.error('No hay usuario seleccionado para eliminar');
+    return;
+  }
+
+  const usuario = this.usuarioSeleccionado;
+
+  // Verificación robusta del ID
+  if (typeof usuario.id !== 'number' || usuario.id <= 0) {
+    console.error('ID de usuario inválido');
+    return;
+  }
+
+  if (!confirm(`¿Estás seguro de eliminar a ${usuario.nombre} ${usuario.apellido}?`)) {
+    return;
+  }
+
+  try {
+    this.isLoading = true;
+    this.errorRegistro = null;
+
+    // Llamada al servicio usando el ID del usuario seleccionado
+    const response = await firstValueFrom(
+      this.usuarioService.eliminarUsuario(usuario.id)
+    );
+
+    console.log('Respuesta del servidor:', response);
+
+    // Recargar lista y mostrar feedback
+    await this.cargarUsuarios();
+    this.registroExitoso = true;
+    setTimeout(() => this.registroExitoso = false, 3000);
+
+    // Limpiar selección si quieres
+    this.usuarioSeleccionado = null;
+
+  } catch (error: any) {
+    console.error('Error al eliminar usuario:', error);
+    this.errorRegistro = error.error?.message ||
+      error.message ||
+      'Error al eliminar el usuario';
+  } finally {
+    this.isLoading = false;
+  }
+}
 
 }
 

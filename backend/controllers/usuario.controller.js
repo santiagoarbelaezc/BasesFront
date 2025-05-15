@@ -20,6 +20,7 @@ exports.registrarUsuario = async (req, res) => {
   }
 };
 
+
 exports.loginUsuario = async (req, res) => {
   const { username, password } = req.body;
   let connection;
@@ -40,7 +41,6 @@ exports.loginUsuario = async (req, res) => {
     if (connection) await connection.close();
   }
 };
-
 exports.actualizarUsuario = async (req, res) => {
   const usuario_id = req.params.id;
   const { nombre, apellido, correo, contrasena, rol_id } = req.body;
@@ -54,12 +54,17 @@ exports.actualizarUsuario = async (req, res) => {
     );
     res.json({ mensaje: '✅ Usuario actualizado' });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: '❌ Error al actualizar usuario' });
+    console.error('Error en actualizarUsuario:', err);  // <- Para ver error real en consola backend
+    res.status(500).json({ 
+      error: '❌ Error al actualizar usuario',
+      detalles: err.message,
+      stack: err.stack
+    });
   } finally {
     if (connection) await connection.close();
   }
 };
+
 
 exports.eliminarUsuario = async (req, res) => {
   const usuario_id = req.params.id;

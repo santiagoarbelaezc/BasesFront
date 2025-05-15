@@ -101,6 +101,10 @@
       <button type="submit" class="btn-login" [disabled]="isSubmitting">
         {{ isSubmitting ? 'Creando...' : 'Crear Usuario' }}
       </button>
+
+      <button type="button" class="btn-update" (click)="editarUsuario()" [disabled]="!usuarioSeleccionado">
+        Actualizar Usuario
+      </button>
     </form>
   </div>
 
@@ -129,21 +133,19 @@
         </tr>
         </thead>
         <tbody>
-        <tr *ngFor="let usuario of usuariosRegistrados">
+        <tr *ngFor="let usuario of usuariosRegistrados" (click)="seleccionarUsuario(usuario)">
+        <td>{{ usuario.nombre || 'No especificado' }}</td>
+        <td>{{ usuario.apellido || 'No especificado' }}</td>
+        <td>{{ usuario.correo || 'No especificado' }}</td>
+        <td>{{ obtenerNombreRol(usuario.rol_id) }}</td>
+        <td class="actions-cell">
           
-          <td>{{ usuario.nombre || 'No especificado' }}</td>
-          <td>{{ usuario.apellido || 'No especificado' }}</td>
-          <td>{{ usuario.correo || 'No especificado' }}</td>
-          <td>{{ obtenerNombreRol(usuario.rol_id) }}</td>
-          <td class="actions-cell">
-            <button (click)="editarUsuario(usuario)" class="btn-edit">
-              <i class="fas fa-edit"></i> Editar
-            </button>
-            <button (click)="eliminarUsuario(usuario)" class="btn-delete">
-              <i class="fas fa-trash-alt"></i> Eliminar
-            </button>
-          </td>
-        </tr>
+          <button (click)="eliminarUsuario()" class="btn-delete">
+            <i class="fas fa-trash-alt"></i> Eliminar
+          </button>
+        </td>
+      </tr>
+
         </tbody>
       </table>
     </div>
