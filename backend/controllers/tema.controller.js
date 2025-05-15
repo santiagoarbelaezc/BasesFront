@@ -52,3 +52,22 @@ exports.eliminarTema = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+
+// Obtener todos los temas
+exports.obtenerTemas = async (req, res) => {
+  try {
+    const connection = await oracledb.getConnection(dbConfig);
+    const result = await connection.execute(
+      `SELECT TEMA_ID, NOMBRE, CONTENIDO_ID FROM TEMA`  // o llamada a tu procedimiento/funcion
+    );
+    await connection.close();
+    res.status(200).json(result.rows.map(row => ({
+      TEMA_ID: row[0],
+      NOMBRE: row[1],
+      CONTENIDO_ID: row[2]
+    })));
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};

@@ -105,3 +105,22 @@ exports.eliminarExamen = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+// Obtener todos los examenes
+exports.obtenerExamenes = async (req, res) => {
+  try {
+    const connection = await oracledb.getConnection(dbConfig);
+
+    const result = await connection.execute(
+      `SELECT * FROM EXAMEN`, // Ajusta la tabla o consulta según tu BD
+      [],
+      { outFormat: oracledb.OUT_FORMAT_OBJECT }
+    );
+
+    await connection.close();
+
+    res.status(200).json(result.rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};

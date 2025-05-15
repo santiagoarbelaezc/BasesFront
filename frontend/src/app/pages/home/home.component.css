@@ -1,75 +1,80 @@
-/* --- ESTRUCTURA BÁSICA GENERAL (sin cambios mayores) --- */
+/* General */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", sans-serif;
+  color: #111;
 }
 
 body, html {
-  height: 100%;
-  background-color: #1c1c1c;
-  color: #ffffff;
-  font-size: 0.8rem;
-  line-height: 1.6;
-  animation: fadeIn 1s ease-out forwards;
+  background-color: #fefefe;
+  min-height: 100vh;
 }
 
-/* --- HOME --- */
+/* Home Content */
 .home-content {
-  padding: 40px;
+  padding: 40px 20px;
   max-width: 1200px;
   margin: 0 auto;
+  text-align: center;
 }
 
 .home-content h2 {
   font-size: 2rem;
-  font-weight: 700;
-  color: #e4e4e4;
-  text-align: center;
-  margin-bottom: 30px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
+  font-weight: 600;
+  margin-bottom: 40px;
+  color: #333;
 }
 
-.home-content p {
-  font-size: 1rem;
-  color: #bbbbbb;
-  text-align: center;
-  margin-bottom: 50px;
-  max-width: 900px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-/* --- CARRUSEL --- */
+/* Carrusel */
 .carousel-container {
-  background: #111;
-  padding: 30px;
-  border-radius: 15px;
-  margin-bottom: 50px;
-  position: relative;
+  margin-bottom: 60px;
+  text-align: left;
 }
 
 .carousel-container h3 {
-  font-size: 1.6rem;
-  font-weight: 700;
-  color: #e4e4e4;
-  margin-bottom: 20px;
-  text-align: center;
-  letter-spacing: 1px;
+  font-size: 1.4rem;
+  margin-bottom: 15px;
+  color: #222;
 }
 
-/* Envuelve carrusel y navegación */
 .carousel-wrapper {
   position: relative;
+  overflow: hidden;
+}
+
+.carousel-navigation {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  z-index: 1;
+}
+
+.carousel-nav {
+  background-color: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  border: none;
+  font-size: 1.5rem;
+  padding: 8px 14px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.carousel-nav:hover {
+  background-color: #e74c3c;
 }
 
 .carousel {
   display: flex;
   overflow-x: auto;
   scroll-behavior: smooth;
-  scrollbar-width: none;
+  gap: 20px;
+  padding: 10px 0;
 }
 
 .carousel::-webkit-scrollbar {
@@ -77,242 +82,119 @@ body, html {
 }
 
 .carousel-item {
-  background: #222;
-  padding: 35px 25px;
-  border-radius: 20px;
-  text-align: center;
-  flex-shrink: 0;
-  width: 280px;
-  height: 280px;
-  margin-right: 30px;
-  color: #fff;
-  
-  box-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
-  cursor: pointer; /* ← cursor tipo botón */
+  background-color: #fafafa;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 20px;
+  min-width: 250px;
+  flex: 0 0 auto;
+  transition: transform 0.2s ease;
 }
 
 .carousel-item:hover {
-  background-color: #fff;
-  color: #000;
-  
-  box-shadow: 0 0 18px rgba(255, 255, 255, 0.2);
+  transform: translateY(-5px);
 }
-
-.carousel-item:hover h4 {
-  color: #111;
-}
-
-.carousel-item:hover p,
-.carousel-item:hover .fecha {
-  color: #333;
-}
-
-
 
 .carousel-item h4 {
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: #e4e4e4;
+  font-size: 1.1rem;
   margin-bottom: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  color: #222;
 }
 
 .carousel-item p {
   font-size: 0.9rem;
-  color: #ffffff;
-  margin-bottom: 10px;
+  color: #555;
+  margin-bottom: 8px;
 }
 
-.carousel-item .fecha,
-.carousel-item .calificacion,
-.carousel-item .dificultad {
+.fecha {
   font-size: 0.8rem;
-  color: #aaa;
+  color: #888;
 }
 
-/* --- NAVEGACIÓN --- */
-.carousel-navigation {
-  position: absolute;
-  top: 50%;
-  left: -100px;
-  right: -100px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 10px;
-  transform: translateY(-50%);
-  pointer-events: none; /* permite clic solo en botones */
-}
-
-.carousel-nav {
-  background: rgba(51, 51, 51, 0.8);
-  border: none;
-  color: #fff;
-  font-size: 2rem;
-  padding: 10px 15px;
-  cursor: pointer;
-  border-radius: 50%;
-  z-index: 5;
-  transition: background 0.3s ease;
-  pointer-events: all; /* los botones sí deben poder recibir clic */
-}
-
-.carousel-nav:hover {
-  background: rgba(85, 85, 85, 0.9);
-}
-
-
+/* Boxes */
 .contenedor-general {
-  display: flex;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  gap: 40px;                     /* más separación entre cajas */
-  padding: 20px;
-  margin-bottom: 50px;
-  justify-content: center;       /* centra horizontalmente */
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 25px;
+  padding: 10px 0;
 }
 
 .contenedor-box {
-  flex: 0 0 220px;
-  height: 320px;
-  background: #222;
-  color: #fff;
-  padding: 30px 20px;
-  border-radius: 15px;
-  text-align: center;
-  transition:
-    transform 0.3s ease,
-    background-color 0.3s ease,
-    color 0.3s ease;
-  transform: scale(1);
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  padding: 25px 20px;
+  transition: transform 0.2s ease;
+  cursor: pointer;
 }
 
 .contenedor-box:hover {
-  transform: scale(1.05);
-  background: #fff;
-  color: #000;
+  transform: translateY(-4px);
 }
 
-.contenedor-box:hover h3 {
-  color: #111;
+.contenedor-box h3 {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  color: #222;
 }
 
-.contenedor-box:hover p {
-  color: #333;
+.contenedor-box p {
+  font-size: 0.9rem;
+  color: #555;
 }
 
-
-
-/* --- BOTONES DE ACCIÓN GENERALES (NO interfieren con carrusel-nav) --- */
-button:not(.carousel-nav) {
-  background: #444;
-  border: none;
-  color: #fff;
-  padding: 15px 30px;
-  font-size: 1rem;
-  cursor: pointer;
-  border-radius: 8px;
-  transition: background 0.3s ease, transform 0.3s ease;
-  margin-top: 15px;
-}
-
-button:not(.carousel-nav):hover {
-  background: #666;
-  transform: translateY(-2px);
-}
-
-/* --- ANIMACIONES --- */
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes fadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-/* === FOOTER ESTILO CIBERPUNK === */
+/* Footer */
 .footer {
-  background: #0a0a0f;
-  color: #b6b6c9;
-  padding: 50px 20px 30px;
-  margin-top: 80px;
-  font-size: 0.95rem;
-  border-top: 2px solid rgba(255, 19, 19, 0.2);
-  box-shadow: 0 -2px 15px rgba(0, 255, 255, 0.05);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #111;
+  color: #fff;
+  padding: 40px 20px 20px;
+  margin-top: 60px;
 }
 
 .footer-content {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
   gap: 40px;
-  max-width: 1300px;
-  margin-left: 30px;
-  margin-right: 50px;
-  justify-items: center; /* Centra cada sección horizontalmente */
-  text-align: center; /* Centra el texto dentro de cada sección */
+  max-width: 1200px;
+  margin: auto;
 }
-
 
 .footer-section h4 {
   font-size: 1rem;
-  color: #ff3333;
-  margin-bottom: 20px;
-  letter-spacing: 1px;
-  border-left: 4px solid #ff1616;
-  padding-left: 10px;
-  text-transform: uppercase;
+  margin-bottom: 15px;
+  color: #fff;
 }
 
-.footer-section p,
-.footer-section ul,
-.footer-section a {
-  color: #e4e4e4;
-  line-height: 1.7;
+.footer-section p, .footer-section a, .footer-section li {
+  font-size: 0.9rem;
+  color: #ccc;
+  margin-bottom: 6px;
   text-decoration: none;
-  transition: color 0.3s ease;
+  list-style: none;
 }
 
 .footer-section a:hover {
-  color: #ff0808;
-  text-shadow: 0 0 5px #dd0000;
-}
-
-.footer-section ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+  color: #e74c3c;
 }
 
 .footer-bottom {
+  border-top: 1px solid #333;
+  margin-top: 30px;
+  padding-top: 15px;
   text-align: center;
-  padding-top: 25px;
-  border-top: 1px solid rgba(0, 255, 255, 0.1);
   font-size: 0.85rem;
-  color: #dddddd;
-  margin-top: 40px;
+  color: #999;
 }
 
-/* Para un efecto glow sutil en secciones */
-.footer-section {
-  position: relative;
-}
-
-.footer-section::before {
-  content: "";
-  position: absolute;
-  top: -10px;
-  left: 0;
-  width: 100%;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, #df0101, transparent);
-  opacity: 0.1;
+/* Responsive */
+@media (max-width: 768px) {
+  .carousel-item {
+    min-width: 200px;
+  }
+  .footer-content {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }

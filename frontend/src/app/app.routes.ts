@@ -12,6 +12,11 @@ import { QuestionPreviewComponent } from './pages/question/question-preview/ques
 import { ReportsComponent } from './pages/reports/reports.component';
 import { ProfileComponent } from './pages/user/profile/profile.component';
 import {RolComponent} from './pages/user/rol/rol.component';
+import { ExamCreateComponent } from './pages/exam/exam-create/exam-create.component';
+import { CategoriaComponent } from './pages/subjects/categoria/categoria.component';
+import { UnidadComponent } from './pages/subjects/unidad/unidad.component';
+import { ContenidoComponent } from './pages/subjects/contenido/contenido.component';
+import { TemaComponent } from './pages/subjects/tema/tema.component';
 
 export const routes: Routes = [
 
@@ -29,6 +34,11 @@ export const routes: Routes = [
     { path: 'reports', component: ReportsComponent },
     { path: 'profile', component: ProfileComponent },
     { path: 'rol', component: RolComponent },
+    { path: 'exam-create', component: ExamCreateComponent },
+    { path: 'categoria', component: CategoriaComponent },
+    { path: 'unidad', component: UnidadComponent },
+    { path: 'contenido', component: ContenidoComponent },
+    { path: 'tema', component: TemaComponent },
 
     {path: '**', redirectTo: 'login'}
 ];
