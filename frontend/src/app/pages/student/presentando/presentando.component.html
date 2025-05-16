@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gestión de Exámenes - School Bases</title>
+  <link rel="stylesheet" href="presentando.component.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body>
+
+  <app-navbar></app-navbar>
+
+  <main class="gestion-examenes-wrapper">
+
+    <!-- Información del examen seleccionado -->
+    <section *ngIf="examenSeleccionado" class="examen-info-container">
+      <h1 class="titulo-seccion">{{ examenSeleccionado.nombre }}</h1>
+      <p><strong>Tiempo:</strong> {{ examenSeleccionado.tiempo }} minutos</p>
+      <p><strong>Preguntas:</strong> {{ examenSeleccionado.cantidad_preguntas }}</p>
+    </section>
+
+    <!-- Pregunta actual -->
+    <section *ngIf="preguntaActual" class="pregunta-container">
+      <div class="pregunta-box">
+        <h2>Pregunta {{ indicePreguntaActual + 1 }}:</h2>
+        <p class="texto-pregunta">{{ preguntaActual.texto }}</p>
+
+        <form>
+          <div class="respuestas">
+            <div *ngFor="let respuesta of respuestasActuales" class="respuesta-item">
+              <input
+                type="radio"
+                [id]="'respuesta_' + respuesta.id"
+                [name]="'pregunta_' + preguntaActual.id"
+                [value]="respuesta.id"
+                [(ngModel)]="respuestaSeleccionada"
+                class="radio-button"
+              />
+              <label [for]="'respuesta_' + respuesta.id">{{ respuesta.texto }}</label>
+            </div>
+          </div>
+        </form>
+
+        <!-- Botón para pasar a la siguiente pregunta -->
+        <div class="botones-navegacion">
+          <button class="btn-next" (click)="siguientePregunta()">Siguiente</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Botón para terminar el examen -->
+    <section *ngIf="esUltimaPregunta" class="terminar-container">
+      <button class="btn-finalizar" (click)="terminarExamen()">Terminar examen</button>
+    </section>
+
+    
+
+    <!-- Tabla con exámenes existentes -->
+    <section class="lista-examenes-container" *ngIf="listaExamenes.length > 0">
+      <h2 class="titulo-seccion-secundario">Lista de Exámenes</h2>
+
+      <div *ngIf="cargandoExamenes" class="loading-message">
+        <i class="fas fa-spinner fa-spin"></i> Cargando exámenes...
+      </div>
+
+      <div *ngIf="errorCargaExamenes" class="error-message">
+        <i class="fas fa-exclamation-triangle"></i> Error al cargar exámenes
+      </div>
+
+      <div class="tabla-responsive">
+        <table class="tabla-examenes">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Examen</th>
+              <th>Nombre</th>
+              <th>Preguntas</th>
+              <th>Fecha</th>
+              <th>Tiempo</th>
+              <th>Peso</th>
+              <th>Umbral</th>
+              <th>Asignación</th>
+              <th>Tema</th>
+              <th>Categoría</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let examen of listaExamenes" (click)="seleccionarExamen(examen)">
+              <td>{{ examen.id }}</td>
+              <td>{{ examen.examen }}</td>
+              <td>{{ examen.nombre }}</td>
+              <td>{{ examen.cantidad_preguntas }}</td>
+              <td>{{ examen.fecha }}</td>
+              <td>{{ examen.tiempo }}</td>
+              <td>{{ examen.pesoCurso }}</td>
+              <td>{{ examen.umbralDeAprobacion }}</td>
+              <td>{{ examen.asignacion }}</td>
+              <td>{{ examen.tema_id }}</td>
+              <td>{{ examen.categoria_id }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+</body>
+</html>

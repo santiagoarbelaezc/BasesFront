@@ -124,3 +124,28 @@ exports.obtenerExamenes = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+// Obtener examen por id
+exports.obtenerExamenPorId = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const connection = await oracledb.getConnection(dbConfig);
+
+    const result = await connection.execute(
+      `SELECT * FROM EXAMEN WHERE id = :id`,
+      { id: parseInt(id) },
+      { outFormat: oracledb.OUT_FORMAT_OBJECT }
+    );
+
+    await connection.close();
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ mensaje: 'Examen no encontrado' });
+    }
+
+    res.status(200).json(result.rows[0]);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};

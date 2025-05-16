@@ -7,5 +7,7 @@ router.put('/:id', examenController.actualizarExamen);
 router.delete('/:id', examenController.eliminarExamen);
 router.get('/', examenController.obtenerExamenes);
 
+// Nuevo endpoint para obtener examen por id
+router.get('/:id', examenController.obtenerExamenPorId);
 
 module.exports = router;

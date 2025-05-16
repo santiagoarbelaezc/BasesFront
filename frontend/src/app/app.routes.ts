@@ -17,6 +17,9 @@ import { CategoriaComponent } from './pages/subjects/categoria/categoria.compone
 import { UnidadComponent } from './pages/subjects/unidad/unidad.component';
 import { ContenidoComponent } from './pages/subjects/contenido/contenido.component';
 import { TemaComponent } from './pages/subjects/tema/tema.component';
+import { PresentarComponent } from './pages/student/presentar/presentar.component';
+import { CalificacionesComponent } from './pages/student/calificaciones/calificaciones.component';
+import { PresentandoComponent } from './pages/student/presentando/presentando.component';
 
 export const routes: Routes = [
 
@@ -39,6 +42,11 @@ export const routes: Routes = [
     { path: 'unidad', component: UnidadComponent },
     { path: 'contenido', component: ContenidoComponent },
     { path: 'tema', component: TemaComponent },
+    { path: 'presentar', component: PresentarComponent },
+    { path: 'calificaciones', component: CalificacionesComponent },
+     { path: 'presentando', component: PresentandoComponent },
+
+
 
     {path: '**', redirectTo: 'login'}
 ];

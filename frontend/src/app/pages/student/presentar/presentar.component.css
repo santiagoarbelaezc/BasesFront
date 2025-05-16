@@ -1,0 +1,247 @@
+/* General */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", sans-serif;
+  color: #111;
+}
+
+/* Fondo */
+body, html {
+  min-height: 100vh;
+  background-color: #ffffff;
+}
+
+/* Contenedor Principal */
+.gestion-examenes-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+  padding: 20px;
+  width: 100%;
+  min-height: 100vh;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+/* Contenedor del formulario */
+.formulario-examen-container {
+  flex: 0 0 40%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+/* Caja del formulario */
+.formulario-examen-box {
+  background: #f9f9f9;
+  padding: 30px 25px;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  width: 100%;
+  transition: transform 0.2s ease;
+  text-align: center;
+}
+
+.formulario-examen-box:hover {
+  transform: translateY(-3px);
+}
+
+/* Títulos */
+.titulo-seccion {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #222;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.titulo-seccion-secundario {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #222;
+  margin-bottom: 20px;
+}
+
+/* Inputs */
+.input-group {
+  margin-bottom: 20px;
+  position: relative;
+}
+
+input, select {
+  width: 100%;
+  padding: 12px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #fff;
+  font-size: 14px;
+  color: #111;
+  outline: none;
+}
+
+input:focus, select:focus {
+  border-color: #e74c3c;
+}
+
+label {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 13px;
+  color: #666;
+  pointer-events: none;
+  transition: all 0.2s ease;
+  background-color: white;
+  padding: 0 4px;
+}
+
+input:focus + label,
+input:valid + label,
+select:focus + label,
+select:valid + label {
+  top: -9px;
+  left: 8px;
+  font-size: 11px;
+  color: #e74c3c;
+}
+
+/* Botones */
+.btn-primary {
+  background: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+  background: #c0392b;
+}
+
+.btn-secondary {
+  background: #111;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-left: 10px;
+}
+
+.btn-secondary:hover {
+  background: #333;
+}
+
+/* Mensajes */
+.error-message, .error {
+  background: #f8d7da;
+  color: #721c24;
+  padding: 10px 15px;
+  border-left: 4px solid #dc3545;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.success-message {
+  background: #d4edda;
+  color: #155724;
+  padding: 10px 15px;
+  border-left: 4px solid #28a745;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+/* Contenedor tabla */
+.lista-examenes-container {
+  flex: 0 0 55%;
+  max-width: 700px;
+  background: #fdfdfd;
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  overflow-x: auto;
+}
+
+/* Tabla */
+.tabla-responsive {
+  overflow-x: auto;
+}
+
+.tabla-examenes {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+thead {
+  background-color: #f1f1f1;
+}
+
+th, td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+tbody tr:hover {
+  background-color: #fafafa;
+}
+
+th {
+  font-weight: bold;
+  color: #222;
+}
+
+/* Botón Eliminar */
+.btn-delete {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 12px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-delete:hover {
+  background-color: #c0392b;
+}
+
+/* Celdas de acciones */
+.acciones-celda {
+  text-align: center;
+}
+
+/* Loading y errores */
+.loading-message {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+.error-message i {
+  margin-right: 6px;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .gestion-examenes-wrapper {
+    flex-direction: column;
+    gap: 25px;
+    padding: 15px;
+  }
+  .formulario-examen-container, .lista-examenes-container {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}

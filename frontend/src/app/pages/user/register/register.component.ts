@@ -109,64 +109,66 @@ export class RegisterComponent implements OnInit {
   }
 
   async onRegister(form: NgForm) {
-    console.log('Intento de registro', form.valid, form.value);
+  console.log('Intento de registro', form.valid, form.value);
 
-    if (form.invalid || this.isSubmitting) return;
+  if (this.isSubmitting) return;
 
-    if (this.password !== this.confirmPassword) {
-      this.errorRegistro = 'Las contraseñas no coinciden';
-      return;
-    }
-
-    if (!this.rolSeleccionado) {
-      this.errorRegistro = 'Debe seleccionar un rol';
-      return;
-    }
-
-    this.isSubmitting = true;
-    this.isLoading = true;
-    this.progressValue = 0;
-    this.errorRegistro = null;
-    this.registroExitoso = false;
-
-    const usuarioData: CrearUsuarioDTO = {
-      nombre: this.nombre.trim(),
-      apellido: this.apellido.trim(),
-      correo: this.correo.trim(),
-      contrasena: this.password,
-      rol_id: this.rolSeleccionado
-    };
-
-    try {
-      const progressInterval = setInterval(() => {
-        this.progressValue = Math.min(this.progressValue + 10, 90);
-        if (this.progressValue >= 90) clearInterval(progressInterval);
-      }, 300);
-
-      await firstValueFrom(this.usuarioService.register(usuarioData));
-
-      clearInterval(progressInterval);
-      this.progressValue = 100;
-      this.registroExitoso = true;
-
-      // Recargar la lista de usuarios después de registrar uno nuevo
-      await this.cargarUsuarios();
-
-      setTimeout(() => {
-        form.resetForm();
-        this.rolSeleccionado = null;
-        this.registroExitoso = false;
-      }, 2000);
-
-    } catch (error: any) {
-      console.error('Error en registro:', error);
-      this.progressValue = 0;
-      this.errorRegistro = error?.error?.message || error?.message || 'Error desconocido al registrar usuario';
-    } finally {
-      this.isSubmitting = false;
-      this.isLoading = false;
-    }
+  // Validar campos vacíos básicos
+  if (!this.nombre?.trim() || !this.apellido?.trim() || !this.correo?.trim() || !this.password || !this.confirmPassword || !this.rolSeleccionado) {
+    this.errorRegistro = 'Todos los campos son obligatorios.';
+    return;
   }
+
+  // Validar coincidencia de contraseñas
+  if (this.password !== this.confirmPassword) {
+    this.errorRegistro = 'Las contraseñas no coinciden';
+    return;
+  }
+
+  this.isSubmitting = true;
+  this.isLoading = true;
+  this.progressValue = 0;
+  this.errorRegistro = null;
+  this.registroExitoso = false;
+
+  const usuarioData: CrearUsuarioDTO = {
+    nombre: this.nombre.trim(),
+    apellido: this.apellido.trim(),
+    correo: this.correo.trim(),
+    contrasena: this.password,
+    rol_id: this.rolSeleccionado
+  };
+
+  try {
+    const progressInterval = setInterval(() => {
+      this.progressValue = Math.min(this.progressValue + 10, 90);
+      if (this.progressValue >= 90) clearInterval(progressInterval);
+    }, 300);
+
+    await firstValueFrom(this.usuarioService.register(usuarioData));
+
+    clearInterval(progressInterval);
+    this.progressValue = 100;
+    this.registroExitoso = true;
+
+    await this.cargarUsuarios();
+
+    setTimeout(() => {
+      form.resetForm();
+      this.rolSeleccionado = null;
+      this.registroExitoso = false;
+    }, 2000);
+
+  } catch (error: any) {
+    console.error('Error en registro:', error);
+    this.progressValue = 0;
+    this.errorRegistro = error?.error?.message || error?.message || 'Error desconocido al registrar usuario';
+  } finally {
+    this.isSubmitting = false;
+    this.isLoading = false;
+  }
+}
+
 
   editarUsuario(): void {
   console.log('Iniciando editarUsuario');

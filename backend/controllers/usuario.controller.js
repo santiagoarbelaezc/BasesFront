@@ -41,6 +41,8 @@ exports.loginUsuario = async (req, res) => {
     if (connection) await connection.close();
   }
 };
+
+
 exports.actualizarUsuario = async (req, res) => {
   const usuario_id = req.params.id;
   const { nombre, apellido, correo, contrasena, rol_id } = req.body;

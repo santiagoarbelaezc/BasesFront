@@ -47,8 +47,22 @@ export class ExamService {
   );
 }
 
-  // Opcional: obtener examen por id
   obtenerExamenPorId(id: number): Observable<ExamenDTO> {
-    return this.http.get<ExamenDTO>(`${this.baseUrl}/${id}`);
-  }
+  return this.http.get<any>(`${this.baseUrl}/${id}`).pipe(
+    map(item => ({
+      id: item.EXAMEN_ID,
+      examen: item.EXAMEN,
+      nombre: item.NOMBRE,
+      cantidad_preguntas: item.CANTIDAD_PREGUNTAS,
+      fecha: item.FECHA,
+      tiempo: item.TIEMPO,
+      pesoCurso: item.PESOCURSO,
+      umbralDeAprobacion: item.UMBRALDEAPROBACION,
+      asignacion: item.ASIGNACION,
+      tema_id: item.TEMA_ID,
+      categoria_id: item.CATEGORIA_ID
+    }))
+  );
+}
+
 }
