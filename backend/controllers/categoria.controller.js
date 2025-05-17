@@ -46,3 +46,20 @@ exports.eliminarCategoria = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+
+
+exports.obtenerCategorias = async (req, res) => {
+  try {
+    const connection = await oracledb.getConnection(dbConfig);
+    const result = await connection.execute(`SELECT * FROM CATEGORIA`, [], {
+      outFormat: oracledb.OUT_FORMAT_OBJECT,
+    });
+    await connection.close();
+    res.status(200).json(result.rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+

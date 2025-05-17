@@ -1,0 +1,24 @@
+<header class="header">
+  <a href="/home" class="logo-container">
+  <img src="assets/BasesIcon.png" alt="Logo School Bases" class="logo">
+  <h1>Presentación del Examen</h1>
+</a>
+
+
+  <nav class="nav-buttons">
+
+    <div class="nav-item">
+      <button class="btn-nav" (click)="accionSalir()">Salir del Examen</button>
+    </div>
+
+  </nav>
+</header>
+
+<body>
+<div class="loading-indicator" *ngIf="isLoading" [style.--progress-width]="progressValue + '%'">
+  <div class="loading-container">
+    <div class="loading-message">Registrando</div>
+  </div>
+</div>
+</body>
+

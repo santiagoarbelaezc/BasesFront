@@ -1,34 +1,69 @@
-<app-navbar></app-navbar>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gestión de Roles</title>
+  <link rel="stylesheet" href="rol.component.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body>
 
-<div class="container">
-  <h1>Gestión de Roles</h1>
+  <app-navbar></app-navbar>
 
-  <div class="form-group">
-    <label for="roleName">Nombre del Rol:</label>
-    <input type="text" id="roleName" [(ngModel)]="nombreRol" placeholder="Ingrese el nombre del rol">
-  </div>
+  <div class="gestion-examenes-wrapper">
 
-  <div class="button-group">
-    <button (click)="crearRol()" [disabled]="!nombreRol">Crear Rol</button>
-    <button (click)="actualizarRol()" [disabled]="!rolSeleccionado || !nombreRol">Actualizar Rol</button>
-    <button (click)="eliminarRol()" [disabled]="!rolSeleccionado">Eliminar Rol</button>
-  </div>
+    <!-- Contenedor del formulario -->
+    <div class="formulario-examen-container">
+      <div class="formulario-examen-box">
+        <h1 class="titulo-seccion">Gestión de Roles</h1>
 
-  <div id="rolesList">
-    <h2>Lista de Roles</h2>
-    <div *ngIf="cargando" class="loading">Cargando roles...</div>
-    <div *ngIf="error" class="error">{{ error }}</div>
+        <div class="input-group">
+          <input type="text" id="roleName" [(ngModel)]="nombreRol" required />
+          <label for="roleName">Nombre del Rol:</label>
+        </div>
 
-    <ul *ngIf="roles.length > 0">
-      <li *ngFor="let rol of roles"
-          [class.selected]="rol.ROL_ID === rolSeleccionado?.ROL_ID"
-          (click)="seleccionarRol(rol)">
-        {{ rol.NOMBRE }} (ID: {{ rol.ROL_ID }})
-      </li>
-    </ul>
-    <div *ngIf="roles.length === 0 && !cargando && !error">
-      No hay roles disponibles.
+        <div class="button-group" style="display: flex; gap: 10px;">
+          <button class="btn-primary" (click)="crearRol()" [disabled]="!nombreRol">Crear Rol</button>
+          <button class="btn-secondary" (click)="actualizarRol()" [disabled]="!rolSeleccionado || !nombreRol">Actualizar Rol</button>
+          <button class="btn-delete" (click)="eliminarRol()" [disabled]="!rolSeleccionado">Eliminar Rol</button>
+        </div>
+      </div>
     </div>
+
+    <!-- Contenedor de lista -->
+    <div class="lista-examenes-container">
+      <h2 class="titulo-seccion-secundario">Lista de Roles</h2>
+
+      <div *ngIf="cargando" class="loading-message">Cargando roles...</div>
+      <div *ngIf="error" class="error-message">{{ error }}</div>
+
+      <div class="tabla-responsive" *ngIf="roles.length > 0">
+        <table class="tabla-examenes">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>ID</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let rol of roles"
+                [class.selected]="rol.ROL_ID === rolSeleccionado?.ROL_ID"
+                (click)="seleccionarRol(rol)"
+                style="cursor: pointer;">
+              <td>{{ rol.NOMBRE }}</td>
+              <td>{{ rol.ROL_ID }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div *ngIf="roles.length === 0 && !cargando && !error" style="margin-top: 10px;">
+        No hay roles disponibles.
+      </div>
+    </div>
+
   </div>
 
-</div>
+</body>
+</html>

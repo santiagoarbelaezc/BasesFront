@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gestión de Exámenes - School Bases</title>
+  <link rel="stylesheet" href="exam-create.component.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body>
+
+  <app-navbar></app-navbar>
+
+  <main class="gestion-examenes-wrapper">
+
+    <!-- Formulario para crear o editar exámenes -->
+    <section class="formulario-examen-container">
+      <div class="formulario-examen-box">
+        <h1 class="titulo-seccion">Gestión de Exámenes</h1>
+
+        <form (ngSubmit)="guardarExamen(formExamen)" #formExamen="ngForm" novalidate>
+
+          <div class="input-group">
+            <input type="number" id="id" [(ngModel)]="id" placeholder=" " disabled readonly />
+            <label for="id">ID del Examen</label>
+            </div>
+
+          <div class="input-group">
+            <input type="text" id="examen" name="examen" required [(ngModel)]="examen" placeholder=" " />
+            <label for="examen">Examen (examen)</label>
+            </div>
+
+          <div class="input-group">
+            <input type="text" id="nombre" name="nombre" required [(ngModel)]="nombre" placeholder=" " />
+            <label for="nombre">Nombre (nombre)</label>
+          </div>
+
+          <div class="input-group">
+            <input type="number" id="cantidad_preguntas" name="cantidad_preguntas" required [(ngModel)]="cantidad_preguntas" placeholder=" " />
+            <label for="cantidad_preguntas">Cantidad de Preguntas</label>
+          </div>
+
+          <div class="input-group">
+            <input type="date" id="fecha" name="fecha" required [(ngModel)]="fecha" />
+            <label for="fecha">Fecha del Examen</label>
+          </div>
+
+          <div class="input-group">
+            <input type="number" id="tiempo" name="tiempo" required [(ngModel)]="tiempo" placeholder=" " />
+            <label for="tiempo">Tiempo Asignado (minutos)</label>
+          </div>
+
+          <div class="input-group">
+            <input type="number" id="pesoCurso" name="pesoCurso" required [(ngModel)]="pesoCurso" placeholder=" " />
+            <label for="pesoCurso">Peso en el Curso (%)</label>
+          </div>
+
+          <div class="input-group">
+            <input type="number" id="umbralDeAprobacion" name="umbralDeAprobacion" required [(ngModel)]="umbralDeAprobacion" placeholder=" " />
+            <label for="umbralDeAprobacion">Umbral de Aprobación (%)</label>
+          </div>
+
+          <div class="input-group">
+            <input type="text" id="asignacion" name="asignacion" required [(ngModel)]="asignacion" placeholder=" " />
+            <label for="asignacion">Asignación</label>
+          </div>
+
+          <!-- Select para temas -->
+<div class="input-group">
+  <select id="tema_id" name="tema_id" required [(ngModel)]="tema_id">
+    <option value="" disabled selected>Selecciona un tema</option>
+    <option *ngFor="let tema of temas" [value]="tema.tema_id">
+      {{ tema.nombre }}
+    </option>
+  </select>
+  <label for="tema_id">Tema</label>
+</div>
+
+        <!-- Select para categorías -->
+        <div class="input-group">
+        <select id="categoria_id" name="categoria_id" required [(ngModel)]="categoria_id">
+            <option value="" disabled selected>Selecciona una categoría</option>
+            <option *ngFor="let categoria of listaCategorias" [value]="categoria.categoria_id">
+            {{ categoria.nombre }}
+            </option>
+        </select>
+        <label for="categoria_id">Categoría</label>
+        </div>
+
+          <div *ngIf="mensajeError" class="error-message">
+            {{ mensajeError }}
+          </div>
+          <div *ngIf="mensajeExito" class="success-message">
+            ¡Examen guardado exitosamente!
+          </div>
+
+          <div class="botonera-formulario">
+            <button type="submit" class="btn-primary" [disabled]="isSubmitting">
+              {{ isSubmitting ? 'Guardando...' : 'Guardar Examen' }}
+            </button>
+            <button type="button" class="btn-secondary" (click)="editarExamen()" [disabled]="!examenSeleccionado">
+              Actualizar Examen
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- Tabla con exámenes existentes -->
+    <section class="lista-examenes-container" *ngIf="listaExamenes.length > 0">
+      <h2 class="titulo-seccion-secundario">Lista de Exámenes</h2>
+
+      <div *ngIf="cargandoExamenes" class="loading-message">
+        <i class="fas fa-spinner fa-spin"></i> Cargando exámenes...
+      </div>
+
+      <div *ngIf="errorCargaExamenes" class="error-message">
+        <i class="fas fa-exclamation-triangle"></i> Error al cargar exámenes
+      </div>
+
+      <div class="tabla-responsive">
+        <table class="tabla-examenes">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Examen</th>
+              <th>Nombre</th>
+              <th>Preguntas</th>
+              <th>Fecha</th>
+              <th>Tiempo</th>
+              <th>Peso</th>
+              <th>Umbral</th>
+              <th>Asignación</th>
+              <th>Tema</th>
+              <th>Categoría</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let examen of listaExamenes" (click)="seleccionarExamen(examen)">
+              <td>{{ examen.id }}</td>
+              <td>{{ examen.examen }}</td>
+              <td>{{ examen.nombre }}</td>
+              <td>{{ examen.cantidad_preguntas }}</td>
+              <td>{{ examen.fecha }}</td>
+              <td>{{ examen.tiempo }}</td>
+              <td>{{ examen.pesoCurso }}</td>
+              <td>{{ examen.umbralDeAprobacion }}</td>
+              <td>{{ examen.asignacion }}</td>
+              <td>{{ examen.tema_id }}</td>
+              <td>{{ examen.categoria_id }}</td>
+              <td class="acciones-celda" (click)="$event.stopPropagation()">
+                <button (click)="eliminarExamen()" class="btn-delete" title="Eliminar Examen">
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+</body>
+</html>
