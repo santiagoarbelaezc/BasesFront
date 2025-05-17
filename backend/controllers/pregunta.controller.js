@@ -5,8 +5,13 @@ const dbConfig = require('../db-config');
 exports.insertarPregunta = async (req, res) => {
   const { texto, examen_id } = req.body;
 
+  if (!texto || isNaN(examen_id)) {
+    return res.status(400).json({ error: 'Texto o examen_id inválido.' });
+  }
+
+  let connection;
   try {
-    const connection = await oracledb.getConnection(dbConfig);
+    connection = await oracledb.getConnection(dbConfig);
     await connection.execute(
       `BEGIN INSERTAR_PREGUNTA(:texto, :examen_id); END;`,
       {
@@ -15,10 +20,11 @@ exports.insertarPregunta = async (req, res) => {
       }
     );
     await connection.commit();
-    await connection.close();
     res.status(201).json({ mensaje: 'Pregunta insertada correctamente' });
   } catch (err) {
     res.status(500).json({ error: err.message });
+  } finally {
+    if (connection) await connection.close();
   }
 };
 
@@ -27,8 +33,13 @@ exports.actualizarPregunta = async (req, res) => {
   const { id } = req.params;
   const { texto, examen_id } = req.body;
 
+  if (!texto || isNaN(id) || isNaN(examen_id)) {
+    return res.status(400).json({ error: 'Datos inválidos para la actualización.' });
+  }
+
+  let connection;
   try {
-    const connection = await oracledb.getConnection(dbConfig);
+    connection = await oracledb.getConnection(dbConfig);
     await connection.execute(
       `BEGIN ACTUALIZAR_PREGUNTA(:id, :texto, :examen_id); END;`,
       {
@@ -38,10 +49,11 @@ exports.actualizarPregunta = async (req, res) => {
       }
     );
     await connection.commit();
-    await connection.close();
     res.status(200).json({ mensaje: 'Pregunta actualizada correctamente' });
   } catch (err) {
     res.status(500).json({ error: err.message });
+  } finally {
+    if (connection) await connection.close();
   }
 };
 
@@ -49,53 +61,60 @@ exports.actualizarPregunta = async (req, res) => {
 exports.eliminarPregunta = async (req, res) => {
   const { id } = req.params;
 
+  if (isNaN(id)) {
+    return res.status(400).json({ error: 'ID inválido.' });
+  }
+
+  let connection;
   try {
-    const connection = await oracledb.getConnection(dbConfig);
+    connection = await oracledb.getConnection(dbConfig);
     await connection.execute(
       `BEGIN ELIMINAR_PREGUNTA(:id); END;`,
       { id: parseInt(id) }
     );
     await connection.commit();
-    await connection.close();
     res.status(200).json({ mensaje: 'Pregunta eliminada correctamente' });
   } catch (err) {
     res.status(500).json({ error: err.message });
+  } finally {
+    if (connection) await connection.close();
   }
 };
 
 // Obtener todas las preguntas
 exports.obtenerPreguntas = async (req, res) => {
+  let connection;
   try {
-    const connection = await oracledb.getConnection(dbConfig);
-
+    connection = await oracledb.getConnection(dbConfig);
     const result = await connection.execute(
       `SELECT * FROM PREGUNTA`,
       [],
       { outFormat: oracledb.OUT_FORMAT_OBJECT }
     );
-
-    await connection.close();
-
     res.status(200).json(result.rows);
   } catch (err) {
     res.status(500).json({ error: err.message });
+  } finally {
+    if (connection) await connection.close();
   }
 };
 
-// Obtener pregunta por id
+// Obtener pregunta por ID
 exports.obtenerPreguntaPorId = async (req, res) => {
   const { id } = req.params;
 
-  try {
-    const connection = await oracledb.getConnection(dbConfig);
+  if (isNaN(id)) {
+    return res.status(400).json({ error: 'ID inválido.' });
+  }
 
+  let connection;
+  try {
+    connection = await oracledb.getConnection(dbConfig);
     const result = await connection.execute(
       `SELECT * FROM PREGUNTA WHERE PREGUNTA_ID = :id`,
       { id: parseInt(id) },
       { outFormat: oracledb.OUT_FORMAT_OBJECT }
     );
-
-    await connection.close();
 
     if (result.rows.length === 0) {
       return res.status(404).json({ mensaje: 'Pregunta no encontrada' });
@@ -104,5 +123,7 @@ exports.obtenerPreguntaPorId = async (req, res) => {
     res.status(200).json(result.rows[0]);
   } catch (err) {
     res.status(500).json({ error: err.message });
+  } finally {
+    if (connection) await connection.close();
   }
 };

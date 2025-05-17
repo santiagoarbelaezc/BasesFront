@@ -15,10 +15,11 @@ const temaRoutes = require('./routes/tema.routes');
 const categoriaRoutes = require('./routes/categoria.routes');
 const dificultadRoutes = require('./routes/dificultad.routes');
 const examenRoutes = require('./routes/examen.routes');
-const preguntaRoutes = require('./routes/pregunta.routes'); // <-- Aquí importas las rutas de pregunta
+const preguntaRoutes = require('./routes/pregunta.routes');
 const respuestaRoutes = require('./routes/respuesta.routes');
 const respuestaEstudianteRoutes = require('./routes/respuestaestudiante.routes');
 const bancoPreguntasRoutes = require('./routes/bancoPreguntas.routes');
+const subpreguntaRoutes = require('./routes/subpregunta.routes');
 //Modulos que no tienen CRUD, solo logica del negocio 
 const asignacionRoutes = require('./routes/asignacion.routes');
 
@@ -36,6 +37,7 @@ app.use('/api/preguntas', preguntaRoutes); // <-- Aquí usas las rutas de pregun
 app.use('/api/respuestas', respuestaRoutes);
 app.use('/api/respuestasEstudiante', respuestaEstudianteRoutes);
 app.use('/api/bancoPreguntas', bancoPreguntasRoutes);
+app.use('/api/subpreguntas', subpreguntaRoutes);
 //Modulos que no tienen CRUD, solo logica del negocio 
 app.use('/api', asignacionRoutes);
 

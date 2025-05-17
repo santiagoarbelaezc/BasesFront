@@ -1,13 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const preguntaController = require('../controllers/pregunta.controller');
+const controller = require('../controllers/pregunta.controller');
 
-router.post('/', preguntaController.insertarPregunta);
-router.put('/:id', preguntaController.actualizarPregunta);
-router.delete('/:id', preguntaController.eliminarPregunta);
-router.get('/', preguntaController.obtenerPreguntas);
-
-// Nuevo endpoint para obtener pregunta por id
-router.get('/:id', preguntaController.obtenerPreguntaPorId);
+router.get('/', controller.obtenerPreguntas );
+router.post('/', controller.insertarPregunta);
+router.put('/:id', controller.actualizarPregunta);
+router.delete('/:id', controller.eliminarPregunta);
 
 module.exports = router;
