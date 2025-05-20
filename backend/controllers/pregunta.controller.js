@@ -106,3 +106,28 @@ exports.obtenerPreguntaPorId = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+
+exports.obtenerPreguntasPorExamenId = async (req, res) => {
+  const { examenId } = req.params;
+
+  try {
+    const connection = await oracledb.getConnection(dbConfig);
+
+    const result = await connection.execute(
+      `SELECT * FROM PREGUNTA WHERE EXAMEN_ID = :examenId`,
+      { examenId: parseInt(examenId) },
+      { outFormat: oracledb.OUT_FORMAT_OBJECT }
+    );
+
+    await connection.close();
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ mensaje: 'No hay preguntas para este examen' });
+    }
+
+    res.status(200).json(result.rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};

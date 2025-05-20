@@ -50,4 +50,16 @@ export class RespuestaService {
       }))
     );
   }
+
+
+  obtenerRespuestasPorPreguntaId(preguntaId: number): Observable<RespuestaDTO[]> {
+  return this.http.get<any[]>(`${this.baseUrl}/pregunta/${preguntaId}`).pipe(
+    map(data => data.map(item => ({
+      id: item.RESPUESTA_ID,
+      texto: item.TEXTO,
+      esCorrecto: item.ESCORRECTO,
+      pregunta_id: item.PREGUNTA_ID
+    })))
+  );
+}
 }

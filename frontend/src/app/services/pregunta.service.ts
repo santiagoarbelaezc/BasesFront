@@ -49,4 +49,14 @@ export class PreguntaService {
     );
   }
 
+  obtenerPreguntasPorExamenId(examenId: number): Observable<PreguntaDTO[]> {
+  return this.http.get<any[]>(`${this.baseUrl}/examen/${examenId}`).pipe(
+    map(data => data.map(item => ({
+      id: item.PREGUNTA_ID,
+      texto: item.TEXTO,
+      examen_id: item.EXAMEN_ID
+    })))
+  );
+}
+
 }

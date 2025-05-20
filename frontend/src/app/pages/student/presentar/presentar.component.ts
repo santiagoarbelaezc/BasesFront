@@ -11,6 +11,7 @@ import { TemaDTO } from '../../../models/tema.dto';
 import { TemaService } from '../../../services/tema.service';
 import { NavbarEstudianteComponent } from '../../shared/navbar-estudiante/navbar-estudiante.component';
 import { Router } from '@angular/router';
+import { EstudianteService } from '../../../services/estudiante.service';
 
 @Component({
   selector: 'app-exam-create',
@@ -52,7 +53,8 @@ export class PresentarComponent {
   private examenService: ExamService,
   private categoriaService: CategoriaService,
   private temaService: TemaService,
-  private router: Router
+  private router: Router,
+  private estudianteService: EstudianteService // <<--- Agregado
 ) {
   this.cargarExamenes();
   this.cargarCategorias();
@@ -229,7 +231,15 @@ cargarCategorias(): void {
 
 
   presentarExamen() {
-  // lógica para iniciar un examen
+  if (!this.examenSeleccionado?.id) {
+    console.error('No se ha seleccionado un examen válido.');
+    return;
+  }
+
+  // Guardar el id del examen seleccionado en el servicio
+  this.estudianteService.setExamenSeleccionadoId(this.examenSeleccionado.id);
+
+  // Redireccionar a la vista donde se presentará el examen
   this.router.navigate(['/presentando']);
 }
 

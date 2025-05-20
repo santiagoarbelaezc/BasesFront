@@ -9,7 +9,8 @@ import { RespuestaEstudianteDTO } from '../models/respuesta_pregunta.dto';
 })
 export class RespuestaEstudianteService {
 
-  private baseUrl = 'http://localhost:3000/api/respuestas-estudiante'; // Ajusta según tu backend
+  private baseUrl = 'http://localhost:3000/api/respuestasEstudiante';
+ // Ajusta según tu backend
 
   constructor(private http: HttpClient) { }
 

@@ -27,20 +27,22 @@
         <p class="texto-pregunta">{{ preguntaActual.texto }}</p>
 
         <form>
-          <div class="respuestas">
-            <div *ngFor="let respuesta of respuestasActuales" class="respuesta-item">
-              <input
-                type="radio"
-                [id]="'respuesta_' + respuesta.id"
-                [name]="'pregunta_' + preguntaActual.id"
-                [value]="respuesta.id"
-                [(ngModel)]="respuestaSeleccionada"
-                class="radio-button"
-              />
-              <label [for]="'respuesta_' + respuesta.id">{{ respuesta.texto }}</label>
-            </div>
+        <div class="respuestas">
+          <div *ngFor="let respuesta of respuestasActuales" class="respuesta-item">
+            <input
+              type="radio"
+              [id]="'respuesta_' + respuesta.id"
+              [name]="'pregunta_' + preguntaActual.id"
+              [value]="respuesta"
+              [(ngModel)]="respuestaSeleccionada"
+              (change)="onRespuestaSeleccionada()"
+              class="radio-button"
+            />
+            <label [for]="'respuesta_' + respuesta.id">{{ respuesta.texto }}</label>
           </div>
-        </form>
+        </div>
+      </form>
+
 
         <!-- Botón para pasar a la siguiente pregunta -->
         <div class="botones-navegacion">
