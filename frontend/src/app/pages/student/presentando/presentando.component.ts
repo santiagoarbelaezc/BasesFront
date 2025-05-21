@@ -9,6 +9,8 @@ import { PreguntaDTO } from '../../../models/pregunta.dto';
 import { RespuestaDTO } from '../../../models/respuesta.dto';  // <-- Importa la interfaz RespuestaDTO
 import { RespuestaEstudianteDTO } from '../../../models/respuesta_pregunta.dto';
 import { RespuestaEstudianteService } from '../../../services/respuesta_estudiante.service';
+import { ExamenPresentadoDTO } from '../../../models/examenPresentado.dto';
+import { ExamenPresentadoService } from '../../../services/examenPresentado.service';
 
 @Component({
   selector: 'app-presentar',
@@ -38,12 +40,29 @@ export class PresentandoComponent implements OnInit {
     private estudianteService: EstudianteService,
     private preguntaService: PreguntaService,
     private respuestaService: RespuestaService,   // Inyecta el servicio respuestas
-    private respuestaEstudianteService: RespuestaEstudianteService // Agrega esto
+    private respuestaEstudianteService: RespuestaEstudianteService, // Agrega esto
+    private examenPresentadoService: ExamenPresentadoService
 
   ) {}
 
  ngOnInit(): void {
   this.obtenerExamenIdDesdeServicio();
+  
+
+
+  const examenPresentado = this.crearExamenPresentado();
+
+  if (examenPresentado) {
+    this.examenPresentadoService.insertarExamenPresentado(examenPresentado).subscribe({
+      next: (respuesta) => {
+        console.log('Examen presentado guardado con éxito:', respuesta);
+        
+      },
+      error: (err) => {
+        console.error('Error al guardar el examen presentado:', err);
+      }
+    });
+  }
 }
 
 
@@ -151,31 +170,62 @@ export class PresentandoComponent implements OnInit {
 
  
 
- terminarExamen(): void {
-  // Primero guardamos la última respuesta si existe
-  if (this.respuestaSeleccionada && this.examenId && this.preguntaActual) {
-    const ultimaRespuesta: RespuestaEstudianteDTO = {
-      esCorrecta: this.respuestaSeleccionada.esCorrecto,
-      examen_pres_id: this.examenId,
-      pregunta_id: this.preguntaActual.id!
-    };
-    this.respuestasEstudiante.push(ultimaRespuesta);
+terminarExamen(): void {
+  const usuario = this.estudianteService.getUsuario();
+  if (!usuario) {
+    console.error('No se pudo obtener el usuario');
+    return;
   }
 
-  // Enviar cada respuesta al backend
-  for (const respuesta of this.respuestasEstudiante) {
-    this.respuestaEstudianteService.insertarRespuestaEstudiante(respuesta).subscribe({
-      next: () => {
-        console.log('Respuesta enviada:', respuesta);
-      },
-      error: (err) => {
-        console.error('Error al enviar respuesta:', err);
+  // Obtener el último examen presentado para el usuario
+  this.examenPresentadoService.obtenerUltimoExamenPorUsuario(usuario.id!).subscribe({
+    next: (examenPresentado) => {
+      if (!examenPresentado) {
+        console.error('No se encontró examen presentado para el usuario');
+        return;
       }
-    });
-  }
 
-  console.log('Examen finalizado. Respuestas enviadas.');
-  // Aquí podrías redirigir o mostrar mensaje al usuario
+      this.examenId = examenPresentado.id !== undefined ? examenPresentado.id : null;
+
+      // Guardar la última respuesta si existe
+      if (this.respuestaSeleccionada && this.preguntaActual) {
+        if (this.examenId !== null) {
+          const ultimaRespuesta: RespuestaEstudianteDTO = {
+            esCorrecta: this.respuestaSeleccionada.esCorrecto,
+            examen_pres_id: this.examenId,
+            pregunta_id: this.preguntaActual.id!
+          };
+          this.respuestasEstudiante.push(ultimaRespuesta);
+        } else {
+          console.error('examenId es null, no se puede asignar a examen_pres_id');
+        }
+      }
+
+      // Enviar cada respuesta al backend con el examenId correcto
+      for (const respuesta of this.respuestasEstudiante) {
+        if (this.examenId !== null) {
+          respuesta.examen_pres_id = this.examenId;  // Asegurar examen_pres_id correcto
+        } else {
+          console.error('examenId es null, no se puede asignar a examen_pres_id');
+          continue;
+        }
+        this.respuestaEstudianteService.insertarRespuestaEstudiante(respuesta).subscribe({
+          next: () => {
+            console.log('Respuesta enviada:', respuesta);
+          },
+          error: (err) => {
+            console.error('Error al enviar respuesta:', err);
+          }
+        });
+      }
+
+      console.log('Examen finalizado. Respuestas enviadas.');
+      // Aquí podrías redirigir o mostrar mensaje al usuario
+    },
+    error: (err) => {
+      console.error('Error al obtener el último examen presentado:', err);
+    }
+  });
 }
 
 
@@ -188,5 +238,28 @@ export class PresentandoComponent implements OnInit {
   }
 }
 
+
+crearExamenPresentado(): ExamenPresentadoDTO | null {
+  const usuario = this.estudianteService.getUsuario();
+  const examenId = this.estudianteService.getExamenSeleccionadoId();
+
+  if (!usuario || !examenId) {
+    console.error('No se pudo obtener usuario o examenId');
+    return null;
+  }
+
+  const ahora = new Date();
+
+  const examenPresentado: ExamenPresentadoDTO = {
+    fecha: ahora,
+    horaInicio: ahora,
+    horaFin: new Date(0), // Cero significa aún no finalizado
+    usuarioId: usuario.id!, // Se asume que usuario.id está definido (no undefined)
+    examenId: examenId
+  };
+
+  console.log('ExamenPresentadoDTO creado:', examenPresentado);
+  return examenPresentado;
+}
 
 }

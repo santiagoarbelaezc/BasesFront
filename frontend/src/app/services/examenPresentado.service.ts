@@ -53,4 +53,20 @@ export class ExamenPresentadoService {
     );
   }
 
+
+  obtenerUltimoExamenPorUsuario(usuarioId: number): Observable<ExamenPresentadoDTO> {
+  return this.http.get<any>(`${this.baseUrl}/examen-usuario/${usuarioId}`).pipe(
+    map(item => ({
+      id: item.EXAMEN_PRESENTADO_ID,
+      fecha: item.FECHA,
+      horaInicio: item.HORA_INICIO,
+      horaFin: item.HORA_FIN,
+      porcentaje: item.PORCENTAJE,
+      usuarioId: item.USUARIO_ID,
+      examenId: item.EXAMEN_ID
+    }))
+  );
+}
+
+
 }

@@ -8,4 +8,7 @@ router.delete('/:id', examenPresentadoController.eliminarExamenPresentado);
 router.get('/', examenPresentadoController.obtenerExamenesPresentados);
 router.get('/:id', examenPresentadoController.obtenerExamenPresentadoPorId);
 
+// 🔽 Nueva ruta agregada aquí
+router.get('/examen-usuario/:usuario_id', examenPresentadoController.obtenerUltimoExamenPorUsuario);
+
 module.exports = router;
