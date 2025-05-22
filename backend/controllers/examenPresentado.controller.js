@@ -50,10 +50,9 @@ exports.insertarExamenPresentado = async (req, res) => {
 
 
 
-// Actualizar examen presentado
 exports.actualizarExamenPresentado = async (req, res) => {
   const { id } = req.params;
-  const {
+  let {
     fecha,
     hora_inicio,
     hora_fin,
@@ -63,28 +62,83 @@ exports.actualizarExamenPresentado = async (req, res) => {
   } = req.body;
 
   try {
-    const connection = await oracledb.getConnection(dbConfig);
-    await connection.execute(
-      `BEGIN ACTUALIZAR_EXAMEN_PRESENTADO(
-        :id, :fecha, :hora_inicio, :hora_fin, :porcentaje, :usuario_id, :examen_id
-      ); END;`,
-      {
-        id: parseInt(id),
-        fecha,
-        hora_inicio,
-        hora_fin,
-        porcentaje,
-        usuario_id,
-        examen_id
+    // Convertir fecha a Date con control de error
+    let fechaDate;
+    try {
+      fechaDate = new Date(fecha);
+      if (isNaN(fechaDate)) throw new Error('Fecha inválida');
+    } catch (errorFecha) {
+      console.error('Error al convertir fecha:', errorFecha);
+      return res.status(400).json({ error: 'Fecha inválida o malformada' });
+    }
+
+    // Función para ajustar hora para que tenga la misma fecha que fechaDate
+    const ajustarHora = (fechaBase, hora) => {
+      if (!hora) return null; // Manejo de undefined o null
+      try {
+        const d = new Date(hora);
+        if (isNaN(d)) throw new Error('Hora inválida');
+        d.setFullYear(fechaBase.getFullYear());
+        d.setMonth(fechaBase.getMonth());
+        d.setDate(fechaBase.getDate());
+        return d;
+      } catch (errorHora) {
+        console.error('Error al convertir hora:', errorHora);
+        return null; // o lanza error si quieres forzar validación
       }
-    );
-    await connection.commit();
-    await connection.close();
+    };
+
+    const horaInicioDate = ajustarHora(fechaDate, hora_inicio);
+    const horaFinDate = ajustarHora(fechaDate, hora_fin);
+
+    // Validar que horaInicioDate y horaFinDate no sean null (si es obligatorio)
+    if (!horaInicioDate || !horaFinDate) {
+      console.warn('Hora inicio o fin inválida o no proporcionada');
+      // Puedes decidir si devolver error o continuar con null
+    }
+
+    let connection;
+    try {
+      connection = await oracledb.getConnection(dbConfig);
+    } catch (errorConexion) {
+      console.error('Error al conectar con Oracle:', errorConexion);
+      return res.status(500).json({ error: 'Error de conexión a la base de datos' });
+    }
+
+    try {
+      await connection.execute(
+  `BEGIN ACTUALIZAR_EXAMEN_PRESENTADO(
+    :id, :fecha, :hora_inicio, :hora_fin, :porcentaje, :usuario_id, :examen_id
+  ); END;`,
+  {
+    id: parseInt(id),
+    fecha: fechaDate, // OK como DATE
+    hora_inicio: horaInicioDate, // debe ser Date con hora válida
+    hora_fin: horaFinDate,
+    porcentaje,
+    usuario_id,
+    examen_id
+  },
+  { autoCommit: true } // también puedes evitar hacer un `commit()` manual
+);
+    } catch (errorEjecutar) {
+      console.error('Error al ejecutar procedimiento:', errorEjecutar);
+      return res.status(500).json({ error: 'Error en procedimiento almacenado' });
+    } finally {
+      try {
+        await connection.close();
+      } catch (errorCerrar) {
+        console.error('Error al cerrar conexión:', errorCerrar);
+      }
+    }
+
     res.status(200).json({ mensaje: 'Examen presentado actualizado correctamente' });
   } catch (err) {
+    console.error('Error general actualizarExamenPresentado:', err);
     res.status(500).json({ error: err.message });
   }
 };
+
 
 // Eliminar examen presentado
 exports.eliminarExamenPresentado = async (req, res) => {
@@ -108,7 +162,7 @@ exports.obtenerExamenesPresentados = async (req, res) => {
   try {
     const connection = await oracledb.getConnection(dbConfig);
     const result = await connection.execute(
-      `SELECT * FROM EXAMEN_PRESENTADO`,
+      `SELECT * FROM EXAMENPRESENTADO`,
       [],
       { outFormat: oracledb.OUT_FORMAT_OBJECT }
     );
@@ -125,7 +179,7 @@ exports.obtenerExamenPresentadoPorId = async (req, res) => {
   try {
     const connection = await oracledb.getConnection(dbConfig);
     const result = await connection.execute(
-      `SELECT * FROM EXAMEN_PRESENTADO WHERE EXAMEN_PRESENTADO_ID = :id`,
+      `SELECT * FROM EXAMENPRESENTADO WHERE EXAMEN_PRESENTADO_ID = :id`,
       { id: parseInt(id) },
       { outFormat: oracledb.OUT_FORMAT_OBJECT }
     );

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { NavbarComponent } from '../../shared/navbar/navbar.component';
 import { CommonModule } from '@angular/common';
@@ -12,6 +12,12 @@ import { TemaService } from '../../../services/tema.service';
 import { NavbarEstudianteComponent } from '../../shared/navbar-estudiante/navbar-estudiante.component';
 import { Router } from '@angular/router';
 import { EstudianteService } from '../../../services/estudiante.service';
+import { UsuarioDTO } from '../../../models/usuario.dto';
+import { ExamenPresentadoService } from '../../../services/examenPresentado.service';
+import { ExamenPresentadoDTO } from '../../../models/examenPresentado.dto';
+import { ExamenPresentadoVistaDTO } from '../../../models/examenPresentadoVista.dto';
+import { forkJoin, map } from 'rxjs';
+import { CalificacionService } from '../../../services/calificacion.service';
 
 @Component({
   selector: 'app-exam-create',
@@ -20,7 +26,7 @@ import { EstudianteService } from '../../../services/estudiante.service';
   templateUrl: './presentar.component.html',
   styleUrls: ['./presentar.component.css'],
 })
-export class PresentarComponent {
+export class PresentarComponent implements OnInit{
   id?: number;
   examen: string = '';
   nombre: string = '';
@@ -41,7 +47,11 @@ export class PresentarComponent {
 
   listaCategorias: CategoriaDTO[] = [];
 
+  examenesPresentados: ExamenPresentadoVistaDTO[] = [];
+
   temas: TemaDTO[] = [];
+
+  usuario: UsuarioDTO | undefined;
 
 
   cargandoExamenes = false;
@@ -54,11 +64,69 @@ export class PresentarComponent {
   private categoriaService: CategoriaService,
   private temaService: TemaService,
   private router: Router,
-  private estudianteService: EstudianteService // <<--- Agregado
+  private estudianteService: EstudianteService, // <<--- Agregado
+  private examenPresentadoService: ExamenPresentadoService,
+  private calificacionService: CalificacionService
 ) {
   this.cargarExamenes();
   this.cargarCategorias();
   this.cargarTemas(); 
+}
+
+
+  ngOnInit(): void {
+  try {
+    this.usuario = this.estudianteService.getUsuario();
+    console.log('Usuario obtenido:', this.usuario);
+    this.cargarExamenesPresentados();
+  } catch (error) {
+    console.error('Error al obtener el usuario:', error);
+  }
+}
+
+cargarExamenesPresentados(): void {
+  if (!this.usuario?.id) {
+    console.warn('Usuario no cargado todavía');
+    return;
+  }
+
+  this.examenPresentadoService.obtenerExamenesPresentados().subscribe({
+    next: (examenes) => {
+      // Filtrar los exámenes del usuario actual
+      const exPresentadosUsuario = examenes.filter(
+        examen => examen.usuarioId === this.usuario?.id
+      );
+
+      // Obtener todos los ExamenDTO asociados por examenId
+      const observables = exPresentadosUsuario.map(examenPresentado =>
+        this.examenService.obtenerExamenPorId(examenPresentado.examenId!).pipe(
+          map(examenDTO => ({
+            id: examenPresentado.id,
+            fecha: examenPresentado.fecha,
+            horaInicio: examenPresentado.horaInicio,
+            horaFin: examenPresentado.horaFin,
+            porcentaje: examenPresentado.porcentaje,
+            usuario: this.usuario!,         // ← UsuarioDTO completo
+            examen: examenDTO               // ← ExamenDTO obtenido por ID
+          }))
+        )
+      );
+
+      // Ejecutamos todas las peticiones en paralelo
+      forkJoin(observables).subscribe({
+        next: (resultadoConExamenes) => {
+          this.examenesPresentados = resultadoConExamenes;
+          console.log('Exámenes presentados con detalle de examen:', this.examenesPresentados);
+        },
+        error: (err) => {
+          console.error('Error al cargar exámenes detallados:', err);
+        }
+      });
+    },
+    error: (err) => {
+      console.error('Error al cargar exámenes presentados:', err);
+    }
+  });
 }
 
 
@@ -93,10 +161,11 @@ cargarCategorias(): void {
 
     this.examenService.obtenerExamenes().subscribe({
       next: (examenes) => {
-        this.listaExamenes = examenes;
+        this.listaExamenes = examenes.sort((a, b) => (b.id ?? 0) - (a.id ?? 0));
         this.cargandoExamenes = false;
-        console.log('Exámenes cargados', examenes);
+        console.log('Exámenes cargados', this.listaExamenes);
       },
+
       error: (err) => {
         this.errorCargaExamenes = true;
         this.cargandoExamenes = false;

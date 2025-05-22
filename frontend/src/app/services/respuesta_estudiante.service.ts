@@ -47,4 +47,22 @@ export class RespuestaEstudianteService {
       }))
     );
   }
+
+
+  obtenerPorExamenYPregunta(examenPresId: number, preguntaId: number): Observable<RespuestaEstudianteDTO | null> {
+  return this.http.get<any>(`${this.baseUrl}/buscar?examenPresId=${examenPresId}&preguntaId=${preguntaId}`).pipe(
+    map(item => {
+      if (!item) return null;
+      return {
+        id: item.RESPUESTA_ESTUDIANTE_ID,
+        esCorrecta: item.ESCORRECTA,
+        examen_pres_id: item.EXAMEN_PRES_ID,
+        pregunta_id: item.PREGUNTA_ID
+      };
+    })
+  );
+}
+
+
+  
 }

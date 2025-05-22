@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
 import { ExamenPresentadoDTO } from '../models/examenPresentado.dto';
+import { ExamenActualizarPresentDTO } from '../models/examenActualizar.dto';
 
 
 @Injectable({
@@ -17,7 +18,7 @@ export class ExamenPresentadoService {
     return this.http.post<any>(`${this.baseUrl}`, examenPresentado);
   }
 
-  actualizarExamenPresentado(id: number, examenPresentado: ExamenPresentadoDTO): Observable<any> {
+  actualizarExamenPresentado(id: number, examenPresentado: ExamenActualizarPresentDTO): Observable<any> {
     return this.http.put<any>(`${this.baseUrl}/${id}`, examenPresentado);
   }
 

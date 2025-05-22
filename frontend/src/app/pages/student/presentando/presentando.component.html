@@ -20,29 +20,28 @@
       <p><strong>Preguntas:</strong> {{ examenSeleccionado.cantidad_preguntas }}</p>
     </section>
 
-    <!-- Pregunta actual -->
-    <section *ngIf="preguntaActual" class="pregunta-container">
+    <!-- Pregunta actual y botón siguiente, solo si NO hemos llegado al final -->
+    <section *ngIf="!examenTerminado && preguntaActual" class="pregunta-container">
       <div class="pregunta-box">
         <h2>Pregunta {{ indicePreguntaActual + 1 }}:</h2>
         <p class="texto-pregunta">{{ preguntaActual.texto }}</p>
 
         <form>
-        <div class="respuestas">
-          <div *ngFor="let respuesta of respuestasActuales" class="respuesta-item">
-            <input
-              type="radio"
-              [id]="'respuesta_' + respuesta.id"
-              [name]="'pregunta_' + preguntaActual.id"
-              [value]="respuesta"
-              [(ngModel)]="respuestaSeleccionada"
-              (change)="onRespuestaSeleccionada()"
-              class="radio-button"
-            />
-            <label [for]="'respuesta_' + respuesta.id">{{ respuesta.texto }}</label>
+          <div class="respuestas">
+            <div *ngFor="let respuesta of respuestasActuales" class="respuesta-item">
+              <input
+                type="radio"
+                [id]="'respuesta_' + respuesta.id"
+                [name]="'pregunta_' + preguntaActual.id"
+                [value]="respuesta"
+                [(ngModel)]="respuestaSeleccionada"
+                (change)="onRespuestaSeleccionada()"
+                class="radio-button"
+              />
+              <label [for]="'respuesta_' + respuesta.id">{{ respuesta.texto }}</label>
+            </div>
           </div>
-        </div>
-      </form>
-
+        </form>
 
         <!-- Botón para pasar a la siguiente pregunta -->
         <div class="botones-navegacion">
@@ -51,12 +50,10 @@
       </div>
     </section>
 
-    <!-- Botón para terminar el examen -->
-    <section *ngIf="esUltimaPregunta" class="terminar-container">
+    <!-- Botón para terminar el examen, solo visible cuando examenTerminado es true -->
+    <section *ngIf="examenTerminado" class="terminar-container">
       <button class="btn-finalizar" (click)="terminarExamen()">Terminar examen</button>
     </section>
-
-    
 
     <!-- Tabla con exámenes existentes -->
     <section class="lista-examenes-container" *ngIf="listaExamenes.length > 0">
@@ -109,4 +106,11 @@
   </main>
 
 </body>
+
+<div class="loading-indicator" *ngIf="isLoading" [style.--progress-width]="progressValue + '%'">
+  <div class="loading-container">
+    <div class="loading-message">Enviando Respuestas</div>
+  </div>
+</div>
+
 </html>

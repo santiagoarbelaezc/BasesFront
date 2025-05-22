@@ -17,7 +17,7 @@ body, html {
 .gestion-examenes-wrapper {
   display: flex;
   flex-wrap: wrap;
-  gap: 40px;
+ 
   padding: 20px;
   width: 100%;
   min-height: 100vh;
@@ -160,7 +160,16 @@ select:valid + label {
   margin-bottom: 20px;
 }
 
-/* Contenedor tabla */
+.seccion-general-examenes {
+  padding: 20px;
+  margin: 0 auto 20px auto; /* solo margen inferior */
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  max-width: 95%;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
 .lista-examenes-container {
   flex: 0 0 55%;
   max-width: 700px;
@@ -169,19 +178,31 @@ select:valid + label {
   border-radius: 12px;
   border: 1px solid #ddd;
   overflow-x: auto;
+
+  margin-left: auto;  /* Empuja el contenedor a la derecha */
+  margin-right: 30px; /* Opcional: espacio desde el borde derecho */
+
+  height: 300px; /* ⬅️ Altura fija que puedes ajustar */
+  overflow-y: auto; /* ⬅️ Scroll si el contenido se pasa */
+  margin-bottom: 40px;
 }
+
 
 /* Tabla */
 .tabla-responsive {
   overflow-x: auto;
 }
 
-.tabla-examenes {
-  width: 100%;
-  border-collapse: collapse;
+.tabla-examenes{
+  width: 210%;
+  border-collapse: separate; /* Permite separación entre columnas */
+  border-spacing: 0; /* Sin espacio entre filas */
   font-size: 14px;
+  table-layout: fixed;  /* Aquí */
 }
 
+
+/* Encabezado */
 thead {
   background-color: #f1f1f1;
 }
@@ -192,14 +213,27 @@ th, td {
   border-bottom: 1px solid #e0e0e0;
 }
 
+/* Separación vertical entre columnas */
+th:not(:last-child), td:not(:last-child) {
+  border-right: 1px solid #e0e0e0;
+}
+/* Hover fila: fondo rojo y texto blanco */
 tbody tr:hover {
-  background-color: #fafafa;
+  background-color: #e63946; /* rojo vibrante */
+  color: white;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Para que las celdas también cambien de color al hacer hover */
+tbody tr:hover td {
+  color: white;
 }
 
 th {
   font-weight: bold;
   color: #222;
 }
+
 
 /* Botón Eliminar */
 .btn-delete {
@@ -244,4 +278,12 @@ th {
     flex: 0 0 100%;
     max-width: 100%;
   }
+}
+
+.titulo-seccion-tercero {
+  font-size: 15px;
+  font-weight: normal;
+  padding: 16px 20px;
+  text-align: center;
+  
 }
