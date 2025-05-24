@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const preguntaController = require('../controllers/pregunta.controller');
+const controller = require('../controllers/pregunta.controller');
 
 router.post('/', preguntaController.insertarPregunta);
 router.put('/:id', preguntaController.actualizarPregunta);
