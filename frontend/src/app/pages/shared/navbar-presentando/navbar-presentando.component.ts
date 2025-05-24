@@ -46,7 +46,7 @@ export class NavbarPresentandoComponent {
       clearInterval(interval);
       setTimeout(() => {
         this.isLoading = false; // Oculta el indicador después del redireccionamiento
-        this.router.navigate(['/login']);
+        this.router.navigate(['/presentar']);
       }, 500);
     }
   }, 30);

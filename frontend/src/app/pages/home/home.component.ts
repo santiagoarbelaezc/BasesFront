@@ -2,6 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NavbarComponent } from '../shared/navbar/navbar.component';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-home',
@@ -11,6 +13,8 @@ import { NavbarComponent } from '../shared/navbar/navbar.component';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
+
+  
 
   @ViewChild('examenCarousel') examenCarouselRef!: ElementRef;
 
@@ -73,7 +77,10 @@ export class HomeComponent implements OnInit {
     }
   ];
 
-  constructor() { }
+  constructor(private router: Router) { }
+
+  isLoading: boolean = false;
+  progressValue: number = 0;
 
   ngOnInit(): void {
     // Cualquier lógica adicional de inicialización si es necesario.
@@ -90,4 +97,24 @@ export class HomeComponent implements OnInit {
       element.scrollLeft += scrollAmount;
     }
   }
+
+
+  
+  accionSalir() {
+  console.log('Acción seleccionada para Salir');
+  this.isLoading = true;
+  this.progressValue = 0;
+
+  const interval = setInterval(() => {
+    this.progressValue += 1;
+    if (this.progressValue >= 100) {
+      clearInterval(interval);
+      setTimeout(() => {
+        this.isLoading = false; // Oculta el indicador después del redireccionamiento
+        this.router.navigate(['/login']);
+      }, 500);
+    }
+  }, 30);
+}
+
 }

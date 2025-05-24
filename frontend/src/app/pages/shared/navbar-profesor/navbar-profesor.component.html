@@ -8,12 +8,12 @@
   <nav class="nav-buttons">
 
     <div class="nav-item">
-      <button class="btn-nav" (click)="accionUsuarios()">Usuarios</button>
+      <button class="btn-nav" (click)="accionEstudiantes()">Estudiantes</button>
     </div>
 
 
     <div class="nav-item">
-      <button class="btn-nav" (click)="toggleSubMenu('examen')">Examen</button>
+      <button class="btn-nav" (click)="toggleSubMenu('examen')">Gestionar Examenes</button>
       <div class="sub-menu" *ngIf="showExamen">
         <button (click)="accionExamen('crear')">Crear Examen</button>
         <button (click)="accionExamen('detalles')">Detalles Examen</button>
@@ -25,8 +25,9 @@
       </div>
     </div>
 
+
     <div class="nav-item">
-      <button class="btn-nav" (click)="toggleSubMenu('preguntas')">Preguntas</button>
+      <button class="btn-nav" (click)="toggleSubMenu('preguntas')">Gestionar Preguntas</button>
       <div class="sub-menu" *ngIf="showPreguntas">
         <button (click)="accionPreguntas('banco')">Banco de Preguntas</button>
         <button (click)="accionPreguntas('crear')">Crear Preguntas</button>
@@ -38,22 +39,19 @@
       </div>
     </div>
 
-
     <div class="nav-item">
-      <button class="btn-nav" (click)="toggleSubMenu('perfil')">Perfil</button>
-      <div class="sub-menu" *ngIf="showPerfiles">
-        <button (click)="accionPerfil('perfiles')">Configurar Perfil</button>
-        <button (click)="accionPerfil('roles')">Roles</button>
+      <button class="btn-nav" (click)="toggleSubMenu('contenidoEducativo')">Contenido Educativo</button>
+      <div class="sub-menu" *ngIf="showContenidoEducativo">
+        <button (click)="accionContenidoEducativo('crear')"> Gestionar Categorias</button>
+        <button (click)="accionContenidoEducativo('detalles')">Gestionar Unidades</button>
+        <button (click)="accionContenidoEducativo('lista')">Gestionar Contenidos</button>
+        <button (click)="accionContenidoEducativo('presentados')">Gestionar Temas</button>
+        
       </div>
     </div>
 
 
-    <div class="nav-item">
-      <button class="btn-nav" (click)="accionReportes()">Reportes</button>
-    </div>
 
-
-    
 
     <div class="nav-item">
       <button class="btn-nav" (click)="accionSalir()">

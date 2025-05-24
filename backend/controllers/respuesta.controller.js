@@ -153,3 +153,25 @@ exports.obtenerRespuestasPorPregunta = async (req, res) => {
     if (connection) await connection.close();
   }
 };
+
+
+// Obtener respuestas por pregunta_id
+exports.obtenerRespuestasPorPreguntaId = async (req, res) => {
+  const { preguntaId } = req.params;
+
+  try {
+    const connection = await oracledb.getConnection(dbConfig);
+
+    const result = await connection.execute(
+      `SELECT * FROM RESPUESTA WHERE PREGUNTA_ID = :preguntaId`,
+      { preguntaId: parseInt(preguntaId) },
+      { outFormat: oracledb.OUT_FORMAT_OBJECT }
+    );
+
+    await connection.close();
+
+    res.status(200).json(result.rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};

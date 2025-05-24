@@ -20,6 +20,7 @@ import { TemaComponent } from './pages/subjects/tema/tema.component';
 import { PresentarComponent } from './pages/student/presentar/presentar.component';
 import { CalificacionesComponent } from './pages/student/calificaciones/calificaciones.component';
 import { PresentandoComponent } from './pages/student/presentando/presentando.component';
+import { VistaProfesorComponent } from './pages/subjects/vista-profesor/vista-profesor.component';
 
 export const routes: Routes = [
 
@@ -45,6 +46,7 @@ export const routes: Routes = [
     { path: 'presentar', component: PresentarComponent },
     { path: 'calificaciones', component: CalificacionesComponent },
      { path: 'presentando', component: PresentandoComponent },
+    { path: 'profesor', component: VistaProfesorComponent },
 
 
 

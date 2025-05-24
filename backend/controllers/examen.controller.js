@@ -133,7 +133,7 @@ exports.obtenerExamenPorId = async (req, res) => {
     const connection = await oracledb.getConnection(dbConfig);
 
     const result = await connection.execute(
-      `SELECT * FROM EXAMEN WHERE id = :id`,
+      `SELECT * FROM EXAMEN WHERE examen_id = :id`,
       { id: parseInt(id) },
       { outFormat: oracledb.OUT_FORMAT_OBJECT }
     );

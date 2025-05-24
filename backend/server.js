@@ -19,8 +19,6 @@ const preguntaRoutes = require('./routes/pregunta.routes');
 const respuestaRoutes = require('./routes/respuesta.routes');
 const respuestaEstudianteRoutes = require('./routes/respuestaestudiante.routes');
 const bancoPreguntasRoutes = require('./routes/bancoPreguntas.routes');
-const subpreguntaRoutes = require('./routes/subpregunta.routes');
-//Modulos que no tienen CRUD, solo logica del negocio 
 const asignacionRoutes = require('./routes/asignacion.routes');
 
 // Usar rutas
@@ -33,12 +31,11 @@ app.use('/api/temas', temaRoutes);
 app.use('/api/categorias', categoriaRoutes);
 app.use('/api/dificultades', dificultadRoutes);
 app.use('/api/examenes', examenRoutes);
-app.use('/api/preguntas', preguntaRoutes); // <-- Aquí usas las rutas de pregunta
+app.use('/api/examenesPresentados', examenPresentadoRoutes);  // <--- Aquí usas las rutas de examenPresentado
+app.use('/api/preguntas', preguntaRoutes);
 app.use('/api/respuestas', respuestaRoutes);
 app.use('/api/respuestasEstudiante', respuestaEstudianteRoutes);
 app.use('/api/bancoPreguntas', bancoPreguntasRoutes);
-app.use('/api/subpreguntas', subpreguntaRoutes);
-//Modulos que no tienen CRUD, solo logica del negocio 
 app.use('/api', asignacionRoutes);
 
 // Puerto de escucha
