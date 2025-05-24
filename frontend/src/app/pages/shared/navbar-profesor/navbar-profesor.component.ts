@@ -12,6 +12,7 @@ import { Router } from '@angular/router';
 export class NavbarProfesorComponent {
   showExamen = false;
   showPreguntas = false;
+  showContenidoEducativo = false;
   showPerfiles = false;
 
 
@@ -27,6 +28,11 @@ export class NavbarProfesorComponent {
     } else if (menu === 'preguntas') {
       this.showPreguntas = !this.showPreguntas;
       this.showExamen = false;
+
+    } else if (menu === 'contenidoEducativo') {
+      this.showContenidoEducativo = !this.showContenidoEducativo;
+      this.showExamen = false;
+
     } else if (menu === 'perfil') {
       this.showPerfiles = !this.showPerfiles;
       this.showPreguntas = false;
@@ -57,6 +63,29 @@ export class NavbarProfesorComponent {
         break;
     }
   }
+
+  accionContenidoEducativo(accion: string) {
+    console.log(`Acción seleccionada para Examen: ${accion}`);
+
+    switch (accion) {
+      case 'Gestionar Contenido':
+        this.router.navigate(['/exam-create']);
+        break;
+      case 'Gestionar Unidad':
+        this.router.navigate(['/exam-detail']);
+        break;
+      case 'Gestionar Tema':
+        this.router.navigate(['/exam-list']);
+        break;
+      case 'Gestionar Categoria':
+        this.router.navigate(['/exam-presentation']);
+        break;
+      default:
+        console.warn('Acción de examen no reconocida:', accion);
+        break;
+    }
+  }
+
 
   accionPreguntas(accion: string) {
   console.log(`Acción seleccionada para Preguntas: ${accion}`);
@@ -93,6 +122,11 @@ export class NavbarProfesorComponent {
   accionReportes() {
     console.log('Acción seleccionada para Reportes');
     this.router.navigate(['/reports']);
+  }
+
+  accionEstudiantes() {
+    console.log('Acción seleccionada para Reportes');
+    this.router.navigate(['/estudiantes']);
   }
 
   accionRoles() {
