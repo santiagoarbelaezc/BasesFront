@@ -68,6 +68,9 @@ export class NavbarProfesorComponent {
     console.log(`Acción seleccionada para Examen: ${accion}`);
 
     switch (accion) {
+      case 'curso':
+        this.router.navigate(['/curso']);
+        break;
       case 'Gestionar Contenido':
         this.router.navigate(['/exam-create']);
         break;
