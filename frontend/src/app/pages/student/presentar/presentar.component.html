@@ -14,88 +14,195 @@
   <main class="gestion-examenes-wrapper">
 
     <!-- Formulario reducido con solo botones -->
-    <section class="formulario-examen-container">
-      <div class="formulario-examen-box">
-        <h1 class="titulo-seccion">Gestión de Exámenes</h1>
+<section class="formulario-examen-container">
+  <div class="formulario-examen-box">
+    <h1 class="titulo-seccion">Gestión de Exámenes</h1>
 
-        <form novalidate>
-          <div class="input-group">
+    <form novalidate>
+
+      <section>
+        <div>
+          <h4 class="titulo-seccion-tercero">Menu para mirar los Examenes Disponibles para Presentar
+
+            Puedes mirar tus Examenes Prsentados y las Calificaciones
             
-            <input
-                type="text"
-                id="examenSeleccionadoInput"
-                class="form-control"
-                [value]="examenSeleccionado?.nombre || ''"
-                disabled
-            />
-          </div>
+          </h4>
+        </div>
+      </section>
 
-          <div class="input-group">
-            <label for="btnPresentar"></label><br />
-            <button type="button" id="btnPresentar" class="btn-primary" (click)="presentarExamen()">
-              Presentar examen ya
-            </button>
-          </div>
 
-          <div class="input-group" style="margin-top: 1rem;">
-            <label for="btnListar"></label><br />
-            <button type="button" id="btnListar" class="btn-secondary" (click)="listarExamenes()">
-              Listar exámenes
-            </button>
-          </div>
-        </form>
-      </div>
-    </section>
-
-    <!-- Tabla con exámenes existentes -->
-    <section class="lista-examenes-container" *ngIf="listaExamenes.length > 0">
-      <h2 class="titulo-seccion-secundario">Lista de Exámenes</h2>
-
-      <div *ngIf="cargandoExamenes" class="loading-message">
-        <i class="fas fa-spinner fa-spin"></i> Cargando exámenes...
+      <div class="input-group">
+        <label *ngIf="!examenSeleccionado" for="nombreExamenInput">Nombre del Examen</label>
+        <input
+          type="text"
+          id="nombreExamenInput"
+          class="form-control"
+          [value]="examenSeleccionado?.nombre || ''"
+          disabled
+        />
       </div>
 
-      <div *ngIf="errorCargaExamenes" class="error-message">
-        <i class="fas fa-exclamation-triangle"></i> Error al cargar exámenes
+      <div class="input-group">
+        <label *ngIf="!examenSeleccionado" for="examenIdInput">ID del Examen</label>
+        <input
+          type="text"
+          id="examenIdInput"
+          class="form-control"
+          [value]="examenSeleccionado?.examen"
+          disabled
+        />
       </div>
 
-      <div class="tabla-responsive">
-        <table class="tabla-examenes">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Examen</th>
-              <th>Nombre</th>
-              <th>Preguntas</th>
-              <th>Fecha</th>
-              <th>Tiempo</th>
-              <th>Peso</th>
-              <th>Umbral</th>
-              <th>Asignación</th>
-              <th>Tema</th>
-              <th>Categoría</th>
-              
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let examen of listaExamenes" (click)="seleccionarExamen(examen)">
-              <td>{{ examen.id }}</td>
-              <td>{{ examen.examen }}</td>
-              <td>{{ examen.nombre }}</td>
-              <td>{{ examen.cantidad_preguntas }}</td>
-              <td>{{ examen.fecha }}</td>
-              <td>{{ examen.tiempo }}</td>
-              <td>{{ examen.pesoCurso }}</td>
-              <td>{{ examen.umbralDeAprobacion }}</td>
-              <td>{{ examen.asignacion }}</td>
-              <td>{{ examen.tema_id }}</td>
-              <td>{{ examen.categoria_id }}</td>
-              
-            </tr>
-          </tbody>
-        </table>
+      <div class="input-group">
+        <label *ngIf="!examenSeleccionado" for="cantidadPreguntasInput">Cantidad de Preguntas</label>
+        <input
+          type="text"
+          id="cantidadPreguntasInput"
+          class="form-control"
+          [value]="examenSeleccionado?.cantidad_preguntas"
+          disabled
+        />
       </div>
-    </section>
+
+      <section>
+        <div>
+          <h4 class="titulo-seccion-tercero">Elige el Examen para Resolver el Examen</h4>
+        </div>
+      </section>
+
+      
+      <div class="input-group">
+        <label for="btnPresentar"></label><br />
+        <button
+          type="button"
+          id="btnPresentar"
+          class="btn-primary"
+          (click)="presentarExamen()"
+          [disabled]="!examenSeleccionado"
+        >
+          Presentar examen ya
+        </button>
+      </div>
+
+      <div class="input-group" style="margin-top: 1rem;">
+        <label for="btnListar"></label><br />
+        <button type="button" id="btnListar" class="btn-secondary" (click)="listarExamenes()">
+          Listar exámenes
+        </button>
+      </div>
+
+
+      
+
+    </form>
+
+  </div>
+
+  
+</section>
+
+
+
+<!-- Sección principal que agrupa ambas listas de exámenes -->
+<section class="seccion-general-examenes">
+
+  <!-- Sub-sección: Exámenes Presentados -->
+  <section class="lista-examenes-container" *ngIf="examenesPresentados.length > 0">
+    <h2 class="titulo-seccion-secundario">Exámenes Presentados</h2>
+
+    <!-- Cabecera fija -->
+    <table class="tabla-examenes">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre Examen</th>
+          <th>Cantidad Preguntas</th>
+          <th>Fecha</th>
+          <th>Hora Inicio</th>
+          <th>Hora Fin</th>
+          <th>Porcentaje</th>
+         
+          <th>Usuario</th>
+        </tr>
+      </thead>
+    </table>
+
+    <!-- Cuerpo con scroll -->
+    <div class="scrollable-body">
+      <table class="tabla-examenes">
+        <tbody>
+          <tr *ngFor="let presentado of examenesPresentados">
+            <td>{{ presentado.id }}</td>
+            <td>{{ presentado.examen.nombre }}</td>
+            <td>{{ presentado.examen.cantidad_preguntas }}</td>
+
+            <td>{{ presentado.fecha | date: 'shortDate' }}</td>
+            <td>{{ presentado.horaInicio | date: 'shortTime' }}</td>
+            <td>{{ presentado.horaFin | date: 'shortTime' }}</td>
+            <td>{{ presentado.porcentaje }}%</td>
+            <td>{{ presentado.usuario.nombre }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Sub-sección: Lista de Exámenes -->
+  <section class="lista-examenes-container" *ngIf="listaExamenes.length > 0">
+    <h2 class="titulo-seccion-secundario">Lista de Exámenes</h2>
+
+    <div *ngIf="cargandoExamenes" class="loading-message">
+      <i class="fas fa-spinner fa-spin"></i> Cargando exámenes...
+    </div>
+
+    <div *ngIf="errorCargaExamenes" class="error-message">
+      <i class="fas fa-exclamation-triangle"></i> Error al cargar exámenes
+    </div>
+
+    <!-- Cabecera fija -->
+    <table class="tabla-examenes">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Examen</th>
+          <th>Nombre</th>
+          <th>Preguntas</th>
+          <th>Fecha</th>
+          <th>Tiempo</th>
+          <th>Peso</th>
+          <th>Umbral</th>
+          <th>Asignación</th>
+          <th>Tema</th>
+          <th>Categoría</th>
+        </tr>
+      </thead>
+    </table>
+
+    <!-- Cuerpo con scroll -->
+    <div class="scrollable-body">
+      <table class="tabla-examenes">
+        <tbody>
+          <tr *ngFor="let examen of listaExamenes" (click)="seleccionarExamen(examen)">
+            <td>{{ examen.id }}</td>
+            <td>{{ examen.examen }}</td>
+            <td>{{ examen.nombre }}</td>
+            <td>{{ examen.cantidad_preguntas }}</td>
+            <td>{{ examen.fecha }}</td>
+            <td>{{ examen.tiempo }}</td>
+            <td>{{ examen.pesoCurso }}</td>
+            <td>{{ examen.umbralDeAprobacion }}</td>
+            <td>{{ examen.asignacion }}</td>
+            <td>{{ examen.tema_id }}</td>
+            <td>{{ examen.categoria_id }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</section>
+
+
 
   </main>
 

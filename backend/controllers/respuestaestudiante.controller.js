@@ -117,3 +117,31 @@ exports.obtenerRespuestaEstudiantePorId = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+// Buscar respuesta estudiante por examen presentado y pregunta
+exports.buscarPorExamenYPregunta = async (req, res) => {
+  const { examenPresId, preguntaId } = req.query;
+
+  try {
+    const connection = await oracledb.getConnection(dbConfig);
+
+    const result = await connection.execute(
+      `SELECT * FROM RESPUESTAESTUDIANTE WHERE EXAMEN_PRES_ID = :examenPresId AND PREGUNTA_ID = :preguntaId`,
+      {
+        examenPresId: parseInt(examenPresId),
+        preguntaId: parseInt(preguntaId)
+      },
+      { outFormat: oracledb.OUT_FORMAT_OBJECT }
+    );
+
+    await connection.close();
+
+    if (result.rows.length === 0) {
+      return res.status(200).json(null); // No se encontró, devuelve null
+    }
+
+    res.status(200).json(result.rows[0]); // Devuelve el primer resultado (debería ser único)
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};

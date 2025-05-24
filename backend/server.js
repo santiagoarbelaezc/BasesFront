@@ -15,11 +15,12 @@ const temaRoutes = require('./routes/tema.routes');
 const categoriaRoutes = require('./routes/categoria.routes');
 const dificultadRoutes = require('./routes/dificultad.routes');
 const examenRoutes = require('./routes/examen.routes');
-const preguntaRoutes = require('./routes/pregunta.routes'); // <-- Aquí importas las rutas de pregunta
+const examenPresentadoRoutes = require('./routes/examenPresentado.routes'); // <--- Aquí importas las rutas de examenPresentado
+const preguntaRoutes = require('./routes/pregunta.routes');
 const respuestaRoutes = require('./routes/respuesta.routes');
 const respuestaEstudianteRoutes = require('./routes/respuestaestudiante.routes');
 const bancoPreguntasRoutes = require('./routes/bancoPreguntas.routes');
-//Modulos que no tienen CRUD, solo logica del negocio 
+// Modulos que no tienen CRUD, solo logica del negocio 
 const asignacionRoutes = require('./routes/asignacion.routes');
 
 // Usar rutas
@@ -32,11 +33,12 @@ app.use('/api/temas', temaRoutes);
 app.use('/api/categorias', categoriaRoutes);
 app.use('/api/dificultades', dificultadRoutes);
 app.use('/api/examenes', examenRoutes);
-app.use('/api/preguntas', preguntaRoutes); // <-- Aquí usas las rutas de pregunta
+app.use('/api/examenesPresentados', examenPresentadoRoutes);  // <--- Aquí usas las rutas de examenPresentado
+app.use('/api/preguntas', preguntaRoutes);
 app.use('/api/respuestas', respuestaRoutes);
 app.use('/api/respuestasEstudiante', respuestaEstudianteRoutes);
 app.use('/api/bancoPreguntas', bancoPreguntasRoutes);
-//Modulos que no tienen CRUD, solo logica del negocio 
+// Modulos que no tienen CRUD, solo logica del negocio 
 app.use('/api', asignacionRoutes);
 
 // Puerto de escucha

@@ -9,7 +9,8 @@ import { RespuestaEstudianteDTO } from '../models/respuesta_pregunta.dto';
 })
 export class RespuestaEstudianteService {
 
-  private baseUrl = 'http://localhost:3000/api/respuestas-estudiante'; // Ajusta según tu backend
+  private baseUrl = 'http://localhost:3000/api/respuestasEstudiante';
+ // Ajusta según tu backend
 
   constructor(private http: HttpClient) { }
 
@@ -46,4 +47,22 @@ export class RespuestaEstudianteService {
       }))
     );
   }
+
+
+  obtenerPorExamenYPregunta(examenPresId: number, preguntaId: number): Observable<RespuestaEstudianteDTO | null> {
+  return this.http.get<any>(`${this.baseUrl}/buscar?examenPresId=${examenPresId}&preguntaId=${preguntaId}`).pipe(
+    map(item => {
+      if (!item) return null;
+      return {
+        id: item.RESPUESTA_ESTUDIANTE_ID,
+        esCorrecta: item.ESCORRECTA,
+        examen_pres_id: item.EXAMEN_PRES_ID,
+        pregunta_id: item.PREGUNTA_ID
+      };
+    })
+  );
+}
+
+
+  
 }
