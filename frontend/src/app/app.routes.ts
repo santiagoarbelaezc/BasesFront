@@ -21,6 +21,7 @@ import { PresentarComponent } from './pages/student/presentar/presentar.componen
 import { CalificacionesComponent } from './pages/student/calificaciones/calificaciones.component';
 import { PresentandoComponent } from './pages/student/presentando/presentando.component';
 import { VistaProfesorComponent } from './pages/subjects/vista-profesor/vista-profesor.component';
+import { CursoComponent } from './pages/subjects/curso/curso.component';
 
 export const routes: Routes = [
 
@@ -45,8 +46,9 @@ export const routes: Routes = [
     { path: 'tema', component: TemaComponent },
     { path: 'presentar', component: PresentarComponent },
     { path: 'calificaciones', component: CalificacionesComponent },
-     { path: 'presentando', component: PresentandoComponent },
+    { path: 'presentando', component: PresentandoComponent },
     { path: 'profesor', component: VistaProfesorComponent },
+    { path: 'curso', component: CursoComponent },
 
 
 

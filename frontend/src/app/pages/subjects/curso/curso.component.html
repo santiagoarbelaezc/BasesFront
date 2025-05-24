@@ -1,0 +1,57 @@
+<app-navbar></app-navbar>
+
+<div class="main-container">
+
+  <!-- Contenedor del formulario de creación de curso -->
+  <div class="login-container">
+    <div class="login-box">
+      <section class="contenedor-titulo-usuarios">
+        <h1 id="titulo-gestion-usuarios">Gestión de Cursos</h1>
+      </section>
+
+      <form (ngSubmit)="onCrearCurso(cursoForm)" #cursoForm="ngForm" novalidate>
+
+        <!-- Campo Nombre del Curso -->
+        <div class="input-group">
+          <input
+            type="text"
+            id="nombreCurso"
+            name="nombreCurso"
+            required
+            [(ngModel)]="nombreCurso"
+            placeholder=" " />
+          <label for="nombreCurso">Nombre del Curso</label>
+        </div>
+
+        <!-- Campo Descripción del Curso -->
+        <div class="input-group">
+          <textarea
+            id="descripcionCurso"
+            name="descripcionCurso"
+            required
+            rows="3"
+            [(ngModel)]="descripcionCurso"
+            placeholder=" "></textarea>
+          <label for="descripcionCurso">Descripción</label>
+        </div>
+
+        <!-- Mensajes de estado -->
+        <div *ngIf="errorCurso" class="error-message">
+          {{ errorCurso }}
+        </div>
+        <div *ngIf="cursoCreado" class="success-message">
+          ¡Curso creado exitosamente!
+        </div>
+
+        <!-- Botón de enviar -->
+        <div style="margin-top: 15px;">
+          <button type="submit" class="btn-login" [disabled]="isSubmittingCurso">
+            {{ isSubmittingCurso ? 'Creando...' : 'Crear Curso' }}
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+</div>
