@@ -1,8 +1,146 @@
-<app-navbar></app-navbar>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gestión Banco de Preguntas</title>
+  <link rel="stylesheet" href="question-bank.component.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body>
 
-<section class="question-bank-content">
-  <!-- Aquí irá el contenido específico de la lista de exámenes -->
-  <h2>BANCO DE PREGUNTAS</h2>
-  <!-- Ejemplo de contenido dinámico o estático futuro -->
-  <p>Bienvenido al Banco.</p>
-</section>
+  <app-navbar></app-navbar>
+
+  <div class="main-container">
+
+    <!-- Contenedor del formulario -->
+    <div class="login-container">
+      <div class="login-box">
+        <section class="contenedor-titulo-usuarios">
+          <h1 id="titulo-gestion-usuarios">Gestión del Banco de Preguntas</h1>
+        </section>
+
+        <form (ngSubmit)="onRegistrarPregunta(preguntaForm)" #preguntaForm="ngForm" novalidate>
+
+          <div class="input-group">
+            <input type="text" id="texto" name="texto" required [(ngModel)]="texto" placeholder=" " />
+            <label for="texto">Texto de la Pregunta</label>
+          </div>
+
+          <div class="input-group">
+            <input type="text" id="revision" name="revision" required [(ngModel)]="revision" placeholder=" " />
+            <label for="revision">Revisión</label>
+          </div>
+
+          <div class="input-group">
+            <select id="dificultad" name="dificultadId" required [(ngModel)]="dificultadId">
+              <option [ngValue]="null" disabled selected>Seleccione Dificultad</option>
+              <option *ngFor="let dif of dificultades" [ngValue]="dif.id">{{ dif.nombre }}</option>
+            </select>
+            <label for="dificultad">Dificultad</label>
+          </div>
+
+          <div class="input-group">
+            <select id="categoria" name="categoriaId" required [(ngModel)]="categoriaId">
+              <option [ngValue]="null" disabled selected>Seleccione Categoría</option>
+              <option *ngFor="let cat of categorias" [ngValue]="cat.id">{{ cat.nombre }}</option>
+            </select>
+            <label for="categoria">Categoría</label>
+          </div>
+
+          <div class="input-group">
+            <select id="tema" name="temaId" required [(ngModel)]="temaId">
+              <option [ngValue]="null" disabled selected>Seleccione Tema</option>
+              <option *ngFor="let tema of temas" [ngValue]="tema.id">{{ tema.nombre }}</option>
+            </select>
+            <label for="tema">Tema</label>
+          </div>
+
+          <div class="input-group checkbox-group">
+            <input
+              type="checkbox"
+              id="preguntaPublica"
+              [(ngModel)]="esPublica"
+              name="esPublica"
+            />
+            <label for="preguntaPublica">¿Pregunta Pública?</label>
+          </div>
+
+
+          <!-- Mensajes -->
+          <div *ngIf="errorRegistro" class="error-message">
+            {{ errorRegistro }}
+          </div>
+          <div *ngIf="registroExitoso" class="success-message">
+            ¡Pregunta registrada exitosamente!
+          </div>
+
+          <!-- Botones -->
+          <div style="display: flex; gap: 10px; margin-top: 15px;">
+            <button type="submit" class="btn-login" [disabled]="isSubmitting" style="flex: 1;">
+              {{ isSubmitting ? 'Registrando...' : 'Registrar Pregunta' }}
+            </button>
+
+            <button type="button" class="btn-update" (click)="actualizarPregunta()" [disabled]="!preguntaSeleccionada" style="flex: 1;">
+              Actualizar Pregunta
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Contenedor lista de preguntas -->
+    <div class="user-list-container" *ngIf="preguntasRegistradas.length > 0">
+      <h3>Preguntas Registradas</h3>
+
+      <div *ngIf="cargandoPreguntas" class="loading" style="margin-bottom: 10px;">
+        <i class="fas fa-spinner fa-spin"></i> Cargando preguntas...
+      </div>
+
+      <div *ngIf="errorCargaPreguntas" class="error" style="margin-bottom: 10px;">
+        <i class="fas fa-exclamation-triangle"></i> Error al cargar preguntas
+      </div>
+
+      <div class="table-responsive">
+        <table class="user-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Texto</th>
+              <th>¿Pública?</th>
+              <th>Revisión</th>
+              <th>Dificultad</th>
+              <th>Categoría</th>
+              <th>Tema</th>
+              <th>Usuario</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let pregunta of preguntasRegistradas" (click)="seleccionarPregunta(pregunta)">
+              <td>{{ pregunta.id }}</td>
+              <td>{{ pregunta.texto }}</td>
+              <td>{{ pregunta.esPublica ? 'Sí' : 'No' }}</td>
+              <td>{{ pregunta.revision }}</td>
+              <td>{{ obtenerNombreDificultad(pregunta.dificultadId) }}</td>
+              <td>{{ obtenerNombreCategoria(pregunta.categoriaId) }}</td>
+              <td>{{ obtenerNombreTema(pregunta.temaId) }}</td>
+              <td>{{ obtenerNombreUsuario(pregunta.usuarioId) }}</td>
+              <td class="actions-cell" (click)="$event.stopPropagation()">
+                <button
+                  (click)="eliminarPregunta(pregunta.id)"
+                  class="btn-delete btn-eliminar"
+                  title="Eliminar pregunta">
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>

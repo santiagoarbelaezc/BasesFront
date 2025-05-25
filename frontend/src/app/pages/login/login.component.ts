@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RolService } from '../../services/rol.service';
 import { EstudianteService } from '../../services/estudiante.service';
+import { ProfesorService } from '../../services/profesor.service';
 
 @Component({
   selector: 'app-login',
@@ -23,7 +24,8 @@ export class LoginComponent {
     private router: Router,
     private usuarioService: UsuarioService,
     private rolService: RolService,
-    private estudianteService: EstudianteService // inyecta aquí// Inyectamos el servicio de roles
+    private estudianteService: EstudianteService,
+    private profesorService: ProfesorService 
   ) {}
 
   onLogin(): void {
@@ -58,6 +60,8 @@ export class LoginComponent {
                   this.router.navigate(['/home']);
                   break;
                 case 'DOCENTE':
+                  // Guardar usuario en el servicio ProfesorService
+                  this.profesorService.setProfesor(usuarioCompleto);
                   this.router.navigate(['/profesor']);
                   break;
                 case 'ESTUDIANTE':

@@ -46,3 +46,25 @@ exports.eliminarDificultad = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+
+// Obtener todas las dificultades
+exports.obtenerDificultades = async (req, res) => {
+  try {
+    const connection = await oracledb.getConnection(dbConfig);
+    const result = await connection.execute(
+      `SELECT dificultad_id, nombre FROM dificultad` // Ajusta el nombre de la tabla y columnas
+    );
+    await connection.close();
+
+    // Mapea las filas al formato que usa el frontend
+    const dificultades = result.rows.map(row => ({
+      DIFICULTAD_ID: row[0],
+      NOMBRE: row[1],
+    }));
+
+    res.status(200).json(dificultades);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
