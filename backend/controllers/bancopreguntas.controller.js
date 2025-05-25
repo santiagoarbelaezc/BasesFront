@@ -38,6 +38,95 @@ exports.insertarPregunta = async (req, res) => {
   }
 };
 
+// Obtener todas las preguntas del banco
+exports.obtenerBancoPreguntas = async (req, res) => {
+  try {
+    const connection = await oracledb.getConnection(dbConfig);
+    const result = await connection.execute(
+      `SELECT 
+        BANCOPREGUNTAS_ID AS pregunta_id,
+        TEXTO,
+        ESPUBLICA,
+        REVISION,
+        DIFICULTAD_ID,
+        CATEGORIA_ID,
+        TEMA_ID,
+        USUARIO_ID
+       FROM BANCOPREGUNTAS`,
+      [],
+      { outFormat: oracledb.OUT_FORMAT_OBJECT }
+    );
+    await connection.close();
+    res.status(200).json(result.rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+
+// Obtener pregunta por ID
+exports.obtenerPreguntaPorId = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const connection = await oracledb.getConnection(dbConfig);
+    const result = await connection.execute(
+      `SELECT 
+        BANCOPREGUNTAS_ID AS pregunta_id,
+        TEXTO,
+        ESPUBLICA,
+        REVISION,
+        DIFICULTAD_ID,
+        CATEGORIA_ID,
+        TEMA_ID,
+        USUARIO_ID
+       FROM BANCOPREGUNTAS 
+       WHERE BANCOPREGUNTAS_ID = :id`,
+      [id],
+      { outFormat: oracledb.OUT_FORMAT_OBJECT }
+    );
+    
+    await connection.close();
+    
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Pregunta no encontrada' });
+    }
+    
+    res.status(200).json(result.rows[0]);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+
+// Obtener preguntas por usuario ID
+exports.obtenerPreguntasPorUsuarioId = async (req, res) => {
+  const { usuario_id } = req.params;
+  try {
+    const connection = await oracledb.getConnection(dbConfig);
+    const result = await connection.execute(
+      `SELECT 
+        BANCOPREGUNTAS_ID AS pregunta_id,
+        TEXTO,
+        ESPUBLICA,
+        REVISION,
+        DIFICULTAD_ID,
+        CATEGORIA_ID,
+        TEMA_ID,
+        USUARIO_ID 
+       FROM BANCOPREGUNTAS 
+       WHERE USUARIO_ID = :usuario_id`,
+      [usuario_id],
+      { outFormat: oracledb.OUT_FORMAT_OBJECT }
+    );
+    
+    await connection.close();
+    res.status(200).json(result.rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+
 // Actualizar pregunta
 exports.actualizarPregunta = async (req, res) => {
   const { id } = req.params;

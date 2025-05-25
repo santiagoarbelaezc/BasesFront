@@ -7,6 +7,8 @@ import { NavbarProfesorComponent } from '../../shared/navbar-profesor/navbar-pro
 import { DificultadService } from '../../../services/dificultad.service';
 import { TemaService } from '../../../services/tema.service';
 import { CategoriaService } from '../../../services/categoria.service';
+import { BancoService } from '../../../services/banco.service';
+import { ProfesorService } from '../../../services/profesor.service';
 
 
 @Component({
@@ -42,16 +44,47 @@ export class QuestionBankComponent implements OnInit {
   isSubmitting: boolean = false;
 
   constructor(
-    private dificultadService: DificultadService,
-    private temaService: TemaService,
-    private categoriaService: CategoriaService,
-  ) {}
+  private dificultadService: DificultadService,
+  private temaService: TemaService,
+  private categoriaService: CategoriaService,
+  private bancoService: BancoService,
+  private profesorService: ProfesorService
+) {}
+
 
   ngOnInit(): void {
-    this.cargarDificultades();
-    this.cargarCategorias();
-    this.cargarTemas();
+  this.cargarDificultades();
+  this.cargarCategorias();
+  this.cargarTemas();
+
+  const profesor = this.profesorService.getProfesor();
+  if (profesor) {
+    this.usuarioId = profesor.id ?? null; // Guarda el ID o null si es undefined
+    if (this.usuarioId !== null) {
+      this.cargarPreguntasPorUsuario(this.usuarioId);
+    }
+  } else {
+    console.warn('No se encontró profesor actual');
   }
+}
+
+
+cargarPreguntasPorUsuario(usuarioId: number): void {
+  this.cargandoPreguntas = true;
+  this.bancoService.obtenerPreguntasPorUsuarioId(usuarioId).subscribe({
+    next: (data) => {
+      this.preguntasRegistradas = data;
+      this.cargandoPreguntas = false;
+    },
+    error: (err) => {
+      this.errorCargaPreguntas = 'Error al cargar preguntas del banco.';
+      console.error(err);
+      this.cargandoPreguntas = false;
+    }
+  });
+}
+
+
 
   cargarDificultades(): void {
     this.dificultadService.obtenerDificultades().subscribe({

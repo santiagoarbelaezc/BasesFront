@@ -23,6 +23,7 @@ import { PresentandoComponent } from './pages/student/presentando/presentando.co
 import { VistaProfesorComponent } from './pages/subjects/vista-profesor/vista-profesor.component';
 import { CursoComponent } from './pages/subjects/curso/curso.component';
 import { GrupoComponent } from './pages/subjects/grupo/grupo.component';
+import { EstudianteComponent } from './pages/subjects/estudiante/estudiante.component';
 
 export const routes: Routes = [
 
@@ -51,6 +52,7 @@ export const routes: Routes = [
     { path: 'profesor', component: VistaProfesorComponent },
     { path: 'curso', component: CursoComponent },
     { path: 'grupo', component: GrupoComponent },
+    { path: 'estudiantes', component: EstudianteComponent },
 
 
 

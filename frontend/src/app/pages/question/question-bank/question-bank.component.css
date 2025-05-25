@@ -165,6 +165,34 @@ select:valid + label {
   margin-bottom: 20px;
 }
 
+.table-responsive {
+  max-height: 600px;
+  overflow-x: auto;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  width: 100%;
+}
+
+
+/* Estilo para mantener el encabezado fijo opcionalmente */
+.user-table {
+  width: max-content; /* Esto permite que la tabla sea más ancha que el contenedor */
+  border-collapse: collapse;
+  table-layout: auto; /* Cambia a 'auto' si quieres que las columnas crezcan naturalmente */
+}
+
+
+.user-table thead th {
+  position: sticky;
+  top: 0;
+  background-color: #f1f1f1;
+  z-index: 1;
+}
+
+
+
+
 /* Contenedor tabla */
 .user-list-container {
   flex: 0 0 55%;

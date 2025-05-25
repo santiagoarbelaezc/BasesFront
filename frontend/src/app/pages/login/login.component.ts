@@ -60,10 +60,10 @@ export class LoginComponent {
                   this.router.navigate(['/home']);
                   break;
                 case 'DOCENTE':
-                  // Guardar usuario en el servicio ProfesorService
                   this.profesorService.setProfesor(usuarioCompleto);
                   this.router.navigate(['/profesor']);
                   break;
+
                 case 'ESTUDIANTE':
 
                    // Guardar usuario en el servicio EstudianteService

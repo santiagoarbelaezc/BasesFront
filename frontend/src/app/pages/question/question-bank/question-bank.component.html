@@ -112,20 +112,20 @@
               <th>Dificultad</th>
               <th>Categoría</th>
               <th>Tema</th>
-              <th>Usuario</th>
+              
               <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let pregunta of preguntasRegistradas" (click)="seleccionarPregunta(pregunta)">
-              <td>{{ pregunta.id }}</td>
+              <td>{{ pregunta.pregunta_id }}</td>
               <td>{{ pregunta.texto }}</td>
-              <td>{{ pregunta.esPublica ? 'Sí' : 'No' }}</td>
+              <td>{{ pregunta.esPublica ? '  No' : '  Si' }}</td>
               <td>{{ pregunta.revision }}</td>
-              <td>{{ obtenerNombreDificultad(pregunta.dificultadId) }}</td>
-              <td>{{ obtenerNombreCategoria(pregunta.categoriaId) }}</td>
-              <td>{{ obtenerNombreTema(pregunta.temaId) }}</td>
-              <td>{{ obtenerNombreUsuario(pregunta.usuarioId) }}</td>
+              <td>{{ obtenerNombreDificultad(pregunta.dificultad_id) }}</td>
+              <td>{{ obtenerNombreCategoria(pregunta.categoria_id) }}</td>
+              <td>{{ obtenerNombreTema(pregunta.tema_id) }}</td>
+              
               <td class="actions-cell" (click)="$event.stopPropagation()">
                 <button
                   (click)="eliminarPregunta(pregunta.id)"
