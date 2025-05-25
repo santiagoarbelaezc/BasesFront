@@ -1,0 +1,65 @@
+<app-navbar></app-navbar>
+
+<div class="main-container">
+  <div class="login-container">
+    <div class="login-box">
+      <h1>Gestión de Grupos y Estudiantes</h1>
+
+      <!-- Tabla de grupos -->
+      <div class="table-responsive">
+        <table class="user-table">
+          <thead>
+            <tr>
+              <th>Grupo</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngFor="let grupo of grupos">
+              <!-- Fila principal del grupo -->
+              <tr>
+                <td>{{ grupo.nombre }}</td>
+                <td>
+                  <button (click)="verEstudiantes(grupo.id!)">
+                    {{ grupo.mostrarEstudiantes ? 'Ocultar' : 'Ver Estudiantes' }}
+                  </button>
+                </td>
+              </tr>
+
+              <!-- Subtabla de estudiantes -->
+              <tr *ngIf="grupo.mostrarEstudiantes">
+                <td colspan="2">
+                  <h4>Estudiantes asignados a {{ grupo.nombre }}</h4>
+
+                  <table class="user-table">
+                    <thead>
+                      <tr>
+                        <th>Nombre</th>
+                        <th>Correo</th>
+                        <th>Acción</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let estudiante of grupo.estudiantes">
+                        <td>{{ estudiante.nombre }} {{ estudiante.apellido }}</td>
+                        <td>{{ estudiante.correo }}</td>
+                        <td>
+                          <button class="btn-delete" (click)="quitarEstudiante(grupo.id!, estudiante.usuario_id)">
+                            <i class="fas fa-trash-alt"></i> Quitar
+                          </button>
+                        </td>
+                      </tr>
+                      <tr *ngIf="grupo.estudiantes.length === 0">
+                        <td colspan="3">Sin estudiantes asignados</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

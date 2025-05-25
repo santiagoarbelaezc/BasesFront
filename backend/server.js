@@ -9,6 +9,7 @@ app.use(express.json());
 const rolRoutes = require('./routes/rol.routes');
 const usuarioRoutes = require('./routes/usuario.routes');
 const grupoRoutes = require('./routes/grupo.routes');
+const cursoRoutes = require('./routes/curso.routes');
 const unidadRoutes = require('./routes/unidad.routes');
 const contenidoRoutes = require('./routes/contenido.routes');
 const temaRoutes = require('./routes/tema.routes');
@@ -40,6 +41,7 @@ app.use('/api/subPregunta', subsubpreguntaRoutes)
 app.use('/api/respuestas', respuestaRoutes);
 app.use('/api/respuestasEstudiante', respuestaEstudianteRoutes);
 app.use('/api/bancoPreguntas', bancoPreguntasRoutes);
+app.use('/api/cursos', cursoRoutes);
 // Modulos que no tienen CRUD, solo logica del negocio 
 app.use('/api', asignacionRoutes);
 
