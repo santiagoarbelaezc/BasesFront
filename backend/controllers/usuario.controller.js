@@ -102,3 +102,32 @@ exports.obtenerUsuarios = async (req, res) => {
     if (connection) await connection.close();
   }
 };
+
+exports.obtenerUsuarioPorCorreo = async (req, res) => {
+  const { correo } = req.params;
+  let connection;
+  try {
+    connection = await oracledb.getConnection(dbConfig);
+    const result = await connection.execute(
+      `SELECT usuario_id, nombre, apellido, correo, rol_id FROM USUARIO WHERE correo = :correo`,
+      { correo }
+    );
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: '❌ Usuario no encontrado con ese correo' });
+    }
+
+    const [usuario_id, nombre, apellido, correoBD, rol_id] = result.rows[0];
+    res.json({
+      id: usuario_id,
+      nombre,
+      apellido,
+      correo: correoBD,
+      rol_id
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: '❌ Error al obtener usuario por correo' });
+  } finally {
+    if (connection) await connection.close();
+  }
+};

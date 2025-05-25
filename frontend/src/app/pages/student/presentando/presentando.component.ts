@@ -22,7 +22,7 @@ import { Router } from '@angular/router';
 })
 export class PresentandoComponent implements OnInit {
 
-
+  inicio: Date | null = null;
   isLoading: boolean = false;
   progressValue: number = 0;
 
@@ -57,6 +57,8 @@ export class PresentandoComponent implements OnInit {
 
  ngOnInit(): void {
   this.obtenerExamenIdDesdeServicio();
+
+  this.inicio = new Date();
   
 }
 
@@ -259,16 +261,17 @@ crearExamenPresentado(): ExamenPresentadoDTO | null {
   const ahora = new Date();
 
   const porcentaje = this.totalPreguntasRespondidas > 0
-    ? (this.respuestasCorrectas / this.totalPreguntasRespondidas) * 100
-    : 0;
+  ? (this.respuestasCorrectas / this.totalPreguntasRespondidas) * 100
+  : 0;
+
 
   const examenPresentado: ExamenPresentadoDTO = {
     fecha: ahora,
-    horaInicio: ahora,
+    horaInicio: this.inicio!,
     horaFin: new Date(), // ahora sí está finalizado
     usuarioId: usuario.id!,
     examenId: examenId,
-    porcentaje: parseFloat(porcentaje.toFixed(2))  // redondear a 2 decimales
+    porcentaje: parseFloat(porcentaje.toFixed(4)) // máximo 4 decimales
   };
 
   console.log('ExamenPresentadoDTO creado:', examenPresentado);

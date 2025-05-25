@@ -34,28 +34,37 @@
     </section>
 
     <!-- Tabla de calificaciones -->
-    <section class="tabla-calificaciones-container" *ngIf="listaCalificaciones.length > 0">
-      <div class="tabla-responsive">
-        <table class="tabla-examenes">
-          <thead>
-            <tr>
-              <th>Nombre del Examen</th>
-              <th>Tiempo (min)</th>
-              <th>Porcentaje</th>
-              <th>Calificación</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let calificacion of listaCalificaciones">
-              <td>{{ calificacion.nombreExamen }}</td>
-              <td>{{ calificacion.tiempo }}</td>
-              <td>{{ calificacion.porcentaje }}%</td>
-              <td>{{ calificacion.calificacion }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
+<section class="tabla-calificaciones-container" *ngIf="listaCalificaciones.length > 0">
+  <div class="tabla-responsive">
+    <table class="tabla-examenes">
+      <thead>
+        <tr>
+          <th>Nombre del Examen</th>
+          <th>Codigo</th>
+          <th>Asignacion</th>
+          <th>Cant. Preguntas</th>
+          <th>Tiempo (min)</th>
+          <th>Porcentaje</th>
+          <th>Calificación</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let calificacion of listaCalificaciones">
+          <td>{{ calificacion.examen.nombre }}</td>
+          <td>{{ calificacion.examen.examen }}</td>
+          <td>{{ calificacion.examen.asignacion }}</td>
+
+          <td>{{ calificacion.examen.cantidad_preguntas }}</td>
+
+          <td>{{ calcularTiempoEnMinutos(calificacion.horaInicio, calificacion.horaFin) }}</td>
+          <td>{{ calificacion.porcentaje }}%</td>
+          <td>{{ calificacion.nota }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
 
     <!-- Mensajes de carga o error -->
     <div *ngIf="cargandoCalificaciones" class="loading-message">

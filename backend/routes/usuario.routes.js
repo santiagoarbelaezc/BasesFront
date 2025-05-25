@@ -5,6 +5,7 @@ const usuarioController = require('../controllers/usuario.controller');
 router.post('/register', usuarioController.registrarUsuario);
 router.post('/login', usuarioController.loginUsuario);
 router.get('/', usuarioController.obtenerUsuarios);
+router.get('/correo/:correo', usuarioController.obtenerUsuarioPorCorreo); // Nuevo endpoint
 router.put('/:id', usuarioController.actualizarUsuario);
 router.delete('/:id', usuarioController.eliminarUsuario);
 

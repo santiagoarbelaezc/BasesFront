@@ -1,8 +1,100 @@
-<app-navbar></app-navbar>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Profesor - Bases Project</title>
+  <link rel="stylesheet" href="vista-profesor.component.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body>
+  <app-navbar></app-navbar>
 
-<section class="profile-content">
-  <!-- Aquí irá el contenido específico de la lista de exámenes -->
-  <h2>Bienvenido a la Vista de Profesor</h2>
-  <!-- Ejemplo de contenido dinámico o estático futuro -->
-  <p>Selecciona una opcion</p>
-</section>
+  <section class="home-content">
+    <h2>Panel del Profesor</h2>
+
+    <!-- Carrusel: Exámenes recientemente creados -->
+    <div class="carousel-container">
+      <h3>Exámenes Creados Recientemente</h3>
+
+      <div class="carousel-wrapper">
+        <div class="carousel-navigation">
+          <button class="carousel-nav prev" (click)="scrollCarousel('examenCarousel', 'left')" aria-label="Anterior examen">‹</button>
+          <button class="carousel-nav next" (click)="scrollCarousel('examenCarousel', 'right')" aria-label="Siguiente examen">›</button>
+        </div>
+
+        <div class="carousel examenCarousel" #examenCarousel>
+          <div class="carousel-item" *ngFor="let examen of examenesRecientes">
+            <h4>{{ examen.nombre }}</h4>
+            <p>{{ examen.descripcion }}</p>
+            <span class="fecha">Creado el {{ examen.fecha }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contenedor de acciones académicas -->
+    <div class="contenedor-general">
+      <!-- Crear Pregunta -->
+      <div class="contenedor-box" id="crearPreguntaBox">
+        <h3>Crear Pregunta</h3>
+        <p>Agrega nuevas preguntas para tus exámenes y bancos temáticos.</p>
+      </div>
+
+      <!-- Gestionar Banco de Preguntas -->
+      <div class="contenedor-box" id="bancoPreguntasBox">
+        <h3>Banco de Preguntas</h3>
+        <p>Revisa, edita y organiza las preguntas disponibles.</p>
+      </div>
+
+      <!-- Gestionar Contenido Educativo -->
+      <div class="contenedor-box" id="contenidoBox">
+        <h3>Contenido Educativo</h3>
+        <p>Administra material de estudio, guías y enlaces complementarios.</p>
+      </div>
+
+      <!-- Estadísticas -->
+      <div class="contenedor-box" id="estadisticasBox">
+        <h3>Estadísticas Académicas</h3>
+        <p>Visualiza reportes del rendimiento estudiantil por examen o tema.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-section about">
+        <h4>Sobre el Proyecto</h4>
+        <p>Sistema inteligente para la gestión académica y evaluación docente.</p>
+      </div>
+
+      <div class="footer-section contact">
+        <h4>Contacto</h4>
+        <p>Email: contacto&#64;basesproject.edu</p>
+        <p>Teléfono: +57 123 456 7890</p>
+        <p>Universidad XYZ – Facultad de Ingeniería</p>
+      </div>
+
+      <div class="footer-section links">
+        <h4>Enlaces Útiles</h4>
+        <ul>
+          <li><a href="#">Lista de Exámenes</a></li>
+          <li><a href="#">Estadísticas</a></li>
+          <li><a href="#">Banco de Preguntas</a></li>
+          <li><a href="#">Contenido Educativo</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; 2025 Bases Project. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <!-- Indicador de carga -->
+  <div class="loading-indicator" *ngIf="isLoading" [style.--progress-width]="progressValue + '%'">
+    <div class="loading-container">
+      <div class="loading-message">Cargando recursos del profesor...</div>
+    </div>
+  </div>
+</body>
+</html>

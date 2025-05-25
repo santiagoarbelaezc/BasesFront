@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { UsuarioDTO } from '../models/usuario.dto';
 
-
 @Injectable({
   providedIn: 'root'
 })
 export class EstudianteService {
 
   private readonly STORAGE_KEY = 'examenSeleccionadoId';
+
+  private usuarioActual?: UsuarioDTO; // <-- variable para guardar el usuario dinámico
 
   setExamenSeleccionadoId(id: number): void {
     localStorage.setItem(this.STORAGE_KEY, id.toString());
@@ -22,17 +23,13 @@ export class EstudianteService {
     localStorage.removeItem(this.STORAGE_KEY);
   }
 
-  // Usuario quemado
-  private usuarioHardcodeado: UsuarioDTO = {
-    id: 27,
-    nombre: 'Steven',
-    apellido: 'Morales',
-    correo: 'steven@correo.com',
-    contrasena: '1234',
-    rol_id: 3
-  };
+  // Método para establecer el usuario actual
+  setUsuario(usuario: UsuarioDTO): void {
+    this.usuarioActual = usuario;
+  }
 
-  getUsuario(): UsuarioDTO {
-    return this.usuarioHardcodeado;
+  // Método para obtener el usuario actual
+  getUsuario(): UsuarioDTO | undefined {
+    return this.usuarioActual;
   }
 }

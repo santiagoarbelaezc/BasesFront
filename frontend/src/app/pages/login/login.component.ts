@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { UsuarioService } from '../../services/usuario.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RolService } from '../../services/rol.service';
+import { EstudianteService } from '../../services/estudiante.service';
 
 @Component({
   selector: 'app-login',
@@ -17,41 +19,78 @@ export class LoginComponent {
   isLoading: boolean = false;
   progressValue: number = 0;
 
-  constructor(private router: Router, private usuarioService: UsuarioService) {}
+  constructor(
+    private router: Router,
+    private usuarioService: UsuarioService,
+    private rolService: RolService,
+    private estudianteService: EstudianteService // inyecta aquí// Inyectamos el servicio de roles
+  ) {}
 
   onLogin(): void {
-    this.isLoading = true;
-    this.progressValue = 0;
+  this.isLoading = true;
+  this.progressValue = 0;
 
-    // Llamada al backend
-    this.usuarioService.login(this.username, this.password).subscribe({
-      next: (response: any) => {
-        console.log('✅ Login exitoso:', response);
+  this.usuarioService.login(this.username, this.password).subscribe({
+    next: async (response: any) => {
+      console.log('✅ Login exitoso:', response);
+      const usuarioLogin = response.usuario;
 
-        // Opcional: almacenar datos del usuario
-        localStorage.setItem('usuario', JSON.stringify(response.usuario));
+      try {
+        // 1. Obtener el usuario completo por correo
+        const usuarioCompleto = await this.usuarioService.obtenerUsuarioPorCorreo(this.username).toPromise();
+        console.log('📩 Usuario obtenido por correo:', usuarioCompleto);
 
-        // Inicia animación de carga
+        // 2. Guardar usuario completo en localStorage
+        localStorage.setItem('usuario', JSON.stringify(usuarioCompleto));
+
+        // 3. Obtener rol por ID
+        const rol = await this.rolService.obtenerRolPorId(usuarioCompleto.rol_id);
+        console.log('🔐 Rol obtenido:', rol);
+
+        // 4. Animación de carga y redirección según rol
         const interval = setInterval(() => {
           this.progressValue += 1;
           if (this.progressValue >= 100) {
             clearInterval(interval);
             setTimeout(() => {
-              this.router.navigate(['/home']);
+              switch (rol.NOMBRE.toUpperCase()) {
+                case 'ADMINISTRADOR':
+                  this.router.navigate(['/home']);
+                  break;
+                case 'DOCENTE':
+                  this.router.navigate(['/profesor']);
+                  break;
+                case 'ESTUDIANTE':
+
+                   // Guardar usuario en el servicio EstudianteService
+                  this.estudianteService.setUsuario(usuarioCompleto);
+      
+                  this.router.navigate(['/presentar']);
+                  break;
+                default:
+                  alert('⚠️ Rol no reconocido. Contacte al administrador.');
+                  this.isLoading = false;
+                  this.progressValue = 0;
+                  break;
+              }
             }, 500);
           }
         }, 30);
-      },
-      error: (error) => {
+      } catch (error) {
+        console.error('❌ Error al procesar el login:', error);
+        alert('Error al verificar el rol o recuperar el usuario.');
         this.isLoading = false;
         this.progressValue = 0;
-        alert(error.error?.error || '❌ Error al iniciar sesión');
-        console.error('Login error:', error);
       }
-    });
-  }
+    },
+    error: (error) => {
+      this.isLoading = false;
+      this.progressValue = 0;
+      alert(error.error?.error || '❌ Error al iniciar sesión');
+      console.error('Login error:', error);
+    }
+  });
+}
 
-
-  
 
 }

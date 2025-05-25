@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import {catchError, Observable, throwError} from 'rxjs';
+import { catchError, Observable, throwError } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class UsuarioService {
@@ -27,6 +27,16 @@ export class UsuarioService {
   // Obtener todos los usuarios (solo para administrador)
   obtenerUsuarios(): Observable<any[][]> {
     return this.http.get<any[][]>(`${this.apiUrl}/`, this.getAuthHeaders());
+  }
+
+  // Obtener un usuario por su correo (nuevo endpoint)
+  obtenerUsuarioPorCorreo(correo: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/correo/${correo}`, this.getAuthHeaders()).pipe(
+      catchError(error => {
+        console.error('Error en servicio obtenerUsuarioPorCorreo:', error);
+        return throwError(() => error);
+      })
+    );
   }
 
   // Actualizar usuario (solo administrador)

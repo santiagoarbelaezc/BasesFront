@@ -2,7 +2,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Home</title>
+  <title>Admin - Bases Project</title>
   <link rel="stylesheet" href="home.component.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
@@ -10,94 +10,92 @@
   <app-navbar></app-navbar>
 
   <section class="home-content">
-    <h2>Bienvenido a Bases Project</h2>
+    <h2>Panel del Administrador</h2>
 
-    <!-- Primer Carrusel: Exámenes recientes -->
+   <!-- Carrusel: Usuarios recientemente creados -->
 <div class="carousel-container">
-  <h3>Exámenes Creados Recientemente</h3>
+  <h3>Usuarios Registrados Recientemente</h3>
 
-    <div class="carousel-wrapper">
+  <div class="carousel-wrapper">
     <div class="carousel-navigation">
-      <button class="carousel-nav prev" (click)="scrollCarousel('examenCarousel', 'left')" aria-label="Anterior examen">‹</button>
-      <button class="carousel-nav next" (click)="scrollCarousel('examenCarousel', 'right')" aria-label="Siguiente examen">›</button>
+      <button class="carousel-nav prev" (click)="scrollCarousel('usuarioCarousel', 'left')" aria-label="Anterior usuario">‹</button>
+      <button class="carousel-nav next" (click)="scrollCarousel('usuarioCarousel', 'right')" aria-label="Siguiente usuario">›</button>
     </div>
 
-    <div class="carousel examenCarousel" #examenCarousel>
-      <div class="carousel-item" *ngFor="let examen of examenesRecientes">
-        <h4>{{ examen.nombre }}</h4>
-        <p>{{ examen.descripcion }}</p>
-        <span class="fecha">{{ examen.fecha }}</span>
+    <div class="carousel usuarioCarousel" #usuarioCarousel>
+      <div class="carousel-item" *ngFor="let usuario of usuariosRecientes">
+        <h4>{{ usuario.nombre }}</h4>
+        <p>Rol: {{ usuario.rol }}</p>
+        <span class="fecha">Registrado el {{ usuario.fechaRegistro }}</span>
       </div>
     </div>
   </div>
 </div>
 
 
-    <!-- Contenedor general que agrupa los tres boxes -->
-<div class="contenedor-general">
-  <!-- Crear nuevo grupo -->
-  <div class="contenedor-box" id="grupoBox">
-    <h3>Crear Nuevo Grupo</h3>
-    <p>Organiza a tus estudiantes en grupos para una gestión más eficiente de los exámenes y tareas.</p>
-  </div>
+    <!-- Contenedor de acciones administrativas -->
+    <div class="contenedor-general">
+      <!-- Crear nuevo usuario -->
+      <div class="contenedor-box" id="crearUsuarioBox">
+        <h3>Crear Usuario</h3>
+        <p>Agrega nuevos usuarios al sistema asignando roles y permisos adecuados.</p>
+      </div>
 
-  <!-- Crear nueva unidad -->
-  <div class="contenedor-box" id="unidadBox">
-    <h3>Crear Nueva Unidad</h3>
-    <p>Organiza los temas en unidades para una mejor estructuración de los exámenes y el material de estudio.</p>
-  </div>
+      <!-- Gestión de usuarios -->
+      <div class="contenedor-box" id="gestionUsuarioBox">
+        <h3>Gestión de Usuarios</h3>
+        <p>Consulta, actualiza o elimina usuarios registrados en el sistema.</p>
+      </div>
 
-  <!-- Crear nueva materia -->
-  <div class="contenedor-box" id="materiaBox">
-    <h3>Crear Nueva Materia</h3>
-    <p>Agrega nuevas materias para organizar los exámenes y tareas de manera más estructurada.</p>
-  </div>
+      <!-- Crear roles -->
+      <div class="contenedor-box" id="crearRolBox">
+        <h3>Creación de Roles</h3>
+        <p>Define y personaliza roles para establecer jerarquías y niveles de acceso.</p>
+      </div>
 
-  <div class="contenedor-box" id="temaBox">
-    <h3>Crear Nueva Tema</h3>
-    <p>Agrega nuevas materias para organizar los exámenes y tareas de manera más estructurada.</p>
-  </div>
-</div>
+      <!-- Generar reportes -->
+      <div class="contenedor-box" id="reportesBox">
+        <h3>Generar Reportes</h3>
+        <p>Obtén estadísticas detalladas sobre el uso del sistema, usuarios activos y más.</p>
+      </div>
+    </div>
   </section>
 
   <footer class="footer">
-  <div class="footer-content">
-    <div class="footer-section about">
-      <h4>Sobre el Proyecto</h4>
-      <p>Sistema inteligente para la creación, gestión y presentación de exámenes en línea. Optimiza el rendimiento docente y estudiantil con herramientas modernas y eficientes.</p>
+    <div class="footer-content">
+      <div class="footer-section about">
+        <h4>Sobre el Proyecto</h4>
+        <p>Sistema inteligente para la gestión administrativa y académica. Optimiza el rendimiento institucional con herramientas modernas.</p>
+      </div>
+
+      <div class="footer-section contact">
+        <h4>Contacto</h4>
+        <p>Email: contacto&#64;basesproject.edu</p>
+        <p>Teléfono: +57 123 456 7890</p>
+        <p>Universidad XYZ – Facultad de Ingeniería</p>
+      </div>
+
+      <div class="footer-section links">
+        <h4>Enlaces Útiles</h4>
+        <ul>
+          <li><a href="#">Lista de Usuarios</a></li>
+          <li><a href="#">Reportes Generales</a></li>
+          <li><a href="#">Roles del Sistema</a></li>
+          <li><a href="#">Auditorías</a></li>
+        </ul>
+      </div>
     </div>
 
-    <div class="footer-section contact">
-      <h4>Contacto</h4>
-      <p>Email: contacto&#64;basesproject.edu</p>
-      <p>Teléfono: +57 123 456 7890</p>
-      <p>Universidad XYZ – Facultad de Ingeniería</p>
+    <div class="footer-bottom">
+      <p>&copy; 2025 Bases Project. Todos los derechos reservados.</p>
     </div>
+  </footer>
 
-    <div class="footer-section links">
-      <h4>Enlaces Útiles</h4>
-      <ul>
-        <li><a href="#">Banco de Preguntas</a></li>
-        <li><a href="#">Exámenes Presentados</a></li>
-        <li><a href="#">Estudiantes</a></li>
-        <li><a href="#">Materias Activas</a></li>
-      </ul>
+  <!-- Indicador de carga -->
+  <div class="loading-indicator" *ngIf="isLoading" [style.--progress-width]="progressValue + '%'">
+    <div class="loading-container">
+      <div class="loading-message">Saliendo al Login</div>
     </div>
   </div>
-
-  <div class="footer-bottom">
-    <p>&copy; 2025 Bases Project. Todos los derechos reservados.</p>
-  </div>
-</footer>
-
-
 </body>
-
-<div class="loading-indicator" *ngIf="isLoading" [style.--progress-width]="progressValue + '%'">
-  <div class="loading-container">
-    <div class="loading-message">Saliendo al Login</div>
-  </div>
-</div>
-
-<html>
-
+</html>

@@ -83,3 +83,28 @@ exports.eliminarRol = async (req, res) => {
     if (connection) await connection.close();
   }
 };
+
+
+exports.obtenerRolPorId = async (req, res) => {
+  const rol_id = req.params.id;
+  let connection;
+  try {
+    connection = await oracledb.getConnection(dbConfig);
+    const result = await connection.execute(
+      `SELECT ROL_ID, NOMBRE FROM ROL WHERE ROL_ID = :rol_id`,
+      [rol_id],
+      { outFormat: oracledb.OUT_FORMAT_OBJECT }
+    );
+    
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: '❌ Rol no encontrado' });
+    }
+    
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: '❌ Error al obtener rol' });
+  } finally {
+    if (connection) await connection.close();
+  }
+};

@@ -352,3 +352,43 @@ tbody tr:hover {
 .loading-message::before {
     border-top-color: #ff4d4d; /* spinner rojo */
 }
+
+
+.botones-filtro {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.btn-filtro {
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+  color: #333;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-filtro i {
+  font-size: 15px;
+  color: #e74c3c;
+  transition: transform 0.2s ease;
+}
+
+.btn-filtro:hover {
+  background: #fff0f0;
+  border-color: #e74c3c;
+  color: #e74c3c;
+}
+
+.btn-filtro:hover i {
+  transform: scale(1.2);
+}

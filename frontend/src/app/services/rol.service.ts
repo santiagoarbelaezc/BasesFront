@@ -93,4 +93,25 @@ export class RolService {
       throw error;
     }
   }
+
+   // Obtener un rol por ID
+  async obtenerRolPorId(rolId: number): Promise<{ ROL_ID: number; NOMBRE: string }> {
+    try {
+      const response = await fetch(`${this.apiUrl}/${rolId}`);
+      
+      if (!response.ok) {
+        if (response.status === 404) {
+          throw new Error('Rol no encontrado');
+        }
+        throw new Error('Error al obtener el rol');
+      }
+
+      const data = await response.json();
+      console.log('Datos del rol recibidos:', data);
+      return data;
+    } catch (error) {
+      console.error('Error al obtener el rol:', error);
+      throw error;
+    }
+  }
 }
