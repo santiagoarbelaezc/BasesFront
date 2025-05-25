@@ -41,7 +41,8 @@
 
     <div class="nav-item">
       <button class="btn-nav" (click)="toggleSubMenu('contenidoEducativo')">Contenido Educativo</button>
-      <div class="sub-menu" *ngIf="showContenidoEducativo">
+      <div class="sub-menu" *ngIf="showContenidoEducativo">      
+        <button (click)="accionContenidoEducativo('grupo')"> Gestionar Grupos</button>
         <button (click)="accionContenidoEducativo('curso')"> Gestionar Cursos</button>
         <button (click)="accionContenidoEducativo('categoria')"> Gestionar Categorias</button>
         <button (click)="accionContenidoEducativo('unidad')">Gestionar Unidades</button>
