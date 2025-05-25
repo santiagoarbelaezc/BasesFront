@@ -131,3 +131,31 @@ exports.obtenerUsuarioPorCorreo = async (req, res) => {
     if (connection) await connection.close();
   }
 };
+
+
+exports.obtenerUsuariosPorRol = async (req, res) => {
+  const rol_id = parseInt(req.params.rol_id);
+  let connection;
+  try {
+    connection = await oracledb.getConnection(dbConfig);
+    const result = await connection.execute(
+      `SELECT usuario_id, nombre, apellido, correo, rol_id FROM USUARIO WHERE rol_id = :rol_id`,
+      { rol_id }
+    );
+
+    const usuarios = result.rows.map(row => ({
+      id: row[0],
+      nombre: row[1],
+      apellido: row[2],
+      correo: row[3],
+      rol_id: row[4]
+    }));
+
+    res.json(usuarios);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: '❌ Error al obtener usuarios por rol' });
+  } finally {
+    if (connection) await connection.close();
+  }
+};

@@ -289,3 +289,50 @@ th {
   background: none;
   padding: 0;
 }
+
+
+
+/* Estilo para los select (combo boxes) */
+select {
+  appearance: none; /* Quita el estilo por defecto del navegador */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: #fff;
+  border: 2px solid #ccc;
+  border-radius: 6px;
+  padding: 8px 40px 8px 12px; /* espacio para la flecha */
+  font-size: 14px;
+  color: #333;
+  cursor: pointer;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  width: 100%; /* para que se adapten al contenedor */
+  box-sizing: border-box;
+  position: relative;
+  margin-bottom: 18px; /* <- aquí aumentas el espacio vertical */
+}
+
+/* Cambia el borde y agrega sombra cuando está enfocado */
+select:focus {
+  border-color: #e74c3c; /* rojo estilo checkbox */
+  box-shadow: 0 0 5px rgba(231, 76, 60, 0.5);
+  outline: none;
+}
+
+/* Flecha personalizada usando un SVG en background */
+select {
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg fill='%23666' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px 16px;
+}
+
+/* Opcional: cambiar el color del texto del placeholder */
+select option[disabled] {
+  color: #999;
+}
+
+/* Para que el select no permita que se vea el texto seleccionado cuando no hay nada */
+select option[ngValue=null] {
+  display: none;
+}
+

@@ -9,6 +9,7 @@ import { TemaService } from '../../../services/tema.service';
 import { CategoriaService } from '../../../services/categoria.service';
 import { BancoService } from '../../../services/banco.service';
 import { ProfesorService } from '../../../services/profesor.service';
+import { BancoPreguntaDTO } from '../../../models/bancoPregunta.dto';
 
 
 @Component({
@@ -108,8 +109,50 @@ cargarPreguntasPorUsuario(usuarioId: number): void {
   }
 
   onRegistrarPregunta(form: NgForm): void {
-    // Acción para registrar una nueva pregunta
+  if (form.invalid || this.usuarioId === null) {
+    this.errorRegistro = 'Formulario inválido o usuario no identificado.';
+    return;
   }
+
+  this.isSubmitting = true;
+  this.errorRegistro = '';
+  this.registroExitoso = false;
+
+  const nuevaPregunta: BancoPreguntaDTO = {
+    texto: this.texto.trim(),
+    es_publica: this.esPublica,
+    revision: this.revision.trim(),
+    dificultad_id: this.dificultadId!,
+    categoria_id: this.categoriaId!,
+    tema_id: this.temaId!,
+    usuario_id: this.usuarioId!
+  };
+
+  this.bancoService.insertarPregunta(nuevaPregunta).subscribe({
+    next: () => {
+      this.registroExitoso = true;
+      this.limpiarFormulario(form);
+      this.cargarPreguntasPorUsuario(this.usuarioId!); // Recarga la lista
+    },
+    error: (err) => {
+      console.error('Error al registrar la pregunta:', err);
+      this.errorRegistro = 'Error al registrar la pregunta.';
+    },
+    complete: () => {
+      this.isSubmitting = false;
+    }
+  });
+}
+  limpiarFormulario(form: NgForm): void {
+    form.resetForm();
+    this.texto = '';
+    this.revision = '';
+    this.dificultadId = null;
+    this.categoriaId = null;
+    this.temaId = null;
+    this.esPublica = false;
+  }
+
 
   actualizarPregunta(): void {
     // Acción para actualizar una pregunta existente

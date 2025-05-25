@@ -1,9 +1,7 @@
 const oracledb = require('oracledb');
 const dbConfig = require('../db-config');
-
-// Insertar pregunta en banco
 exports.insertarPregunta = async (req, res) => {
-  const {
+  let {
     texto,
     es_publica,
     revision,
@@ -12,6 +10,9 @@ exports.insertarPregunta = async (req, res) => {
     tema_id,
     usuario_id
   } = req.body;
+
+  // Convertir booleano JS a número 1 o 0 para Oracle
+  es_publica = es_publica ? 1 : 0;
 
   try {
     const connection = await oracledb.getConnection(dbConfig);

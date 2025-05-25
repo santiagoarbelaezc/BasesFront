@@ -7,5 +7,5 @@ export interface BancoPreguntaDTO {
   categoria_id: number;
   tema_id: number;
   usuario_id: number;
-  fecha_creacion?: string;
+  
 }

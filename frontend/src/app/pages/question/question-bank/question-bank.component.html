@@ -32,29 +32,21 @@
             <label for="revision">Revisión</label>
           </div>
 
-          <div class="input-group">
-            <select id="dificultad" name="dificultadId" required [(ngModel)]="dificultadId">
-              <option [ngValue]="null" disabled selected>Seleccione Dificultad</option>
-              <option *ngFor="let dif of dificultades" [ngValue]="dif.id">{{ dif.nombre }}</option>
-            </select>
-            <label for="dificultad">Dificultad</label>
-          </div>
+          <select id="dificultad" name="dificultadId" required [(ngModel)]="dificultadId">
+            <option [ngValue]="null" disabled selected>Seleccione Dificultad</option>
+            <option *ngFor="let dif of dificultades" [ngValue]="dif.dificultad_id">{{ dif.nombre }}</option>
+          </select>
 
-          <div class="input-group">
-            <select id="categoria" name="categoriaId" required [(ngModel)]="categoriaId">
-              <option [ngValue]="null" disabled selected>Seleccione Categoría</option>
-              <option *ngFor="let cat of categorias" [ngValue]="cat.id">{{ cat.nombre }}</option>
-            </select>
-            <label for="categoria">Categoría</label>
-          </div>
+          <select id="categoria" name="categoriaId" required [(ngModel)]="categoriaId">
+            <option [ngValue]="null" disabled selected>Seleccione Categoría</option>
+            <option *ngFor="let cat of categorias" [ngValue]="cat.categoria_id">{{ cat.nombre }}</option>
+          </select>
 
-          <div class="input-group">
-            <select id="tema" name="temaId" required [(ngModel)]="temaId">
-              <option [ngValue]="null" disabled selected>Seleccione Tema</option>
-              <option *ngFor="let tema of temas" [ngValue]="tema.id">{{ tema.nombre }}</option>
-            </select>
-            <label for="tema">Tema</label>
-          </div>
+          <select id="tema" name="temaId" required [(ngModel)]="temaId">
+            <option [ngValue]="null" disabled selected>Seleccione Tema</option>
+            <option *ngFor="let tema of temas" [ngValue]="tema.tema_id">{{ tema.nombre }}</option>
+          </select>
+
 
           <div class="input-group checkbox-group">
             <input

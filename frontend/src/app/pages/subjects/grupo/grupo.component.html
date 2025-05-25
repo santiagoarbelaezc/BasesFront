@@ -1,24 +1,65 @@
 <app-navbar></app-navbar>
 
-<div class="main-container">
-  <div class="login-container">
-    <div class="login-box">
-      <h1>Gestión de Grupos y Estudiantes</h1>
+<div class="control-panel">
+  <div class="header-section">
+    <h1 class="main-title">Creación y asignación de grupos</h1>
+    <h3 class="subtitle">Selecciona grupo y estudiante para asignar</h3>
+  </div>
+</div>
 
-      <!-- Tabla de grupos -->
+<div class="control-panel">
+  <h2>Crear Grupo</h2>
+
+  <div class="inputs-container">
+    <input type="text" placeholder="Nombre Grupo" />
+    <select>
+      <option value="">Seleccione opción</option>
+      <option value="opcion1">Opción 1</option>
+      <option value="opcion2">Opción 2</option>
+      <option value="opcion3">Opción 3</option>
+    </select>
+  </div>
+
+  <div class="buttons-container">
+    <button class="btn-action" (click)="crearNuevoGrupo()">Crear Nuevo Grupo</button>
+  </div>
+</div>
+
+
+<div class="control-panel">
+  <div class="inputs-container">
+    <input type="text" placeholder="Nombre del estudiante" disabled />
+    <input type="text" placeholder="ID del grupo" disabled />
+  </div>
+
+  <div class="buttons-container">
+    <button class="btn-action" (click)="asignarEstudiante()">Agregar Estudiante</button>
+    <button class="btn-action" (click)="quitarEstudianteSeleccionado()">Quitar Estudiante</button>
+  </div>
+</div>
+
+<div class="main-container">
+  <!-- NUEVO: contenedor de las cajas -->
+  <div class="login-boxes-wrapper">
+    
+    <!-- Caja de grupos -->
+    <div class="login-box table-container">
+      <h2>Gestión de Grupos y Estudiantes</h2>
+
       <div class="table-responsive">
         <table class="user-table">
           <thead>
             <tr>
               <th>Grupo</th>
+              <th>Código</th>
               <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
             <ng-container *ngFor="let grupo of grupos">
-              <!-- Fila principal del grupo -->
               <tr>
                 <td>{{ grupo.nombre }}</td>
+                <td>{{ grupo.cursoId }}</td>
                 <td>
                   <button (click)="verEstudiantes(grupo.id!)">
                     {{ grupo.mostrarEstudiantes ? 'Ocultar' : 'Ver Estudiantes' }}
@@ -26,11 +67,9 @@
                 </td>
               </tr>
 
-              <!-- Subtabla de estudiantes -->
               <tr *ngIf="grupo.mostrarEstudiantes">
-                <td colspan="2">
+                <td colspan="3">
                   <h4>Estudiantes asignados a {{ grupo.nombre }}</h4>
-
                   <table class="user-table">
                     <thead>
                       <tr>
@@ -61,5 +100,35 @@
         </table>
       </div>
     </div>
+
+    <!-- Caja de usuarios -->
+    <div class="login-box table-container">
+      <div class="table-responsive" *ngIf="usuariosRol3.length > 0">
+        <h2>Estudiantes disponibles</h2>
+        <table class="user-table">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Correo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let usuario of usuariosRol3">
+              <td>{{ usuario.nombre }} {{ usuario.apellido }}</td>
+              <td>{{ usuario.correo }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div *ngIf="usuariosRol3.length === 0 && !errorUsuariosRol3">
+        <p>No hay estudiantes disponibles para asignar.</p>
+      </div>
+
+      <div *ngIf="errorUsuariosRol3">
+        <p class="error">{{ errorUsuariosRol3 }}</p>
+      </div>
+    </div>
+
   </div>
 </div>

@@ -72,4 +72,16 @@ export class UsuarioService {
       })
     };
   }
+
+
+  // Obtener usuarios por rol_id
+obtenerUsuariosPorRol(rol_id: number): Observable<any[]> {
+  return this.http.get<any[]>(`${this.apiUrl}/rol/${rol_id}`, this.getAuthHeaders()).pipe(
+    catchError(error => {
+      console.error('Error en servicio obtenerUsuariosPorRol:', error);
+      return throwError(() => error);
+    })
+  );
+}
+
 }
