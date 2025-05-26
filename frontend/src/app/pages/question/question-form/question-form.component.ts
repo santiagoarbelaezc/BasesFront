@@ -10,6 +10,7 @@ import { CategoriaService } from '../../../services/categoria.service';
 import { BancoService } from '../../../services/banco.service';
 import { ProfesorService } from '../../../services/profesor.service';
 import { BancoPreguntaDTO } from '../../../models/bancoPregunta.dto';
+import { ExamService } from '../../../services/exam.service';
 
 
 @Component({
@@ -49,7 +50,9 @@ export class QuestionFormComponent implements OnInit {
   private temaService: TemaService,
   private categoriaService: CategoriaService,
   private bancoService: BancoService,
-  private profesorService: ProfesorService
+  private profesorService: ProfesorService,
+  private examService: ExamService
+
 ) {}
 
 
@@ -57,6 +60,7 @@ export class QuestionFormComponent implements OnInit {
   this.cargarDificultades();
   this.cargarCategorias();
   this.cargarTemas();
+  this.cargarExamenes();
 
   const profesor = this.profesorService.getProfesor();
   if (profesor) {
@@ -85,6 +89,17 @@ cargarPreguntasPorUsuario(usuarioId: number): void {
   });
 }
 
+
+cargarExamenes(): void {
+  this.examService.obtenerExamenes().subscribe({
+    next: (data) => {
+      this.examenes = data;
+    },
+    error: (err) => {
+      console.error('Error al cargar exámenes:', err);
+    }
+  });
+}
 
 
   cargarDificultades(): void {
