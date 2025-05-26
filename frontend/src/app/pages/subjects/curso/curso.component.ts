@@ -2,7 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { NavbarProfesorComponent } from '../../shared/navbar-profesor/navbar-profesor.component';
-import { CursoService, Curso } from '../../../services/curso.service';
+import { CursoService } from '../../../services/curso.service';
+import { CursoDTO } from '../../../models/curso.dto';  // ✅ Usar DTO correcto
 
 @Component({
   selector: 'app-curso',
@@ -37,12 +38,12 @@ export class CursoComponent {
     this.isSubmittingCurso = true;
     this.errorCurso = null;
 
-    const nuevoCurso: Curso = {
+    const nuevoCurso: CursoDTO = {
       nombre: this.nombreCurso,
       descripcion: this.descripcionCurso
     };
 
-    this.cursoService.crearCurso(nuevoCurso).subscribe({
+    this.cursoService.insertarCurso(nuevoCurso).subscribe({  // ✅ Método correcto
       next: () => {
         this.cursoCreado = true;
         this.isSubmittingCurso = false;

@@ -5,13 +5,16 @@ import { CommonModule } from '@angular/common';
 import { NavbarProfesorComponent } from '../../shared/navbar-profesor/navbar-profesor.component';
 import { GrupoDTO } from '../../../models/grupo.dto';
 import { UsuarioService } from '../../../services/usuario.service';
+import { CursoDTO } from '../../../models/curso.dto';
+import { CursoService } from '../../../services/curso.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-grupo',
   standalone: true,
   imports: [
     CommonModule,
-    NavbarProfesorComponent
+    NavbarProfesorComponent, FormsModule
   ],
   templateUrl: './grupo.component.html',
   styleUrls: ['./grupo.component.css']
@@ -21,17 +24,28 @@ export class GrupoComponent implements OnInit {
   errorGrupos: string | null = null;
   errorEstudiantes: string | null = null;
 
+  nombreGrupo: string = '';
+
+  cursoSeleccionado: CursoDTO | null = null;
+
+  cursos: CursoDTO[] = [];
+  errorCursos: string | null = null;
+
 
   usuariosRol3: any[] = [];
   errorUsuariosRol3: string | null = null;
 
 
-  constructor(private grupoService: GrupoService, private usuarioService: UsuarioService) {}
+  constructor(private grupoService: GrupoService, private usuarioService: UsuarioService,
+    private cursoService: CursoService
+  ) {}
 
   ngOnInit(): void {
     console.log('[ngOnInit] Cargando grupos...');
     this.cargarGrupos();
     this.cargarUsuariosPorRol();
+    this.cargarCursos();
+
   }
 
   cargarGrupos(): void {
@@ -51,6 +65,27 @@ export class GrupoComponent implements OnInit {
       }
     });
   }
+
+
+  cargarCursos(): void {
+  console.log('[cargarCursos] Llamando al servicio para obtener cursos');
+  this.cursoService.obtenerCursos().subscribe({
+    next: (data) => {
+      console.log('[cargarCursos] Cursos recibidos:', data);
+      this.cursos = data.map((curso: any) => ({
+        curso_id: curso.id,
+        nombre: curso.nombre,
+        descripcion: curso.descripcion
+      }));
+    },
+    error: (err) => {
+      console.error('[cargarCursos] Error al cargar cursos:', err);
+      this.errorCursos = 'Error al cargar los cursos';
+    }
+  });
+}
+
+
 
   verEstudiantes(grupoId: number): void {
     console.log(`[verEstudiantes] Grupo ID: ${grupoId}`);
@@ -128,8 +163,35 @@ quitarEstudianteSeleccionado() {
   // Lógica para quitar un estudiante seleccionado
 }
 
-crearNuevoGrupo() {
-  // Lógica para quitar un estudiante seleccionado
+crearNuevoGrupo(): void {
+  console.log('[crearNuevoGrupo] Iniciando creación de nuevo grupo');
+
+  if (!this.cursoSeleccionado) {
+    alert('Debe seleccionar un curso para crear el grupo.');
+    return;
+  }
+  const nuevoGrupo: GrupoDTO = {
+    nombre: this.nombreGrupo,
+    cursoId: this.cursoSeleccionado!.curso_id!
+  };
+
+  console.log('[crearNuevoGrupo] Datos del grupo a enviar:', nuevoGrupo);
+
+  this.grupoService.insertarGrupo(nuevoGrupo).subscribe({
+    next: () => {
+      console.log('[crearNuevoGrupo] Grupo creado exitosamente');
+      alert('Grupo creado exitosamente.');
+      this.nombreGrupo = '';
+      this.cursoSeleccionado = null;
+      console.log('[crearNuevoGrupo] Valores reseteados. Cargando grupos...');
+      this.cargarGrupos();
+    },
+    error: (err) => {
+      console.error('[crearNuevoGrupo] Error al crear grupo:', err);
+      alert('Hubo un error al crear el grupo.');
+    }
+  });
 }
+
 
 }

@@ -112,7 +112,7 @@ body, html {
 
 /* Inputs */
 .input-group {
-  margin-bottom: 20px;
+ 
   position: relative;
 }
 
@@ -271,51 +271,79 @@ th {
 }
 
 
-/* Contenedor superior para inputs y botones */
+/* Estructura principal del panel */
 .control-panel {
   width: 100%;
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 20px 30px;
-  background: #f9f9f9;
-  border: 1px solid #ddd;
-  border-radius: 12px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  justify-content: space-between;
-  align-items: center;
-  box-sizing: border-box;
-  margin-top: 30px;
-}
-
-/* Inputs desactivados estilo acorde a inputs normales */
-.control-panel input {
-  flex: 1 1 200px;
-  max-width: 250px;
-  padding: 12px 10px;
+  max-width: 1000px;
+  margin: 24px auto;
+  padding: 24px 32px;
+  background: #fafafa;
   border: 1px solid #ccc;
-  border-radius: 6px;
-  background: #fff; /* editable */
-  color: #111;
-  cursor: text; /* normal cursor de escritura */
-  font-size: 14px;
-  font-family: "Segoe UI", sans-serif;
-  outline: none;
-  user-select: auto;
+  border-radius: 10px;
   box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
 }
 
+/* Encabezado */
+.control-panel h2 {
+  margin: 0 0 24px 0;
+  font-size: 21px;
+  font-weight: 600;
+  text-align: center;
+  color: #222;
+}
 
-/* Contenedor inputs para que estén juntos con gap */
-.inputs-container {
+/* Diseño de filas del formulario */
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(220px, 1fr));
+  gap: 36px 48px;
+  width: 100%;
+  margin-bottom: 32px;
+}
+
+/* Grupos de entrada */
+.input-group {
   display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
-  flex: 1 1 auto;
-  min-width: 300px;
-  align-items: center;
+  flex-direction: column;
+  gap: 5px;
 }
+
+.input-group label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #444;
+  user-select: none;
+}
+
+/* Estilos base para inputs */
+.input-group input[type="text"],
+.input-group select {
+  width: 100%;
+  padding: 10px 14px;
+  font-size: 14.5px;
+  border: 1.5px solid #bbb;
+  border-radius: 8px;
+  box-sizing: border-box;
+  background-color: #fff;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Estados interactivos */
+.input-group input[type="text"]:focus,
+.input-group select:focus {
+  border-color: #4a90e2;
+  outline: none;
+  box-shadow: 0 0 8px rgba(74, 144, 226, 0.5);
+}
+
+.buttons-row {
+  display: flex;
+  justify-content: center;
+  gap: 32px; /* separación amplia entre botones */
+}
+
 
 /* Botones estilo btn-login para coherencia visual */
 .buttons-container {
@@ -360,4 +388,5 @@ th {
     width: 100%;
   }
 }
+
 

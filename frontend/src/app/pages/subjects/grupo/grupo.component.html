@@ -2,28 +2,31 @@
 
 <div class="control-panel">
   <div class="header-section">
-    <h1 class="main-title">Creación y asignación de grupos</h1>
-    <h3 class="subtitle">Selecciona grupo y estudiante para asignar</h3>
+    <h1>Creación y asignación de grupos</h1>
+    
   </div>
 </div>
 
 <div class="control-panel">
   <h2>Crear Grupo</h2>
 
-  <div class="inputs-container">
-    <input type="text" placeholder="Nombre Grupo" />
-    <select>
-      <option value="">Seleccione opción</option>
-      <option value="opcion1">Opción 1</option>
-      <option value="opcion2">Opción 2</option>
-      <option value="opcion3">Opción 3</option>
-    </select>
-  </div>
+  <div class="form-row">
+    <input type="text" placeholder="Nombre Grupo" [(ngModel)]="nombreGrupo" name="nombreGrupo" required />
 
-  <div class="buttons-container">
-    <button class="btn-action" (click)="crearNuevoGrupo()">Crear Nuevo Grupo</button>
+
+    <select id="curso" [(ngModel)]="cursoSeleccionado" name="curso" required>
+      <option value="" disabled selected hidden></option>
+      <option *ngFor="let curso of cursos" [ngValue]="curso">
+        {{ curso.nombre }}
+      </option>
+    </select>
+
+
+
+    <button class="btn-action" (click)="crearNuevoGrupo()">Crear Grupo</button>
   </div>
 </div>
+
 
 
 <div class="control-panel">
@@ -51,7 +54,7 @@
           <thead>
             <tr>
               <th>Grupo</th>
-              <th>Código</th>
+              <th>Código Curso</th>
               <th>Acciones</th>
             </tr>
           </thead>
