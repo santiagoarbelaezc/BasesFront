@@ -18,4 +18,7 @@ router.get('/resumen/curso/:cursoId', reportesController.getResumenCurso);
 // GET /api/notas/:cursoId
 router.get('/notas/:cursoId', reportesController.getNotasPorCurso);
 
+router.get('/api/reportes/examenes/:examenId', reportesController.getExamenesPresentadosPorExamen);
+
+
 module.exports = router;
