@@ -1,6 +1,7 @@
 const oracledb = require('oracledb');
 const dbConfig = require('../db-config');
 
+// Insertar grupo
 exports.insertarGrupo = async (req, res) => {
   const { nombre, cursoId } = req.body;
   try {
@@ -15,7 +16,6 @@ exports.insertarGrupo = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
-
 
 // Obtener todos los grupos
 exports.obtenerGrupos = async (req, res) => {
@@ -35,7 +35,7 @@ exports.obtenerGrupos = async (req, res) => {
   }
 };
 
-// Obtener grupo por GRUPO_ID
+// Obtener grupo por ID
 exports.obtenerGrupoPorId = async (req, res) => {
   const { id } = req.params;
   try {
@@ -94,71 +94,49 @@ exports.eliminarGrupo = async (req, res) => {
   }
 };
 
-// Obtener grupos con su curso (JOIN)
-exports.obtenerGruposConCurso = async (req, res) => {
-  try {
-    const connection = await oracledb.getConnection(dbConfig);
-    const result = await connection.execute(
-      `SELECT g.GRUPO_ID, g.NOMBRE, g.CURSO_ID, c.NOMBRE AS CURSO_NOMBRE
-       FROM GRUPO g
-       JOIN CURSOS c ON g.CURSO_ID = c.CURSO_ID
-       ORDER BY g.GRUPO_ID`
-    );
-    await connection.close();
-
-    const grupos = result.rows.map(row => ({
-      GRUPO_ID: row[0],
-      NOMBRE: row[1],
-      CURSO_ID: row[2],
-      CURSO_NOMBRE: row[3]
-    }));
-
-    res.json(grupos);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};
-
-// Obtener estudiantes asignados a un grupo
-exports.obtenerEstudiantesPorGrupo = async (req, res) => {
+// Obtener usuarios asignados a un grupo
+exports.obtenerUsuariosPorGrupo = async (req, res) => {
   const { grupoId } = req.params;
   try {
     const connection = await oracledb.getConnection(dbConfig);
     const result = await connection.execute(
-      `SELECT e.ESTUDIANTE_ID, e.NOMBRE
-       FROM ESTUDIANTES e
-       JOIN GRUPO_ESTUDIANTES ge ON e.ESTUDIANTE_ID = ge.ESTUDIANTE_ID
-       WHERE ge.GRUPO_ID = :grupoId`,
+      `SELECT u.USUARIO_ID, u.NOMBRE, u.APELLIDO, u.CORREO
+       FROM USUARIO u
+       JOIN USUARIO_GRUPO ug ON u.USUARIO_ID = ug.USUARIO_ID
+       WHERE ug.GRUPO_ID = :grupoId`,
       [parseInt(grupoId)]
     );
     await connection.close();
 
-    const estudiantes = result.rows.map(row => ({
-      ESTUDIANTE_ID: row[0],
+    const usuarios = result.rows.map(row => ({
+      USUARIO_ID: row[0],
       NOMBRE: row[1],
+      APELLIDO: row[2],
+      CORREO: row[3]
     }));
 
-    res.json(estudiantes);
+    res.json(usuarios);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
 
-// Quitar estudiante de un grupo
+// Quitar usuario de un grupo
 exports.quitarUsuarioDeGrupo = async (req, res) => {
   const { grupoId, usuarioId } = req.params;
   try {
     const connection = await oracledb.getConnection(dbConfig);
     await connection.execute(
-      `DELETE FROM GRUPO_ESTUDIANTES WHERE GRUPO_ID = :grupoId AND ESTUDIANTE_ID = :usuarioId`,
+      `DELETE FROM USUARIO_GRUPO WHERE GRUPO_ID = :grupoId AND USUARIO_ID = :usuarioId`,
       { grupoId: parseInt(grupoId), usuarioId: parseInt(usuarioId) }
     );
     await connection.close();
-    res.status(200).json({ mensaje: 'Estudiante removido del grupo correctamente' });
+    res.status(200).json({ mensaje: 'Usuario removido del grupo correctamente' });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
+
 
 exports.asignarUsuarioAGrupo = async (req, res) => {
   let { usuarioId, grupoId } = req.body;

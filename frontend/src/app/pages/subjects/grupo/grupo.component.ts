@@ -94,30 +94,46 @@ export class GrupoComponent implements OnInit {
 
 
   verEstudiantes(grupoId: number): void {
-    console.log(`[verEstudiantes] Grupo ID: ${grupoId}`);
-    const grupo = this.grupos.find(g => g.id === grupoId);
-    if (!grupo) {
-      console.warn(`[verEstudiantes] No se encontró el grupo con ID: ${grupoId}`);
-      return;
-    }
+  console.log(`[verEstudiantes] Grupo ID: ${grupoId}`);
 
-    grupo.mostrarEstudiantes = !grupo.mostrarEstudiantes;
-    console.log(`[verEstudiantes] Toggle mostrarEstudiantes a ${grupo.mostrarEstudiantes} para grupo ID ${grupoId}`);
-
-    if (grupo.mostrarEstudiantes && grupo.estudiantes.length === 0) {
-      console.log(`[verEstudiantes] Cargando estudiantes para grupo ID ${grupoId}`);
-      this.grupoService.obtenerEstudiantesPorGrupo(grupoId).subscribe({
-        next: (estudiantes) => {
-          console.log(`[verEstudiantes] Estudiantes recibidos para grupo ${grupoId}:`, estudiantes);
-          grupo.estudiantes = estudiantes;
-        },
-        error: (err) => {
-          console.error(`[verEstudiantes] Error al cargar estudiantes del grupo ${grupoId}:`, err);
-          this.errorEstudiantes = 'No se pudieron cargar los estudiantes del grupo';
-        }
-      });
-    }
+  const grupo = this.grupos.find(g => g.id === grupoId);
+  if (!grupo) {
+    console.warn(`[verEstudiantes] No se encontró el grupo con ID: ${grupoId}`);
+    return;
   }
+
+  // Alternar visibilidad
+  grupo.mostrarEstudiantes = !grupo.mostrarEstudiantes;
+  console.log(`[verEstudiantes] Toggle mostrarEstudiantes a ${grupo.mostrarEstudiantes} para grupo ID ${grupoId}`);
+
+  // Si se va a mostrar y aún no tiene estudiantes cargados
+  if (grupo.mostrarEstudiantes && (!grupo.estudiantes || grupo.estudiantes.length === 0)) {
+    console.log(`[verEstudiantes] Cargando estudiantes para grupo ID ${grupoId}`);
+
+    this.grupoService.obtenerEstudiantesPorGrupo(grupoId).subscribe({
+      next: (estudiantesRaw) => {
+        console.log(`[verEstudiantes] Estudiantes recibidos para grupo ${grupoId}:`, estudiantesRaw);
+        
+        // Transformar claves a camelCase
+        const estudiantes = estudiantesRaw.map(e => ({
+          usuario_id: e.USUARIO_ID,
+          nombre: e.NOMBRE,
+          apellido: e.APELLIDO,
+          correo: e.CORREO
+        }));
+
+        grupo.estudiantes = estudiantes;
+      },
+      error: (err) => {
+        console.error(`[verEstudiantes] Error al cargar estudiantes del grupo ${grupoId}:`, err);
+        this.errorEstudiantes = 'No se pudieron cargar los estudiantes del grupo';
+        grupo.mostrarEstudiantes = false; // Ocultar tabla si falla la carga
+      }
+    });
+  }
+}
+
+
 
   cargarUsuariosPorRol(): void {
   console.log('[cargarUsuariosPorRol3] Llamando al servicio para obtener usuarios con rol_id = 3');
@@ -252,5 +268,33 @@ onGrupoSeleccionado(): void {
   console.log('[onGrupoSeleccionado] ID del grupo seleccionado:', this.grupoSeleccionadoId);
 }
 
+cargarUsuarioGrupoPorGrupoId(grupoId: number): void {
+  console.log(`[cargarUsuarioGrupoPorGrupoId] Grupo ID: ${grupoId}`);
+
+  this.grupoService.obtenerUsuarioGrupoPorGrupoId(grupoId).subscribe({
+    next: (data) => {
+      console.log(`[cargarUsuarioGrupoPorGrupoId] Datos recibidos para grupo ${grupoId}:`, data);
+
+      // Mapear las propiedades mayúsculas del backend al DTO con propiedades minúsculas
+      const estudiantesMapeados = data.map((item: any) => ({
+        usuario_id: item.USUARIO_ID,
+        nombre: item.NOMBRE,
+        apellido: item.APELLIDO,
+        correo: item.CORREO
+      }));
+
+      // Buscar el grupo correspondiente en el array 'grupos'
+      const grupo = this.grupos.find(g => g.id === grupoId);
+      if (grupo) {
+        grupo.estudiantes = estudiantesMapeados; // Asignar los estudiantes mapeados
+        grupo.mostrarEstudiantes = true; // Mostrar tabla
+      }
+    },
+    error: (err) => {
+      console.error(`[cargarUsuarioGrupoPorGrupoId] Error al cargar usuario_grupo:`, err);
+      alert('No se pudo obtener la información de los estudiantes.');
+    }
+  });
+}
 
 }

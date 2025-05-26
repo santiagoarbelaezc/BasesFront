@@ -20,6 +20,7 @@ export class ExamService {
 
   // Actualizar examen
   actualizarExamen(id: number, examen: ExamenDTO): Observable<any> {
+    
     return this.http.put<any>(`${this.baseUrl}/${id}`, examen);
   }
 
