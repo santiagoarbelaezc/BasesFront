@@ -1,8 +1,69 @@
-<app-navbar></app-navbar>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gestión de Categorías</title>
+  <link rel="stylesheet" href="categoria.component.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body>
 
-<section class="profile-content">
-  <!-- Aquí irá el contenido específico de la lista de exámenes -->
-  <h2>Bienvenido a Categorias</h2>
-  <!-- Ejemplo de contenido dinámico o estático futuro -->
-  <p>Selecciona una opcion</p>
-</section>
+  <app-navbar></app-navbar>
+
+  <div class="gestion-examenes-wrapper">
+
+    <!-- Formulario de categoría -->
+    <div class="formulario-examen-container">
+      <div class="formulario-examen-box">
+        <h1 class="titulo-seccion">Gestión de Categorías</h1>
+
+        <div class="input-group">
+          <input type="text" id="nombreCategoria" [(ngModel)]="nombreCategoria" required />
+          <label for="nombreCategoria">Nombre de la Categoría:</label>
+        </div>
+
+        <div class="button-group" style="display: flex; gap: 10px;">
+          <button class="btn-primary" (click)="crearCategoria()" [disabled]="!nombreCategoria">Crear</button>
+          <button class="btn-secondary" (click)="actualizarCategoria()" [disabled]="!categoriaSeleccionada || !nombreCategoria">Actualizar</button>
+          <button class="btn-delete" (click)="eliminarCategoria()" [disabled]="!categoriaSeleccionada">Eliminar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lista de categorías -->
+    <div class="lista-examenes-container">
+      <h2 class="titulo-seccion-secundario">Lista de Categorías</h2>
+
+      <div *ngIf="cargando" class="loading-message">Cargando categorías...</div>
+      <div *ngIf="error" class="error-message">{{ error }}</div>
+
+      <div class="tabla-responsive" *ngIf="categorias.length > 0">
+        <table class="tabla-examenes">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>ID</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let categoria of categorias"
+                [class.selected]="categoria.categoria_id === categoriaSeleccionada?.categoria_id"
+                (click)="seleccionarCategoria(categoria)"
+                style="cursor: pointer;">
+              <td>{{ categoria.nombre }}</td>
+              <td>{{ categoria.categoria_id }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div *ngIf="categorias.length === 0 && !cargando && !error" style="margin-top: 10px;">
+        No hay categorías disponibles.
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>
