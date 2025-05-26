@@ -164,3 +164,44 @@ exports.getNotasPorCurso = async (req, res) => {
     if (connection) await connection.close();
   }
 };
+
+exports.getExamenesPresentadosPorExamen = async (req, res) => {
+  const { examenId } = req.params;
+  let connection;
+
+  try {
+    connection = await oracledb.getConnection(dbConfig);
+
+    const result = await connection.execute(
+      `SELECT 
+         ep.FECHA,
+         u.NOMBRE || ' ' || u.APELLIDO AS ESTUDIANTE,
+         e.NOMBRE AS EXAMEN,
+         ep.HORA_INICIO,
+         ep.HORA_FIN,
+         ep.PORCENTAJE,
+         ep.EXAMEN_ID
+       FROM EXAMEN_PRESENTADO ep
+       JOIN USUARIO u ON ep.USUARIO_ID = u.USUARIO_ID
+       JOIN EXAMEN e ON ep.EXAMEN_ID = e.EXAMEN_ID
+       WHERE ep.EXAMEN_ID = :examenId`,
+      { examenId: parseInt(examenId) },
+      { outFormat: oracledb.OUT_FORMAT_OBJECT }
+    );
+
+    const examenes = result.rows.map(row => ({
+      estudiante: row.ESTUDIANTE,
+      examen: row.EXAMEN,
+      examenId: row.EXAMEN_ID,
+      fecha: row.FECHA,
+      puntaje: row.PORCENTAJE,
+      tiempo: calcularDuracion(row.HORA_INICIO, row.HORA_FIN)
+    }));
+
+    res.status(200).json(examenes);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  } finally {
+    if (connection) await connection.close();
+  }
+};

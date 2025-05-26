@@ -30,4 +30,10 @@ export class ReportesService {
   getNotasPorCurso(cursoId: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}/notas/${cursoId}`);
   }
+
+  // 🔍 Exámenes presentados por ID de examen
+  getExamenesPorExamenId(examenId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/examenes/${examenId}`);
+  }
+
 }

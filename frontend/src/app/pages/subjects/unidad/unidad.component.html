@@ -29,7 +29,7 @@
       <button class="btn-primary" (click)="crearContenido()" [disabled]="!unidadSeleccionadaId || !nombreContenido">Crear Contenido</button>
 
       <!-- Crear Tema (requiere contenido seleccionado) -->
-       <div class="input-group">
+      <div class="input-group">
         <select [(ngModel)]="unidadSeleccionadaParaTema" (change)="cargarContenidosPorUnidad()" required>
           <option [value]="null" disabled selected>Selecciona una unidad</option>
           <option *ngFor="let unidad of unidades" [value]="unidad.unidad_id">

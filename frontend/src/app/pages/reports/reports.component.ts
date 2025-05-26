@@ -5,7 +5,8 @@ import { CommonModule } from '@angular/common';
 import { ReportesService } from '../../services/reportes.service';
 import { ChartData } from 'chart.js';
 import { NgChartsModule } from 'ng2-charts';
-
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 
 @Component({
   selector: 'app-reports',
@@ -19,8 +20,12 @@ export class ReportsComponent implements OnInit {
   // 🔘 Pestaña activa
   tabActiva: string = 'examenes';
 
-  // 1️⃣ Exámenes Presentados
-  examenesPresentados: any[] = [];
+  // 📋 Lista de exámenes (para el <select>)
+  listaExamenes: { id: number, nombre: string }[] = [];
+  examenSeleccionadoId: number | null = null;
+
+  // 1️⃣ Exámenes Presentados (filtrados)
+  examenesFiltrados: any[] = [];
   graficoExamenes: ChartData<'bar'> = {
     labels: [],
     datasets: []
@@ -45,13 +50,28 @@ export class ReportsComponent implements OnInit {
   constructor(private reportesService: ReportesService) {}
 
   ngOnInit(): void {
-    this.cargarExamenesPresentados();
+    this.cargarListaExamenes();
   }
 
-  // 1️⃣ Cargar exámenes presentados
-  cargarExamenesPresentados(): void {
+  // 🔍 Lista de exámenes disponibles (para el select)
+  cargarListaExamenes(): void {
     this.reportesService.getExamenesPresentados().subscribe(data => {
-      this.examenesPresentados = data;
+      const mapa = new Map();
+      data.forEach((e: any) => {
+        if (!mapa.has(e.examen)) {
+          mapa.set(e.examen, e.examenId);
+        }
+      });
+      this.listaExamenes = Array.from(mapa.entries()).map(([nombre, id]) => ({ nombre, id }));
+    });
+  }
+
+  // 1️⃣ Filtrar exámenes presentados por ID
+  cargarExamenFiltrado(): void {
+    if (!this.examenSeleccionadoId) return;
+
+    this.reportesService.getExamenesPorExamenId(this.examenSeleccionadoId).subscribe(data => {
+      this.examenesFiltrados = data;
 
       this.graficoExamenes = {
         labels: data.map((d: any) => d.estudiante),
@@ -66,7 +86,31 @@ export class ReportsComponent implements OnInit {
     });
   }
 
-  // 2️⃣ Cargar estadísticas por pregunta
+  // 📥 Generar informe PDF
+  generarPDF(): void {
+    const contenido = document.getElementById('reporteExamenes');
+    if (!contenido) return;
+
+    html2canvas(contenido).then(canvas => {
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'mm', 'a4');
+
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const imgWidth = pageWidth - 20;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+      pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
+
+      const nombre = this.listaExamenes.find(e => e.id === this.examenSeleccionadoId)?.nombre || 'reporte';
+      const fecha = new Date().toLocaleDateString();
+      pdf.setFontSize(10);
+      pdf.text(`Generado el ${fecha}`, 10, pdf.internal.pageSize.getHeight() - 10);
+
+      pdf.save(`reporte_${nombre}.pdf`);
+    });
+  }
+
+  // 2️⃣ Estadísticas por pregunta
   cargarEstadisticas(): void {
     if (!this.examenIdSeleccionado) return;
 
@@ -91,7 +135,7 @@ export class ReportsComponent implements OnInit {
     });
   }
 
-  // 3️⃣ Cargar resumen de curso
+  // 3️⃣ Resumen por curso
   cargarResumenCurso(): void {
     if (!this.cursoIdResumen) return;
 
@@ -100,7 +144,7 @@ export class ReportsComponent implements OnInit {
     });
   }
 
-  // 4️⃣ Cargar notas por curso
+  // 4️⃣ Notas por curso
   cargarNotasCurso(): void {
     if (!this.cursoIdNotas) return;
 
