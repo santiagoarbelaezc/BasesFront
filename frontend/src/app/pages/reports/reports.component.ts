@@ -32,6 +32,11 @@ export class ReportsComponent implements OnInit {
     datasets: []
   };
 
+  graficoResumenCurso: ChartData<'bar'> = {
+  labels: ['Aprobados', 'Reprobados'],
+  datasets: []
+};
+
   // 2️⃣ Estadísticas por Pregunta
   examenIdSeleccionado: number | null = null;
   estadisticasPregunta: any[] = [];
@@ -120,7 +125,19 @@ export class ReportsComponent implements OnInit {
 
     this.reportesService.getResumenCurso(this.cursoIdResumen).subscribe(data => {
       this.resumenCurso = data;
+      this.graficoResumenCurso = {
+  labels: ['Aprobados', 'Reprobados'],
+  datasets: [
+    {
+      label: 'Cantidad de estudiantes',
+      data: [data.APROBADOS, data.REPROBADOS],
+      backgroundColor: ['#2ecc71', '#e74c3c']
+    }
+  ]
+};
     });
+
+    
   }
 
   // 📝 Notas por Curso
@@ -156,4 +173,32 @@ export class ReportsComponent implements OnInit {
       });
     }, 500);
   }
+
+
+
+
+generarPDFResumen(): void {
+  const contenido = document.getElementById('reporteResumenCurso');
+  if (!contenido) return;
+
+  setTimeout(() => {
+    html2canvas(contenido).then(canvas => {
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const imgWidth = pageWidth - 20;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+      pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
+
+      const fecha = new Date().toLocaleDateString();
+      pdf.setFontSize(10);
+      pdf.text(`Generado el ${fecha}`, 10, pdf.internal.pageSize.getHeight() - 10);
+      pdf.save('resumen_curso.pdf');
+    });
+  }, 500);
+}
+
+
+  
 }
