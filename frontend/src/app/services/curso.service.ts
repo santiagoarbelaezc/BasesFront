@@ -1,32 +1,50 @@
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { Observable, map } from 'rxjs';
+import { CursoDTO } from '../models/curso.dto';
 
-export interface Curso {
-  curso_id?: number;
-  nombre: string;
-  descripcion: string;
-}
-
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root'
+})
 export class CursoService {
-  private apiUrl = 'http://localhost:3000/api/cursos';
+  private baseUrl = 'http://localhost:3000/api/cursos'; // Ajusta si tu puerto/backend cambia
 
   constructor(private http: HttpClient) {}
 
-  crearCurso(curso: Curso): Observable<any> {
-    return this.http.post(this.apiUrl, curso);
+  // Obtener todos los cursos
+  obtenerCursos(): Observable<CursoDTO[]> {
+    return this.http.get<any[]>(this.baseUrl).pipe(
+      map(items => items.map(item => ({
+        id: item.CURSO_ID,
+        nombre: item.NOMBRE,
+        descripcion: item.DESCRIPCION
+      })))
+    );
   }
 
-  obtenerCursos(): Observable<Curso[]> {
-    return this.http.get<Curso[]>(this.apiUrl);
+  // Obtener curso por ID (opcional si tu backend lo permite)
+  obtenerCursoPorId(id: number): Observable<CursoDTO> {
+    return this.http.get<any>(`${this.baseUrl}/${id}`).pipe(
+      map(item => ({
+        id: item.CURSO_ID,
+        nombre: item.NOMBRE,
+        descripcion: item.DESCRIPCION
+      }))
+    );
   }
 
-  actualizarCurso(id: number, curso: Curso): Observable<any> {
-    return this.http.put(`${this.apiUrl}/${id}`, curso);
+  // Crear un curso
+  insertarCurso(curso: CursoDTO): Observable<any> {
+    return this.http.post(this.baseUrl, curso);
   }
 
+  // Actualizar curso
+  actualizarCurso(id: number, curso: CursoDTO): Observable<any> {
+    return this.http.put(`${this.baseUrl}/${id}`, curso);
+  }
+
+  // Eliminar curso
   eliminarCurso(id: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/${id}`);
+    return this.http.delete(`${this.baseUrl}/${id}`);
   }
 }

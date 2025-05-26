@@ -8,7 +8,7 @@ import { ContenidoDTO } from '../models/contenido.dto';
   providedIn: 'root'
 })
 export class ContenidoService {
-  private baseUrl = 'http://localhost:8080/api/contenidos';
+  private baseUrl = 'http://localhost:3000/api/contenidos';
 
   constructor(private http: HttpClient) {}
 

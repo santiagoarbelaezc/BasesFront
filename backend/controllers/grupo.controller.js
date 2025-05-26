@@ -1,14 +1,13 @@
 const oracledb = require('oracledb');
 const dbConfig = require('../db-config');
 
-// Insertar grupo
 exports.insertarGrupo = async (req, res) => {
-  const { nombre, curso_id } = req.body;
+  const { nombre, cursoId } = req.body;
   try {
     const connection = await oracledb.getConnection(dbConfig);
     await connection.execute(
       `BEGIN INSERTAR_GRUPO(:nombre, :curso_id); END;`,
-      { nombre, curso_id }
+      { nombre, curso_id: cursoId }
     );
     await connection.close();
     res.status(201).json({ mensaje: 'Grupo insertado correctamente' });
@@ -16,6 +15,7 @@ exports.insertarGrupo = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
 
 // Obtener todos los grupos
 exports.obtenerGrupos = async (req, res) => {
