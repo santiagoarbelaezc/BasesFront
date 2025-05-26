@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { NavbarComponent } from '../shared/navbar/navbar.component';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ReportesService } from '../../services/reportes.service';
 import { ChartData } from 'chart.js';
-import { NgChartsModule } from 'ng2-charts';
+import { BaseChartDirective, NgChartsModule } from 'ng2-charts';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 
@@ -20,30 +20,26 @@ export class ReportsComponent implements OnInit {
   // 🔘 Pestaña activa
   tabActiva: string = 'examenes';
 
-  // 📋 Lista de exámenes (para el <select>)
+  @ViewChild(BaseChartDirective) chart: BaseChartDirective | undefined;
+
+  // 📋 Lista de exámenes (para selector)
   listaExamenes: { id: number, nombre: string }[] = [];
   examenSeleccionadoId: number | null = null;
 
-  // 1️⃣ Exámenes Presentados (filtrados)
+  // 1️⃣ Exámenes filtrados o presentados
   examenesFiltrados: any[] = [];
-  graficoExamenes: ChartData<'bar'> = {
-    labels: [],
-    datasets: []
-  };
+  graficoExamenes: ChartData<'bar'> = { labels: [], datasets: [] };
 
   // 2️⃣ Estadísticas por Pregunta
   examenIdSeleccionado: number | null = null;
   estadisticasPregunta: any[] = [];
-  graficoEstadisticas: ChartData<'doughnut'> = {
-    labels: [],
-    datasets: []
-  };
+  graficoEstadisticas: ChartData<'doughnut'> = { labels: [], datasets: [] };
 
-  // 3️⃣ Resumen del Curso
+  // 3️⃣ Resumen por curso
   cursoIdResumen: number | null = null;
   resumenCurso: any = null;
 
-  // 4️⃣ Notas por Curso
+  // 4️⃣ Notas por curso
   cursoIdNotas: number | null = null;
   notasCurso: any[] = [];
 
@@ -53,7 +49,7 @@ export class ReportsComponent implements OnInit {
     this.cargarListaExamenes();
   }
 
-  // 🔍 Lista de exámenes disponibles (para el select)
+  // 🔍 Obtener lista de exámenes únicos para selector
   cargarListaExamenes(): void {
     this.reportesService.getExamenesPresentados().subscribe(data => {
       const mapa = new Map();
@@ -66,9 +62,9 @@ export class ReportsComponent implements OnInit {
     });
   }
 
-  // 1️⃣ Filtrar exámenes presentados por ID
+  // 1️⃣ Cargar exámenes filtrados por examenId y actualizar gráfico con retraso para evitar problemas con canvas
   cargarExamenFiltrado(): void {
-    if (!this.examenSeleccionadoId) return;
+    if (this.examenSeleccionadoId === null || isNaN(this.examenSeleccionadoId)) return;
 
     this.reportesService.getExamenesPorExamenId(this.examenSeleccionadoId).subscribe(data => {
       this.examenesFiltrados = data;
@@ -83,34 +79,77 @@ export class ReportsComponent implements OnInit {
           }
         ]
       };
+
+      setTimeout(() => {
+        this.chart?.update();
+      }, 300);  // Tiempo de espera para que canvas se cargue bien
     });
   }
 
-  // 📥 Generar informe PDF
+  // 📥 Exportar a PDF (tabla + gráfico)
   generarPDF(): void {
-    const contenido = document.getElementById('reporteExamenes');
-    if (!contenido) return;
+    const contenedorTabla = document.getElementById('reporteExamenes');
+    const canvasGrafico = document.querySelector('canvas');
 
-    html2canvas(contenido).then(canvas => {
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF('p', 'mm', 'a4');
+    if (!contenedorTabla || !canvasGrafico) {
+      alert('No se puede generar el reporte. Asegúrate de tener datos cargados.');
+      return;
+    }
 
-      const pageWidth = pdf.internal.pageSize.getWidth();
-      const imgWidth = pageWidth - 20;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+    setTimeout(() => {
+      html2canvas(contenedorTabla, {
+        ignoreElements: (element) => element.tagName === 'CANVAS',
+        scale: 2,
+        useCORS: true
+      }).then(canvasContenido => {
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const pageWidth = pdf.internal.pageSize.getWidth();
 
-      pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
+        const imgDataContenido = canvasContenido.toDataURL('image/png');
+        const imgWidthContenido = pageWidth - 20;
+        const imgHeightContenido = (canvasContenido.height * imgWidthContenido) / canvasContenido.width;
 
-      const nombre = this.listaExamenes.find(e => e.id === this.examenSeleccionadoId)?.nombre || 'reporte';
-      const fecha = new Date().toLocaleDateString();
-      pdf.setFontSize(10);
-      pdf.text(`Generado el ${fecha}`, 10, pdf.internal.pageSize.getHeight() - 10);
+        pdf.addImage(imgDataContenido, 'PNG', 10, 10, imgWidthContenido, imgHeightContenido);
 
-      pdf.save(`reporte_${nombre}.pdf`);
-    });
+        html2canvas(canvasGrafico as HTMLElement, {
+          scale: 2,
+          useCORS: true
+        }).then(canvasGraficoImg => {
+          const imgDataGrafico = canvasGraficoImg.toDataURL('image/png');
+          const imgWidthGrafico = pageWidth - 20;
+          const imgHeightGrafico = (canvasGraficoImg.height * imgWidthGrafico) / canvasGraficoImg.width;
+
+          const currentHeight = 10 + imgHeightContenido + 10;
+          const maxHeight = pdf.internal.pageSize.getHeight();
+
+          if (currentHeight + imgHeightGrafico > maxHeight) {
+            pdf.addPage();
+            pdf.addImage(imgDataGrafico, 'PNG', 10, 20, imgWidthGrafico, imgHeightGrafico);
+          } else {
+            pdf.addImage(imgDataGrafico, 'PNG', 10, currentHeight, imgWidthGrafico, imgHeightGrafico);
+          }
+
+          const nombre = this.listaExamenes.find(e => e.id === this.examenSeleccionadoId)?.nombre || 'reporte';
+          const fecha = new Date().toLocaleDateString();
+
+          pdf.setFontSize(10);
+          pdf.text(`Generado el ${fecha}`, 10, pdf.internal.pageSize.getHeight() - 10);
+
+          pdf.save(`reporte_${nombre}.pdf`);
+        }).catch(err => {
+          console.error('Error al capturar gráfico:', err);
+          alert('Ocurrió un error al capturar el gráfico. Intenta nuevamente.');
+        });
+
+      }).catch(err => {
+        console.error('Error al capturar contenido:', err);
+        alert('Ocurrió un error al generar el reporte.');
+      });
+
+    }, 800);
   }
 
-  // 2️⃣ Estadísticas por pregunta
+  // 2️⃣ Estadísticas por pregunta con actualización diferida para evitar problemas de render
   cargarEstadisticas(): void {
     if (!this.examenIdSeleccionado) return;
 
@@ -132,6 +171,8 @@ export class ReportsComponent implements OnInit {
           }
         ]
       };
+
+      setTimeout(() => this.chart?.update(), 300);  // Espera para que canvas renderice bien
     });
   }
 

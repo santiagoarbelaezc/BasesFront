@@ -23,8 +23,10 @@
   <!-- Filtro por examen -->
   <label for="examenSelect">Selecciona un examen:</label>
   <select id="examenSelect" [(ngModel)]="examenSeleccionadoId" (change)="cargarExamenFiltrado()">
-    <option [value]="null" disabled>-- Elegir examen --</option>
-    <option *ngFor="let ex of listaExamenes" [value]="ex.id">{{ ex.nombre }}</option>
+    <option [ngValue]="null" disabled>-- Elegir examen --</option>
+
+    <option *ngFor="let ex of listaExamenes" [ngValue]="ex.id">{{ ex.nombre }}</option>
+
   </select>
 
   <!-- Botón para exportar PDF -->
