@@ -53,6 +53,12 @@ export class ReportsComponent implements OnInit {
   cursoIdNotas: number | null = null;
   notasCurso: any[] = [];
 
+  graficoNotasCurso: ChartData<'bar'> = {
+  labels: [],
+  datasets: []
+};
+
+
   constructor(private reportesService: ReportesService) {}
 
   ngOnInit(): void {
@@ -123,30 +129,41 @@ export class ReportsComponent implements OnInit {
   cargarResumenCurso(): void {
     if (!this.cursoIdResumen) return;
 
-    this.reportesService.getResumenCurso(this.cursoIdResumen).subscribe(data => {
-      this.resumenCurso = data;
-      this.graficoResumenCurso = {
-  labels: ['Aprobados', 'Reprobados'],
-  datasets: [
-    {
-      label: 'Cantidad de estudiantes',
-      data: [data.APROBADOS, data.REPROBADOS],
-      backgroundColor: ['#2ecc71', '#e74c3c']
-    }
-  ]
-};
-    });
-
+      this.reportesService.getResumenCurso(this.cursoIdResumen).subscribe(data => {
+        this.resumenCurso = data;
+        this.graficoResumenCurso = {
+    labels: ['Aprobados', 'Reprobados'],
+    datasets: [
+      {
+        label: 'Cantidad de estudiantes',
+        data: [data.APROBADOS, data.REPROBADOS],
+        backgroundColor: ['#2ecc71', '#e74c3c']
+      }
+      ]
+    };
+  });
   }
 
-  // 📝 Notas por Curso
-  cargarNotasCurso(): void {
-    if (!this.cursoIdNotas) return;
+// 📝 Notas por Curso
+cargarNotasCurso(): void {
+  if (!this.cursoIdNotas) return;
 
-    this.reportesService.getNotasPorCurso(this.cursoIdNotas).subscribe(data => {
-      this.notasCurso = data;
-    });
-  }
+  this.reportesService.getNotasPorCurso(this.cursoIdNotas).subscribe(data => {
+    this.notasCurso = data;
+
+    // ✅ Configurar gráfica de notas por estudiante
+    this.graficoNotasCurso = {
+      labels: data.map((n: any) => n.ESTUDIANTE),
+      datasets: [
+        {
+          label: 'Nota (%)',
+          data: data.map((n: any) => n.NOTA),
+          backgroundColor: '#3498db'
+        }
+      ]
+    };
+  });
+}
 
   // 📥 Exportar vista actual a PDF
   generarPDF(): void {
@@ -173,31 +190,46 @@ export class ReportsComponent implements OnInit {
     }, 500);
   }
 
+  generarPDFResumen(): void {
+    const contenido = document.getElementById('reporteResumenCurso');
+    if (!contenido) return;
 
+    setTimeout(() => {
+      html2canvas(contenido).then(canvas => {
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const pageWidth = pdf.internal.pageSize.getWidth();
+        const imgWidth = pageWidth - 20;
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
+        pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
 
-generarPDFResumen(): void {
-  const contenido = document.getElementById('reporteResumenCurso');
-  if (!contenido) return;
+        const fecha = new Date().toLocaleDateString();
+        pdf.setFontSize(10);
+        pdf.text(`Generado el ${fecha}`, 10, pdf.internal.pageSize.getHeight() - 10);
+        pdf.save('resumen_curso.pdf');
+      });
+    }, 500);
+  }
+  // 📝 Notas por Curso
+  generarPDFNotas(): void {
+    const contenido = document.getElementById('reporteNotasCurso');
+    if (!contenido) return;
 
-  setTimeout(() => {
-    html2canvas(contenido).then(canvas => {
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF('p', 'mm', 'a4');
-      const pageWidth = pdf.internal.pageSize.getWidth();
-      const imgWidth = pageWidth - 20;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+    setTimeout(() => {
+      html2canvas(contenido).then(canvas => {
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const pageWidth = pdf.internal.pageSize.getWidth();
+        const imgWidth = pageWidth - 20;
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-      pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
-
-      const fecha = new Date().toLocaleDateString();
-      pdf.setFontSize(10);
-      pdf.text(`Generado el ${fecha}`, 10, pdf.internal.pageSize.getHeight() - 10);
-      pdf.save('resumen_curso.pdf');
-    });
-  }, 500);
-}
-
-
-  
+        pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
+        const fecha = new Date().toLocaleDateString();
+        pdf.setFontSize(10);
+        pdf.text(`Generado el ${fecha}`, 10, pdf.internal.pageSize.getHeight() - 10);
+        pdf.save('notas_curso.pdf');
+      });
+    }, 500);
+  }
 }
