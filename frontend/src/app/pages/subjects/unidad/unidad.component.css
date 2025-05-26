@@ -1,0 +1,179 @@
+/* General */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", sans-serif;
+  color: #111;
+}
+
+body, html {
+  min-height: 100vh;
+  background-color: #ffffff;
+}
+
+/* Contenedor principal */
+.gestion-examenes-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+  padding: 20px;
+  width: 100%;
+  min-height: 100vh;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+/* Formulario */
+.formulario-examen-container {
+  flex: 0 0 40%;
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.formulario-examen-box {
+  background: #f9f9f9;
+  padding: 30px 25px;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  width: 100%;
+  transition: transform 0.2s ease;
+}
+
+.formulario-examen-box:hover {
+  transform: translateY(-3px);
+}
+
+.titulo-seccion {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #222;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.input-group {
+  margin-bottom: 20px;
+  position: relative;
+}
+
+input, select {
+  width: 100%;
+  padding: 12px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #fff;
+  font-size: 14px;
+  outline: none;
+}
+
+input:focus, select:focus {
+  border-color: #e74c3c;
+}
+
+label {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 13px;
+  color: #666;
+  pointer-events: none;
+  transition: all 0.2s ease;
+  background-color: white;
+  padding: 0 4px;
+}
+
+input:focus + label,
+input:valid + label,
+select:focus + label,
+select:valid + label {
+  top: -9px;
+  left: 8px;
+  font-size: 11px;
+  color: #e74c3c;
+}
+
+.btn-primary {
+  background: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%;
+  margin-top: 5px;
+}
+
+.btn-primary:hover {
+  background: #c0392b;
+}
+
+/* Lista jerárquica */
+.lista-examenes-container {
+  flex: 0 0 55%;
+  max-width: 700px;
+  background: #fdfdfd;
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  overflow-x: auto;
+}
+
+.titulo-seccion-secundario {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #222;
+  margin-bottom: 20px;
+}
+
+ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+ul li {
+  margin-bottom: 10px;
+  padding-left: 15px;
+  position: relative;
+}
+
+ul li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: #e74c3c;
+  font-size: 18px;
+  top: 1px;
+}
+
+ul li strong {
+  color: #222;
+}
+
+ul li span {
+  display: inline-block;
+  padding-left: 10px;
+  color: #333;
+}
+
+ul ul {
+  padding-left: 20px;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .gestion-examenes-wrapper {
+    flex-direction: column;
+    gap: 25px;
+    padding: 15px;
+  }
+  .formulario-examen-container, .lista-examenes-container {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}

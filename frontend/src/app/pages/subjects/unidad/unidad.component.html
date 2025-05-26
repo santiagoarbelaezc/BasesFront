@@ -1,1 +1,85 @@
-<p>unidad works!</p>
+<app-navbar></app-navbar>
+
+<div class="gestion-examenes-wrapper">
+
+  <!-- Formulario: Crear Unidad -->
+  <div class="formulario-examen-container">
+    <div class="formulario-examen-box">
+      <h1 class="titulo-seccion">Gestión Académica</h1>
+
+      <!-- Crear Unidad -->
+      <div class="input-group">
+        <input type="text" [(ngModel)]="nombreUnidad" required />
+        <label>Nombre de la Unidad:</label>
+      </div>
+      <button class="btn-primary" (click)="crearUnidad()" [disabled]="!nombreUnidad">Crear Unidad</button>
+
+      <!-- Crear Contenido (requiere unidad seleccionada) -->
+      <div class="input-group">
+        <select [(ngModel)]="unidadSeleccionadaId" required>
+          <option [value]="null" disabled selected>Selecciona una unidad</option>
+          <option *ngFor="let unidad of unidades" [value]="unidad.unidad_id">{{ unidad.nombre }}</option>
+        </select>
+        <label>Unidad para el Contenido</label>
+      </div>
+      <div class="input-group">
+        <input type="text" [(ngModel)]="nombreContenido" required />
+        <label>Nombre del Contenido:</label>
+      </div>
+      <button class="btn-primary" (click)="crearContenido()" [disabled]="!unidadSeleccionadaId || !nombreContenido">Crear Contenido</button>
+
+      <!-- Crear Tema (requiere contenido seleccionado) -->
+       <div class="input-group">
+        <select [(ngModel)]="unidadSeleccionadaParaTema" (change)="cargarContenidosPorUnidad()" required>
+          <option [value]="null" disabled selected>Selecciona una unidad</option>
+          <option *ngFor="let unidad of unidades" [value]="unidad.unidad_id">
+            {{ unidad.nombre }}
+          </option>
+        </select>
+        <label>Unidad para el Contenido</label>
+      </div>
+
+      <div class="input-group">
+        <select [(ngModel)]="contenidoSeleccionadoId" required>
+          <option [value]="null" disabled selected>Selecciona un contenido</option>
+          <option *ngFor="let contenido of contenidos" [value]="contenido.contenido_id">
+            {{ contenido.nombre }}
+          </option>
+        </select>
+        <label>Contenido para el Tema</label>
+      </div>
+
+      <div class="input-group">
+        <input type="text" [(ngModel)]="nombreTema" required />
+        <label>Nombre del Tema:</label>
+      </div>
+
+      <button class="btn-primary" (click)="crearTema()" [disabled]="!contenidoSeleccionadoId || !nombreTema">
+        Crear Tema
+      </button>
+
+    </div>
+  </div>
+
+  <!-- Tabla de unidades y jerarquía desplegable -->
+  <div class="lista-examenes-container">
+    <h2 class="titulo-seccion-secundario">Lista de Unidades, Contenidos y Temas</h2>
+
+    <ul>
+      <li *ngFor="let unidad of unidades">
+        <strong>{{ unidad.nombre }}</strong>
+        <ul>
+          <li *ngFor="let contenido of unidad.contenidos">
+            <span style="margin-left: 10px;">📂 {{ contenido.nombre }}</span>
+            <ul>
+              <li *ngFor="let tema of contenido.temas">
+                <span style="margin-left: 20px;">📝 {{ tema.nombre }}</span>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+
+  </div>
+</div>

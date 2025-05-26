@@ -43,4 +43,8 @@ export class UnidadService {
   eliminarUnidad(id: number): Observable<any> {
     return this.http.delete(`${this.baseUrl}/${id}`);
   }
+  // Obtener unidades con contenidos y temas anidados
+  obtenerUnidadesConContenidosYTemas(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/completo`);
+  }
 }

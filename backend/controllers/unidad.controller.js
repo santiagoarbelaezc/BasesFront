@@ -49,3 +49,56 @@ exports.eliminarUnidad = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+exports.obtenerUnidadesConContenidosYTemas = async (req, res) => {
+  let connection;
+
+  try {
+    connection = await oracledb.getConnection(dbConfig);
+
+    // 1. Obtener unidades
+    const unidadesResult = await connection.execute(
+      `SELECT unidad_id, nombre FROM unidad`,
+      [],
+      { outFormat: oracledb.OUT_FORMAT_OBJECT }
+    );
+
+    const unidades = unidadesResult.rows;
+
+    // 2. Obtener contenidos por unidad
+    for (const unidad of unidades) {
+      const contenidosResult = await connection.execute(
+        `SELECT contenido_id, nombre FROM contenido WHERE unidad_id = :unidad_id`,
+        { unidad_id: unidad.UNIDAD_ID },
+        { outFormat: oracledb.OUT_FORMAT_OBJECT }
+      );
+
+      const contenidos = contenidosResult.rows;
+
+      // 3. Obtener temas por contenido
+      for (const contenido of contenidos) {
+        const temasResult = await connection.execute(
+          `SELECT tema_id, nombre FROM tema WHERE contenido_id = :contenido_id`,
+          { contenido_id: contenido.CONTENIDO_ID },
+          { outFormat: oracledb.OUT_FORMAT_OBJECT }
+        );
+        contenido.temas = temasResult.rows;
+      }
+
+      unidad.contenidos = contenidos;
+    }
+
+    res.status(200).json(unidades);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error al cargar unidades completas' });
+  } finally {
+    if (connection) {
+      try {
+        await connection.close();
+      } catch (closeErr) {
+        console.error('Error al cerrar conexión:', closeErr);
+      }
+    }
+  }
+};
