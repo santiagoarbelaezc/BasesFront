@@ -137,7 +137,6 @@ export class ReportsComponent implements OnInit {
 };
     });
 
-    
   }
 
   // 📝 Notas por Curso
