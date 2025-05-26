@@ -160,18 +160,34 @@ exports.quitarUsuarioDeGrupo = async (req, res) => {
   }
 };
 
-// Asignar estudiante a grupo
 exports.asignarUsuarioAGrupo = async (req, res) => {
-  const { usuarioId, grupoId } = req.body;
+  let { usuarioId, grupoId } = req.body;
+
+  usuarioId = parseInt(usuarioId);
+  grupoId = parseInt(grupoId);
+
+  if (isNaN(usuarioId) || isNaN(grupoId)) {
+    return res.status(400).json({ error: 'usuarioId y grupoId deben ser números válidos' });
+  }
+
   try {
     const connection = await oracledb.getConnection(dbConfig);
+
     await connection.execute(
-      `INSERT INTO GRUPO_ESTUDIANTES (GRUPO_ID, ESTUDIANTE_ID) VALUES (:grupoId, :usuarioId)`,
-      { grupoId: parseInt(grupoId), usuarioId: parseInt(usuarioId) }
+      `BEGIN
+         INSERTAR_USUARIO_GRUPO(:usuarioId, :grupoId);
+       END;`,
+      { usuarioId, grupoId }
     );
+
+    // ⚠️ NECESARIO PARA GUARDAR LOS CAMBIOS
+    await connection.commit();
+
     await connection.close();
-    res.status(201).json({ mensaje: 'Estudiante asignado al grupo correctamente' });
+
+    res.status(201).json({ mensaje: 'Estudiante asignado al grupo correctamente mediante procedimiento' });
   } catch (err) {
+    console.error('[asignarUsuarioAGrupo] Error:', err);
     res.status(500).json({ error: err.message });
   }
 };

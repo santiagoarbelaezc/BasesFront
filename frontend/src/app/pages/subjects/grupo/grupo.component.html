@@ -3,7 +3,6 @@
 <div class="control-panel">
   <div class="header-section">
     <h1>Creación y asignación de grupos</h1>
-    
   </div>
 </div>
 
@@ -28,18 +27,31 @@
 </div>
 
 
+<div class="asignacion-formulario">
+  <h3>Asignar estudiante a grupo</h3>
 
-<div class="control-panel">
-  <div class="inputs-container">
-    <input type="text" placeholder="Nombre del estudiante" disabled />
-    <input type="text" placeholder="ID del grupo" disabled />
-  </div>
+  <label for="selectEstudiante">Estudiante:</label>
+<select [(ngModel)]="estudianteSeleccionadoId" (change)="onEstudianteSeleccionado()">
+  <option [value]="null" disabled selected>Seleccione un estudiante</option>
+  <option *ngFor="let estudiante of usuariosRol3" [value]="estudiante.id">
+    {{ estudiante.nombre }} {{ estudiante.apellido }}
+  </option>
+</select>
 
-  <div class="buttons-container">
-    <button class="btn-action" (click)="asignarEstudiante()">Agregar Estudiante</button>
-    <button class="btn-action" (click)="quitarEstudianteSeleccionado()">Quitar Estudiante</button>
-  </div>
+
+<label for="selectGrupo">Grupo:</label>
+<select id="selectGrupo" [(ngModel)]="grupoSeleccionadoId" (change)="onGrupoSeleccionado()">
+  <option [ngValue]="null" disabled>Seleccione un grupo</option>
+  <option *ngFor="let grupo of grupos" [ngValue]="grupo.id">
+    {{ grupo.nombre }}
+  </option>
+</select>
+
+
+  <button (click)="asignarEstudiante()">Asignar Estudiante</button>
 </div>
+
+
 
 <div class="main-container">
   <!-- NUEVO: contenedor de las cajas -->
@@ -134,4 +146,6 @@
     </div>
 
   </div>
+
+  
 </div>

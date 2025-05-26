@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { GrupoDTO } from '../models/grupo.dto';
 import { GrupoConCursoDTO } from '../models/grupo-con-curso.dto';
+import { UsuarioGrupoDTO } from '../models/usuarioGrupo.dto';
 
 
 @Injectable({
@@ -70,13 +71,11 @@ export class GrupoService {
     return this.http.get<any[]>(`${this.apiUrl}/${grupoId}/estudiantes`);
   }
 
-  // Asignar estudiante a grupo
-  asignarEstudianteAGrupo(usuarioId: number, grupoId: number): Observable<any> {
-    return this.http.post(`${this.apiUrl}/asignar-usuario`, {
-      usuarioId,
-      grupoId
-    });
-  }
+
+asignarEstudianteAGrupo(dto: UsuarioGrupoDTO): Observable<any> {
+  return this.http.post(`${this.apiUrl}/asignar-usuario`, dto);
+}
+
 
   // Quitar estudiante de grupo
   quitarEstudianteDeGrupo(grupoId: number, usuarioId: number): Observable<any> {

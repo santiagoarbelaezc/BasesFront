@@ -23,7 +23,7 @@ exports.getExamenesPresentados = async (req, res) => {
          ep.HORA_INICIO,
          ep.HORA_FIN,
          ep.PORCENTAJE
-       FROM EXAMEN_PRESENTADO ep
+       FROM EXAMENPRESENTADO ep
        JOIN USUARIO u ON ep.USUARIO_ID = u.USUARIO_ID
        JOIN EXAMEN e ON ep.EXAMEN_ID = e.EXAMEN_ID`,
       [],
@@ -145,7 +145,7 @@ exports.getNotasPorCurso = async (req, res) => {
          g.NOMBRE AS GRUPO,
          e.NOMBRE AS EXAMEN,
          ep.PORCENTAJE AS NOTA
-       FROM EXAMEN_PRESENTADO ep
+       FROM EXAMENPRESENTADO ep
        JOIN EXAMEN e ON ep.EXAMEN_ID = e.EXAMEN_ID
        JOIN USUARIO u ON ep.USUARIO_ID = u.USUARIO_ID
        JOIN USUARIO_GRUPO ug ON ug.USUARIO_ID = u.USUARIO_ID

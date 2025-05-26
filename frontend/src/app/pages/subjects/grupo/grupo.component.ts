@@ -8,6 +8,7 @@ import { UsuarioService } from '../../../services/usuario.service';
 import { CursoDTO } from '../../../models/curso.dto';
 import { CursoService } from '../../../services/curso.service';
 import { FormsModule } from '@angular/forms';
+import { UsuarioGrupoDTO } from '../../../models/usuarioGrupo.dto';
 
 @Component({
   selector: 'app-grupo',
@@ -34,6 +35,11 @@ export class GrupoComponent implements OnInit {
 
   usuariosRol3: any[] = [];
   errorUsuariosRol3: string | null = null;
+
+
+  estudianteSeleccionadoId: number | null = null;
+  grupoSeleccionadoId: number | null = null;
+
 
 
   constructor(private grupoService: GrupoService, private usuarioService: UsuarioService,
@@ -155,9 +161,37 @@ export class GrupoComponent implements OnInit {
   }
 
 
-  asignarEstudiante() {
-  // Lógica para asignar un estudiante a un grupo
+asignarEstudiante(): void {
+  if (!this.estudianteSeleccionadoId || !this.grupoSeleccionadoId) {
+    alert('Debe seleccionar un estudiante y un grupo');
+    return;
+  }
+
+  const grupoDTO: UsuarioGrupoDTO = {
+    usuarioId: +this.estudianteSeleccionadoId,
+    grupoId: +this.grupoSeleccionadoId
+  };
+
+  console.log('Datos a enviar para asignar estudiante:', grupoDTO);
+
+  this.grupoService.asignarEstudianteAGrupo(grupoDTO).subscribe({
+    next: () => {
+      console.log(`[asignarEstudiante] Estudiante ${grupoDTO.usuarioId} asignado al grupo ${grupoDTO.grupoId}`);
+      alert('Estudiante asignado exitosamente.');
+      const grupo = this.grupos.find(g => g.id === grupoDTO.grupoId);
+      if (grupo) {
+        grupo.mostrarEstudiantes = true;
+        this.verEstudiantes(grupoDTO.grupoId);
+      }
+    },
+    error: (err) => {
+      console.error('[asignarEstudiante] Error al asignar estudiante:', err);
+      alert('Error al asignar estudiante al grupo');
+    }
+  });
 }
+
+
 
 quitarEstudianteSeleccionado() {
   // Lógica para quitar un estudiante seleccionado
@@ -191,6 +225,31 @@ crearNuevoGrupo(): void {
       alert('Hubo un error al crear el grupo.');
     }
   });
+}
+
+
+
+onEstudianteSeleccionado(): void {
+  console.log('[onEstudianteSeleccionado] ID seleccionado (original):', this.estudianteSeleccionadoId);
+  console.log('[onEstudianteSeleccionado] Array usuariosRol3:', this.usuariosRol3);
+
+  if (this.estudianteSeleccionadoId === null) {
+    console.warn('[onEstudianteSeleccionado] ID es null');
+    return;
+  }
+
+  // Convertir a número
+  const estudianteIdNum = +this.estudianteSeleccionadoId;
+  console.log('[onEstudianteSeleccionado] ID seleccionado (convertido a number):', estudianteIdNum);
+
+  const estudiante = this.usuariosRol3.find(e => e.id === estudianteIdNum);
+  console.log('[onEstudianteSeleccionado] Estudiante seleccionado:', estudiante);
+}
+
+
+
+onGrupoSeleccionado(): void {
+  console.log('[onGrupoSeleccionado] ID del grupo seleccionado:', this.grupoSeleccionadoId);
 }
 
 

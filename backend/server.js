@@ -45,7 +45,7 @@ app.use('/api/bancoPreguntas', bancoPreguntasRoutes);
 app.use('/api/cursos', cursoRoutes);
 // Modulos que no tienen CRUD, solo logica del negocio 
 app.use('/api', asignacionRoutes);
-app.use('/api', reportesRoutes); // → Esto hace que los endpoints queden disponibles en: /api/examenes, etc.
+app.use('/api/reportes', reportesRoutes); // → Esto hace que los endpoints queden disponibles en: /api/examenes, etc.
 
 // Puerto de escucha
 app.listen(3000, () => console.log('✅ Backend corriendo en http://localhost:3000'));
