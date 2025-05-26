@@ -24,6 +24,7 @@ const respuestaEstudianteRoutes = require('./routes/respuestaestudiante.routes')
 const bancoPreguntasRoutes = require('./routes/bancoPreguntas.routes');
 // Modulos que no tienen CRUD, solo logica del negocio 
 const asignacionRoutes = require('./routes/asignacion.routes');
+const reportesRoutes = require('./routes/reportes.routes');
 
 // Usar rutas
 app.use('/api/roles', rolRoutes);
@@ -44,6 +45,7 @@ app.use('/api/bancoPreguntas', bancoPreguntasRoutes);
 app.use('/api/cursos', cursoRoutes);
 // Modulos que no tienen CRUD, solo logica del negocio 
 app.use('/api', asignacionRoutes);
+app.use('/api', reportesRoutes); // → Esto hace que los endpoints queden disponibles en: /api/examenes, etc.
 
 // Puerto de escucha
 app.listen(3000, () => console.log('✅ Backend corriendo en http://localhost:3000'));
