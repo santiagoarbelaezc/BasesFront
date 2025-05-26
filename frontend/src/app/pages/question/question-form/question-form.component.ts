@@ -11,6 +11,8 @@ import { BancoService } from '../../../services/banco.service';
 import { ProfesorService } from '../../../services/profesor.service';
 import { BancoPreguntaDTO } from '../../../models/bancoPregunta.dto';
 import { ExamService } from '../../../services/exam.service';
+import { PreguntaService } from '../../../services/pregunta.service';
+import { PreguntaDTO } from '../../../models/pregunta.dto';
 
 
 @Component({
@@ -51,7 +53,8 @@ export class QuestionFormComponent implements OnInit {
   private categoriaService: CategoriaService,
   private bancoService: BancoService,
   private profesorService: ProfesorService,
-  private examService: ExamService
+  private examService: ExamService,
+  private preguntaService: PreguntaService
 
 ) {}
 
@@ -174,8 +177,10 @@ cargarExamenes(): void {
   }
 
   seleccionarPregunta(pregunta: any): void {
-    // Acción para seleccionar una pregunta del listado
-  }
+  this.textoPregunta = pregunta.texto;
+  this.examenId = pregunta.examen_id; // asegúrate que venga en el objeto pregunta
+}
+
 
   eliminarPregunta(): void {
     // Acción para eliminar una pregunta
@@ -218,30 +223,43 @@ onRegistrarPreguntaRespuesta(): void {
   // Lógica para registrar pregunta con sus respuestas
 }
 
-// Método para agregar una nueva pregunta
-agregarPregunta(): void {
-  // Agrega una nueva pregunta a la lista
-  this.preguntas.push({
-    texto: this.textoPregunta,
-    respuestas: [...this.respuestas]
-  });
 
-  // Limpiar campos
-  this.textoPregunta = '';
-  this.respuestas = [];
+agregarRespuesta(): void {
 }
+
 
 // Método para agregar una respuesta
-agregarRespuesta(): void {
-  this.respuestas.push({
-    texto: this.textoRespuesta,
-    esCorrecta: this.esCorrecto
-  });
+agregarPregunta(): void {
+  if (!this.textoPregunta.trim() || this.examenId === null) {
+    console.warn('Texto de la pregunta o examen no proporcionado');
+    return;
+  }
 
-  // Limpiar campos
-  this.textoRespuesta = '';
-  this.esCorrecto = false;
+  const nuevaPregunta: PreguntaDTO = {
+    texto: this.textoPregunta.trim(),
+    examen_id: this.examenId
+  };
+
+  this.preguntaService.insertarPregunta(nuevaPregunta).subscribe({
+    next: (response) => {
+      console.log('Pregunta insertada exitosamente:', response);
+
+      // Opcional: puedes actualizar una lista local si lo deseas
+      this.preguntas.push({
+        texto: this.textoPregunta,
+        examen_id: this.examenId
+      });
+
+      // Limpiar campos
+      this.textoPregunta = '';
+      this.examenId = null;
+    },
+    error: (err) => {
+      console.error('Error al insertar pregunta:', err);
+    }
+  });
 }
+
 
 // Método para eliminar una respuesta por índice
 eliminarRespuesta(): void {
