@@ -84,7 +84,7 @@ export class NavbarProfesorComponent {
         this.router.navigate(['/exam-list']);
         break;
       case 'Gestionar Categoria':
-        this.router.navigate(['/exam-presentation']);
+        this.router.navigate(['/categoria']);
         break;
       default:
         console.warn('Acción de examen no reconocida:', accion);
