@@ -8,7 +8,7 @@ import { UnidadDTO } from '../models/unidad.dto';
   providedIn: 'root'
 })
 export class UnidadService {
-  private baseUrl = 'http://localhost:8080/api/unidades';
+  private baseUrl = 'http://localhost:3000/api/unidades';
 
   constructor(private http: HttpClient) {}
 

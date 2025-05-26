@@ -77,6 +77,21 @@ asignarEstudianteAGrupo(dto: UsuarioGrupoDTO): Observable<any> {
 }
 
 
+obtenerUsuarioGrupoPorGrupoId(grupoId: number): Observable<UsuarioGrupoDTO[]> {
+  return this.http.get<any[]>(`${this.apiUrl}/${grupoId}/estudiantes`).pipe(
+    map(data =>
+      data.map(item => ({
+        usuario_grupo_id: item.USUARIO_GRUPO_ID,
+        usuarioId: item.USUARIO_ID,
+        grupoId: item.GRUPO_ID
+      }))
+    )
+  );
+}
+
+
+
+
   // Quitar estudiante de grupo
   quitarEstudianteDeGrupo(grupoId: number, usuarioId: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${grupoId}/estudiantes/${usuarioId}`);

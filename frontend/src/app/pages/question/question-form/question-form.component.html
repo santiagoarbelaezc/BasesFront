@@ -1,8 +1,130 @@
-<app-navbar></app-navbar>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gestión Banco de Preguntas</title>
+  <link rel="stylesheet" href="question-form.component.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body>
 
-<section class="question-form-content">
-  <!-- Aquí irá el contenido específico de la lista de exámenes -->
-  <h2>CREACION DE PREGUNTAS</h2>
-  <!-- Ejemplo de contenido dinámico o estático futuro -->
-  <p>Bienvenido al Creador de Preguntas</p>
-</section>
+  <app-navbar></app-navbar>
+
+  <div class="main-container">
+
+    <!-- Contenedor del formulario -->
+    <div class="login-container">
+      <div class="login-box">
+        <section class="contenedor-titulo-usuarios">
+          <h1 id="titulo-gestion-usuarios">Gestión Preguntas</h1>
+        </section>
+
+        <form #formPreguntaRespuesta="ngForm" (ngSubmit)="onRegistrarPreguntaRespuesta()" novalidate>
+
+          <!-- Pregunta -->
+          <div class="input-group">
+            <input type="text" id="textoPregunta" name="textoPregunta" required [(ngModel)]="textoPregunta" placeholder=" " />
+            <label for="textoPregunta">Texto de la Pregunta</label>
+          </div>
+
+          <!-- Seleccionar Examen -->
+          <select id="examen" name="examenId" required [(ngModel)]="examenId">
+            <option [ngValue]="null" disabled selected>Seleccione Examen</option>
+            <option *ngFor="let examen of examenes" [ngValue]="examen.examen_id">{{ examen.nombre }}</option>
+          </select>
+
+          <!-- Crear Respuestas -->
+          <h3 style="margin-top: 20px;">Crear Respuestas</h3>
+
+          <div class="input-group">
+            <input type="text" id="textoRespuesta" name="textoRespuesta" required [(ngModel)]="textoRespuesta" placeholder=" " />
+            <label for="textoRespuesta">Texto de la Respuesta</label>
+          </div>
+
+          <div class="input-group checkbox-group">
+            <input
+              type="checkbox"
+              id="esCorrecto"
+              name="esCorrecto"
+              [(ngModel)]="esCorrecto"
+            />
+            <label for="esCorrecto">¿Es Correcta?</label>
+          </div>
+
+          <!-- Botones -->
+          <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px;">
+            <button type="button" class="btn-login" (click)="agregarPregunta()" style="flex: 1;">
+              Agregar Pregunta
+            </button>
+
+            <button type="button" class="btn-update" (click)="eliminarPregunta()" style="flex: 1;">
+              Eliminar Pregunta
+            </button>
+
+            <button type="button" class="btn-login" (click)="agregarRespuesta()" style="flex: 1;">
+              Agregar Respuesta
+            </button>
+
+            <button type="button" class="btn-update" (click)="eliminarRespuesta()" style="flex: 1;">
+              Eliminar Respuesta
+            </button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+
+    <!-- Contenedor lista de preguntas -->
+    <div class="user-list-container" *ngIf="preguntasRegistradas.length > 0">
+      <h3>Preguntas Registradas</h3>
+
+      <div *ngIf="cargandoPreguntas" class="loading" style="margin-bottom: 10px;">
+        <i class="fas fa-spinner fa-spin"></i> Cargando preguntas...
+      </div>
+
+      <div *ngIf="errorCargaPreguntas" class="error" style="margin-bottom: 10px;">
+        <i class="fas fa-exclamation-triangle"></i> Error al cargar preguntas
+      </div>
+
+      <div class="table-responsive">
+        <table class="user-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Texto</th>
+              <th>¿Pública?</th>
+              <th>Revisión</th>
+              <th>Dificultad</th>
+              <th>Categoría</th>
+              <th>Tema</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let pregunta of preguntasRegistradas" (click)="seleccionarPregunta(pregunta)">
+              <td>{{ pregunta.pregunta_id }}</td>
+              <td>{{ pregunta.texto }}</td>
+              <td>{{ pregunta.esPublica ? 'No' : 'Sí' }}</td>
+              <td>{{ pregunta.revision }}</td>
+              <td>{{ obtenerNombreDificultad(pregunta.dificultad_id) }}</td>
+              <td>{{ obtenerNombreCategoria(pregunta.categoria_id) }}</td>
+              <td>{{ obtenerNombreTema(pregunta.tema_id) }}</td>
+              <td class="actions-cell" (click)="$event.stopPropagation()">
+                <button
+                  (click)="eliminarPregunta()"
+                  class="btn-delete btn-eliminar"
+                  title="Eliminar pregunta">
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>
