@@ -29,10 +29,12 @@
           </div>
 
           <!-- Seleccionar Examen -->
-          <select id="examen" name="examenId" required [(ngModel)]="examenId">
+          <select id="examen" name="examen" required [(ngModel)]="examenSeleccionado">
             <option [ngValue]="null" disabled selected>Seleccione Examen</option>
-            <option *ngFor="let examen of examenes" [ngValue]="examen.examen_id">{{ examen.nombre }}</option>
+            <option *ngFor="let examen of examenes" [ngValue]="examen">{{ examen.nombre }}</option>
           </select>
+
+
 
           <!-- Crear Respuestas -->
           <h3 style="margin-top: 20px;">Crear Respuestas</h3>

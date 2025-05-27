@@ -1,9 +1,14 @@
 {
   "dependencies": {
+    "@angular/core": "^19.2.13",
+    "@angular/forms": "^19.2.13",
     "chart.js": "^4.4.9",
     "html2canvas": "^1.4.1",
     "jspdf": "^3.0.1",
     "ng2-charts": "^5.0.4",
     "ngx-chartjs": "^0.0.1"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.14"
   }
 }
