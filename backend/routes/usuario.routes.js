@@ -9,5 +9,6 @@ router.get('/correo/:correo', usuarioController.obtenerUsuarioPorCorreo); // Bus
 router.get('/rol/:rol_id', usuarioController.obtenerUsuariosPorRol);      // ✅ Buscar por rol
 router.put('/:id', usuarioController.actualizarUsuario);
 router.delete('/:id', usuarioController.eliminarUsuario);
+router.get('/:id/info-academica', usuarioController.obtenerInfoAcademica); // 🔍 Info académica de un usuario
 
 module.exports = router;
