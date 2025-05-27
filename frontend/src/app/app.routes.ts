@@ -25,6 +25,8 @@ import { CursoComponent } from './pages/subjects/curso/curso.component';
 import { GrupoComponent } from './pages/subjects/grupo/grupo.component';
 import { EstudianteComponent } from './pages/subjects/estudiante/estudiante.component';
 import { HorarioComponent } from './pages/student/horario/horario.component';
+import { InfoAcademicaComponent } from './pages/student/info-academica/info-academica.component';
+
 
 export const routes: Routes = [
 
@@ -47,6 +49,7 @@ export const routes: Routes = [
     { path: 'unidad', component: UnidadComponent },
     { path: 'contenido', component: ContenidoComponent },
     { path: 'tema', component: TemaComponent },
+    { path: 'info-academica', component: InfoAcademicaComponent },
     { path: 'presentar', component: PresentarComponent },
     { path: 'calificaciones', component: CalificacionesComponent },
     { path: 'presentando', component: PresentandoComponent },
@@ -55,6 +58,7 @@ export const routes: Routes = [
     { path: 'grupo', component: GrupoComponent },
     { path: 'estudiantes', component: EstudianteComponent },
     { path: 'horario', component: HorarioComponent },
+    
 
 
 
