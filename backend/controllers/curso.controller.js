@@ -72,3 +72,37 @@ exports.obtenerCursos = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+
+// Obtener nombre del curso por tema_id
+exports.obtenerCursoPorTemaId = async (req, res) => {
+  const { temaId } = req.params;
+
+  try {
+    const connection = await oracledb.getConnection(dbConfig);
+
+    const result = await connection.execute(
+      `
+      SELECT c.NOMBRE AS NOMBRE
+      FROM CURSO c
+      JOIN UNIDAD u ON c.CURSO_ID = u.CURSO_ID
+      JOIN CONTENIDO con ON con.UNIDAD_ID = u.UNIDAD_ID
+      JOIN TEMA t ON t.CONTENIDO_ID = con.CONTENIDO_ID
+      WHERE t.TEMA_ID = :temaId
+      `,
+      { temaId: parseInt(temaId) },
+      { outFormat: oracledb.OUT_FORMAT_OBJECT }
+    );
+
+    await connection.close();
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ mensaje: 'Curso no encontrado para el tema proporcionado' });
+    }
+
+    res.status(200).json(result.rows[0]); // Devuelve { NOMBRE: '...' }
+  } catch (err) {
+    console.error('Error al obtener curso por tema:', err);
+    res.status(500).json({ error: err.message });
+  }
+};

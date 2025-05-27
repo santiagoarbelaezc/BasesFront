@@ -19,23 +19,24 @@ exports.insertarExamen = async (req, res) => {
   try {
     const connection = await oracledb.getConnection(dbConfig);
     await connection.execute(
-      `BEGIN INSERTAR_EXAMEN(
-        :examen, :nombre, :cantidad_preguntas, :fecha, :tiempo,
-        :pesoCurso, :umbralDeAprobacion, :asignacion, :tema_id, :categoria_id
-      ); END;`,
-      {
-        examen,
-        nombre,
-        cantidad_preguntas,
-        fecha,
-        tiempo,
-        pesoCurso,
-        umbralDeAprobacion,
-        asignacion,
-        tema_id,
-        categoria_id
-      }
-    );
+  `BEGIN INSERTAR_EXAMEN(
+    :p_examen_num, :p_nombre, :p_cantidad_preguntas, :p_fecha, :p_tiempo,
+    :p_pesoCurso, :p_umbral, :p_asignacion, :p_tema_id, :p_categoria_id
+  ); END;`,
+  {
+    p_examen_num: examen,
+    p_nombre: nombre,
+    p_cantidad_preguntas: cantidad_preguntas,
+    p_fecha: fecha,
+    p_tiempo: tiempo,
+    p_pesoCurso: pesoCurso,
+    p_umbral: umbralDeAprobacion,
+    p_asignacion: asignacion,
+    p_tema_id: tema_id,
+    p_categoria_id: categoria_id
+  }
+);
+
     await connection.commit();
     await connection.close();
     res.status(201).json({ mensaje: 'Examen insertado correctamente' });

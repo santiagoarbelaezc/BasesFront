@@ -9,11 +9,12 @@ import { CategoriaDTO } from '../../../models/categoria.dto';
 import { CategoriaService } from '../../../services/categoria.service';
 import { TemaDTO } from '../../../models/tema.dto';
 import { TemaService } from '../../../services/tema.service';
+import { NavbarProfesorComponent } from '../../shared/navbar-profesor/navbar-profesor.component';
 
 @Component({
   selector: 'app-exam-create',
   standalone: true,
-  imports: [NavbarComponent, FormsModule, CommonModule],
+  imports: [NavbarProfesorComponent, FormsModule, CommonModule],
   templateUrl: './exam-create.component.html',
   styleUrls: ['./exam-create.component.css'],
 })
@@ -122,18 +123,20 @@ cargarCategorias(): void {
     this.mensajeExito = false;
 
     const nuevoExamen: ExamenDTO = {
-      id: this.id,
+
       examen: this.examen,
       nombre: this.nombre,
-      cantidad_preguntas: this.cantidad_preguntas,
+      cantidad_preguntas: this.cantidad_preguntas!,
       fecha: this.fecha,
-      tiempo: this.tiempo,
-      pesoCurso: this.pesoCurso,
-      umbralDeAprobacion: this.umbralDeAprobacion,
+      tiempo: this.tiempo!,
+      pesoCurso: this.pesoCurso!,
+      umbralDeAprobacion: this.umbralDeAprobacion!,
       asignacion: this.asignacion,
       tema_id: this.tema_id,
       categoria_id: this.categoria_id,
     };
+
+     console.log('Datos del examen a enviar:', nuevoExamen);
 
     this.examenService.insertarExamen(nuevoExamen).subscribe({
       next: (examenCreado) => {
@@ -153,25 +156,26 @@ cargarCategorias(): void {
   editarExamen(): void {
     if (!this.examenSeleccionado || this.id == null) return;
 
-    const examenActualizado: ExamenDTO = {
-      id: this.id,
-      examen: this.examen,
-      nombre: this.nombre,
-      cantidad_preguntas: this.cantidad_preguntas!,
-      fecha: this.fecha,
-      tiempo: this.tiempo!,
-      pesoCurso: this.pesoCurso!,
-      umbralDeAprobacion: this.umbralDeAprobacion!,
-      asignacion: this.asignacion,
-      tema_id: this.tema_id!,
-      categoria_id: this.categoria_id!
-    };
+    const nuevoExamen: ExamenDTO = {
+
+  examen: this.examen,                       // mantener como string
+  nombre: this.nombre,
+  cantidad_preguntas: this.cantidad_preguntas!,
+  fecha: this.fecha,
+  tiempo: this.tiempo!,
+  pesoCurso: this.pesoCurso!,
+  umbralDeAprobacion: this.umbralDeAprobacion!,
+  asignacion: this.asignacion,               // aquí depende si asignacion es string o number
+  tema_id: Number(this.tema_id),             // convertir a número
+  categoria_id: Number(this.categoria_id),   // convertir a número
+};
+
 
     this.isSubmitting = true;
     this.mensajeError = '';
     this.mensajeExito = false;
 
-    this.examenService.actualizarExamen(this.id, examenActualizado).subscribe({
+    this.examenService.actualizarExamen(this.id, nuevoExamen).subscribe({
       next: (examen) => {
         const index = this.listaExamenes.findIndex(e => e.id === this.id);
         if (index > -1) {

@@ -33,38 +33,49 @@
       </button>
     </section>
 
-    <!-- Tabla de calificaciones -->
-<section class="tabla-calificaciones-container" *ngIf="listaCalificaciones.length > 0">
-  <div class="tabla-responsive">
-    <table class="tabla-examenes">
-      <thead>
-        <tr>
-          <th>Nombre del Examen</th>
-          <th>Codigo</th>
-          <th>Asignacion</th>
-          <th>Cant. Preguntas</th>
-          <th>Tiempo (min)</th>
-          <th>Porcentaje</th>
-          <th>Calificación</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let calificacion of listaCalificaciones">
-          <td>{{ calificacion.examen.nombre }}</td>
-          <td>{{ calificacion.examen.examen }}</td>
-          <td>{{ calificacion.examen.asignacion }}</td>
+   <section class="contenedor-calificaciones" *ngIf="listaCalificaciones.length > 0">
 
-          <td>{{ calificacion.examen.cantidad_preguntas }}</td>
-
-          <td>{{ calcularTiempoEnMinutos(calificacion.horaInicio, calificacion.horaFin) }}</td>
-          <td>{{ calificacion.porcentaje }}%</td>
-          <td>{{ calificacion.nota }}</td>
-        </tr>
-      </tbody>
-    </table>
+  <!-- 📋 Tabla -->
+  <div class="tabla-calificaciones-container">
+    <div class="tabla-responsive">
+      <table class="tabla-examenes">
+        <thead>
+          <tr>
+            <th>Nombre del Examen</th>
+            <th>Codigo</th>
+            <th>Asignacion</th>
+            <th>Cant. Preguntas</th>
+            <th>Tiempo (min)</th>
+            <th>Porcentaje</th>
+            <th>Calificación</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let calificacion of listaCalificaciones">
+            <td>{{ calificacion.examen.nombre }}</td>
+            <td>{{ calificacion.examen.examen }}</td>
+            <td>{{ calificacion.examen.asignacion }}</td>
+            <td>{{ calificacion.examen.cantidad_preguntas }}</td>
+            <td>{{ calcularTiempoEnMinutos(calificacion.horaInicio, calificacion.horaFin) }}</td>
+            <td>{{ calificacion.porcentaje }}%</td>
+            <td>{{ calificacion.nota }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
-</section>
 
+  <!-- 📊 Gráfico -->
+  <div class="grafico-calificaciones">
+    <h3>Resumen gráfico de calificaciones</h3>
+    <canvas baseChart
+            [data]="graficoCalificaciones"
+            [type]="'bar'"
+            [options]="{ responsive: true, plugins: { legend: { display: true } } }">
+    </canvas>
+  </div>
+
+</section>
 
     <!-- Mensajes de carga o error -->
     <div *ngIf="cargandoCalificaciones" class="loading-message">

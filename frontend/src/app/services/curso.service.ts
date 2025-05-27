@@ -47,4 +47,10 @@ export class CursoService {
   eliminarCurso(id: number): Observable<any> {
     return this.http.delete(`${this.baseUrl}/${id}`);
   }
+  //Obtener cursoid
+  obtenerCursoPorTemaId(temaId: number): Observable<string> {
+  return this.http.get<any>(`${this.baseUrl}/por-tema/${temaId}`).pipe(
+    map(item => item?.NOMBRE || 'Desconocido')
+  );
+}
 }

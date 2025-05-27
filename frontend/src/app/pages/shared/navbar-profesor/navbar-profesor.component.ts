@@ -130,6 +130,12 @@ export class NavbarProfesorComponent {
     this.router.navigate(['/reports']);
   }
 
+
+  accionHorario() {
+    console.log('Acción seleccionada para Reportes');
+    this.router.navigate(['/horario']);
+  }
+
   accionEstudiantes() {
     console.log('Acción seleccionada para Reportes');
     this.router.navigate(['/estudiantes']);
