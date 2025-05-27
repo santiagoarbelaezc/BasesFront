@@ -132,8 +132,9 @@ cargarCategorias(): void {
       pesoCurso: this.pesoCurso!,
       umbralDeAprobacion: this.umbralDeAprobacion!,
       asignacion: this.asignacion,
-      tema_id: this.tema_id,
-      categoria_id: this.categoria_id,
+      tema_id: Number(this.tema_id),
+      categoria_id: Number(this.categoria_id),
+
     };
 
      console.log('Datos del examen a enviar:', nuevoExamen);
