@@ -7,6 +7,12 @@ import { ExamenPresentadoService } from './examenPresentado.service';
 import { RespuestaEstudianteService } from './respuesta_estudiante.service';
 import { ExamenActualizarPresentDTO } from '../models/examenActualizar.dto';
 
+
+/**
+ * Servicio encargado de calcular y actualizar la calificación de un examen presentado por un estudiante.
+ * Utiliza las respuestas almacenadas y actualiza el backend con el resultado.
+ */
+
 @Injectable({
   providedIn: 'root'
 })
@@ -16,6 +22,13 @@ export class CalificacionService {
     private respuestaEstudianteService: RespuestaEstudianteService,
     private examenPresentadoService: ExamenPresentadoService
   ) { }
+
+  /**
+   * Calcula el porcentaje de respuestas correctas de un examen presentado y actualiza su calificación en el backend.
+   * @param examenPresentadoVista Datos del examen presentado, incluyendo el usuario y el examen.
+   * @returns Observable con el examen actualizado incluyendo el nuevo porcentaje.
+   */
+  
 calcularYActualizarCalificacion(examenPresentadoVista: ExamenPresentadoVistaDTO): Observable<ExamenPresentadoVistaDTO> {
   const examenPresId = examenPresentadoVista.id;
 

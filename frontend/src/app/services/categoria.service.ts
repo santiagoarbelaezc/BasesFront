@@ -2,7 +2,10 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
 import { CategoriaDTO } from '../models/categoria.dto';
- // ajusta el path según tu estructura
+
+/**
+ * Servicio que gestiona las operaciones CRUD relacionadas con las categorías temáticas.
+ */
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +15,11 @@ export class CategoriaService {
 
   constructor(private http: HttpClient) {}
 
-  // Obtener todas las categorías
+/**
+   * Obtiene todas las categorías desde el backend y las adapta al formato del DTO.
+   * @returns Observable con la lista de categorías.
+   */
+
 obtenerCategorias(): Observable<CategoriaDTO[]> {
   return this.http.get<any[]>(this.apiUrl).pipe(
     map(data => data.map(item => ({
@@ -22,18 +29,33 @@ obtenerCategorias(): Observable<CategoriaDTO[]> {
   );
 }
 
+/**
+   * Inserta una nueva categoría en la base de datos.
+   * @param categoria Objeto con los datos de la categoría a insertar.
+   * @returns Observable con la respuesta del servidor.
+   */
 
-  // Insertar nueva categoría
   insertarCategoria(categoria: CategoriaDTO): Observable<any> {
     return this.http.post(this.apiUrl, categoria);
   }
 
-  // Actualizar categoría
+/**
+   * Actualiza una categoría existente.
+   * @param id ID de la categoría a actualizar.
+   * @param categoria Objeto con los datos actualizados.
+   * @returns Observable con la respuesta del servidor.
+   */
+
   actualizarCategoria(id: number, categoria: CategoriaDTO): Observable<any> {
     return this.http.put(`${this.apiUrl}/${id}`, categoria);
   }
 
-  // Eliminar categoría
+/**
+   * Elimina una categoría por su ID.
+   * @param id ID de la categoría a eliminar.
+   * @returns Observable con la respuesta del servidor.
+   */
+  
   eliminarCategoria(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }
