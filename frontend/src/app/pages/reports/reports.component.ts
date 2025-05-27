@@ -17,47 +17,44 @@ import jsPDF from 'jspdf';
 })
 export class ReportsComponent implements OnInit {
 
-  // 🔘 Pestaña activa
-  tabActiva: string = 'examenes';
+// 🔘 Pestaña activa
+tabActiva: string = 'examenes';
 
-  // 🧠 Select de exámenes únicos
-  listaExamenesUnicos: string[] = [];
-  examenSeleccionadoId: string | null = null;
+// 🧠 Select de exámenes únicos
+listaExamenesUnicos: string[] = [];
+examenSeleccionadoId: string | null = null;
 
-  // 1️⃣ Exámenes Presentados
-  examenesPresentados: any[] = [];
-  examenesFiltrados: any[] = [];
-  graficoExamenes: ChartData<'bar'> = {
-    labels: [],
-    datasets: []
-  };
-
-  graficoResumenCurso: ChartData<'bar'> = {
-  labels: ['Aprobados', 'Reprobados'],
-  datasets: []
-};
-
-  // 2️⃣ Estadísticas por Pregunta
-  examenIdSeleccionado: number | null = null;
-  estadisticasPregunta: any[] = [];
-  graficoEstadisticas: ChartData<'doughnut'> = {
-    labels: [],
-    datasets: []
-  };
-
-  // 3️⃣ Resumen del Curso
-  cursoIdResumen: number | null = null;
-  resumenCurso: any = null;
-
-  // 4️⃣ Notas por Curso
-  cursoIdNotas: number | null = null;
-  notasCurso: any[] = [];
-
-  graficoNotasCurso: ChartData<'bar'> = {
+// 1️⃣ Exámenes Presentados
+examenesPresentados: any[] = [];
+examenesFiltrados: any[] = [];
+graficoExamenes: ChartData<'bar'> = {
   labels: [],
   datasets: []
 };
 
+// 2️⃣ Estadísticas por Pregunta
+examenIdSeleccionado: number | null = null;
+estadisticasPregunta: any[] = [];
+graficoEstadisticas: ChartData<'bar'> = {
+  labels: [],
+  datasets: []
+};
+
+// 3️⃣ Resumen del Curso
+cursoIdResumen: number | null = null;
+resumenCurso: any = null;
+graficoResumenCurso: ChartData<'bar'> = {
+  labels: ['Aprobados', 'Reprobados'],
+  datasets: []
+};
+
+// 4️⃣ Notas por Curso
+cursoIdNotas: number | null = null;
+notasCurso: any[] = [];
+graficoNotasCurso: ChartData<'bar'> = {
+  labels: [],
+  datasets: []
+};
 
   constructor(private reportesService: ReportesService) {}
 
@@ -169,23 +166,37 @@ cargarNotasCurso(): void {
   generarPDF(): void {
     const contenido = document.getElementById('reporteExamenes');
     if (!contenido) return;
-
     setTimeout(() => {
       html2canvas(contenido).then(canvas => {
         const imgData = canvas.toDataURL('image/png');
         const pdf = new jsPDF('p', 'mm', 'a4');
-
         const pageWidth = pdf.internal.pageSize.getWidth();
         const imgWidth = pageWidth - 20;
         const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
         pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
-
         const fecha = new Date().toLocaleDateString();
         pdf.setFontSize(10);
         pdf.text(`Generado el ${fecha}`, 10, pdf.internal.pageSize.getHeight() - 10);
-
         pdf.save('reporte_examenes_presentados.pdf');
+      });
+    }, 500);
+  }
+
+  generarPDFEstadisticas(): void {
+  const contenido = document.getElementById('reporteEstadisticas');
+  if (!contenido) return;
+  setTimeout(() => {
+    html2canvas(contenido).then(canvas => {
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const imgWidth = pageWidth - 20;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
+      const fecha = new Date().toLocaleDateString();
+      pdf.setFontSize(10);
+      pdf.text(`Generado el ${fecha}`, 10, pdf.internal.pageSize.getHeight() - 10);
+      pdf.save('estadisticas_preguntas.pdf');
       });
     }, 500);
   }
@@ -193,7 +204,6 @@ cargarNotasCurso(): void {
   generarPDFResumen(): void {
     const contenido = document.getElementById('reporteResumenCurso');
     if (!contenido) return;
-
     setTimeout(() => {
       html2canvas(contenido).then(canvas => {
         const imgData = canvas.toDataURL('image/png');
@@ -201,9 +211,7 @@ cargarNotasCurso(): void {
         const pageWidth = pdf.internal.pageSize.getWidth();
         const imgWidth = pageWidth - 20;
         const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
         pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
-
         const fecha = new Date().toLocaleDateString();
         pdf.setFontSize(10);
         pdf.text(`Generado el ${fecha}`, 10, pdf.internal.pageSize.getHeight() - 10);
@@ -211,6 +219,7 @@ cargarNotasCurso(): void {
       });
     }, 500);
   }
+  
   // 📝 Notas por Curso
   generarPDFNotas(): void {
     const contenido = document.getElementById('reporteNotasCurso');
