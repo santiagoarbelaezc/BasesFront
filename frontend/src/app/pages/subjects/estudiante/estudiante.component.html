@@ -1,2 +1,32 @@
 <app-navbar></app-navbar>
-<p>estudiante works!</p>
+
+<div class="contenedor">
+  <h2 class="titulo">Listado de Estudiantes</h2>
+
+  <div *ngIf="errorUsuariosRol3" class="mensaje-error">
+    {{ errorUsuariosRol3 }}
+  </div>
+
+  <table *ngIf="usuariosRol3.length > 0; else sinUsuarios" class="tabla">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Apellido</th>
+        <th>Correo</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let usuario of usuariosRol3">
+        <td>{{ usuario.id }}</td>
+        <td>{{ usuario.nombre }}</td>
+        <td>{{ usuario.apellido }}</td>
+        <td>{{ usuario.correo }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <ng-template #sinUsuarios>
+    <p class="mensaje-info">No se encontraron estudiantes registrados.</p>
+  </ng-template>
+</div>
