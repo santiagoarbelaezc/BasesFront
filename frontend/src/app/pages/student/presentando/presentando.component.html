@@ -9,10 +9,18 @@
 </head>
 <body>
 
+  <!-- Navbar de la vista de presentación de examen -->
   <app-navbar></app-navbar>
 
   <main class="gestion-examenes-wrapper">
 
+    <!-- =================== TEMPORIZADOR REGRESIVO =================== -->
+    <!-- Este temporizador se muestra solo si el examen está activo y en curso -->
+    <!-- Muestra el tiempo restante a partir de 30:00 hasta 00:00 -->
+    <div *ngIf="!examenTerminado && tiempoRestante" class="temporizador-container">
+      <p>⏰ Tiempo restante: {{ tiempoRestante }}</p>
+    </div>
+    <!-- ============================================================= -->
     <!-- Información del examen seleccionado -->
     <section *ngIf="examenSeleccionado" class="examen-info-container">
       <h1 class="titulo-seccion">{{ examenSeleccionado.nombre }}</h1>
@@ -26,8 +34,10 @@
         <h2>Pregunta {{ indicePreguntaActual + 1 }}:</h2>
         <p class="texto-pregunta">{{ preguntaActual.texto }}</p>
 
+        <!-- Formulario con opciones de respuesta -->
         <form>
           <div class="respuestas">
+            <!-- Listado de respuestas para la pregunta actual -->
             <div *ngFor="let respuesta of respuestasActuales" class="respuesta-item">
               <input
                 type="radio"
@@ -59,14 +69,17 @@
     <section class="lista-examenes-container" *ngIf="listaExamenes.length > 0">
       <h2 class="titulo-seccion-secundario">Lista de Exámenes</h2>
 
+      <!-- Indicador de carga de exámenes -->
       <div *ngIf="cargandoExamenes" class="loading-message">
         <i class="fas fa-spinner fa-spin"></i> Cargando exámenes...
       </div>
 
+      <!-- Mensaje de error si no se pueden cargar -->
       <div *ngIf="errorCargaExamenes" class="error-message">
         <i class="fas fa-exclamation-triangle"></i> Error al cargar exámenes
       </div>
 
+      <!-- Tabla de exámenes disponibles -->
       <div class="tabla-responsive">
         <table class="tabla-examenes">
           <thead>
@@ -85,6 +98,7 @@
             </tr>
           </thead>
           <tbody>
+            <!-- Iteración de exámenes en la lista -->
             <tr *ngFor="let examen of listaExamenes" (click)="seleccionarExamen(examen)">
               <td>{{ examen.id }}</td>
               <td>{{ examen.examen }}</td>
@@ -105,12 +119,12 @@
 
   </main>
 
-</body>
-
-<div class="loading-indicator" *ngIf="isLoading" [style.--progress-width]="progressValue + '%'">
-  <div class="loading-container">
-    <div class="loading-message">Enviando Respuestas</div>
+  <!-- Indicador de carga final (envío de respuestas) -->
+  <div class="loading-indicator" *ngIf="isLoading" [style.--progress-width]="progressValue + '%'">
+    <div class="loading-container">
+      <div class="loading-message">Enviando Respuestas</div>
+    </div>
   </div>
-</div>
 
+</body>
 </html>

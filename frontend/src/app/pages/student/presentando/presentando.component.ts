@@ -20,8 +20,10 @@ import { Router } from '@angular/router';
   templateUrl: './presentando.component.html',
   styleUrls: ['./presentando.component.css'],
 })
+
 export class PresentandoComponent implements OnInit {
 
+  // =================== VARIABLES DEL EXAMEN ===================  
   inicio: Date | null = null;
   isLoading: boolean = false;
   progressValue: number = 0;
@@ -42,8 +44,10 @@ export class PresentandoComponent implements OnInit {
 
   respuestasEstudiante: RespuestaEstudianteDTO[] = [];
 
-
   respuestaSeleccionada: RespuestaDTO | null = null;
+  // =================== TEMPORIZADOR REGRESIVO ===================
+  tiempoRestante: string = '';        // Cadena en formato "mm:ss" que se actualiza cada segundo
+  private temporizadorInterval: any;  // Referencia al intervalo para detenerlo luego
 
   constructor(
     private estudianteService: EstudianteService,
@@ -57,7 +61,7 @@ export class PresentandoComponent implements OnInit {
 
  ngOnInit(): void {
   this.obtenerExamenIdDesdeServicio();
-
+  this.iniciarTemporizador(30); // Inicia el temporizador con duración de 30 minutos
   this.inicio = new Date();
   
 }
@@ -173,6 +177,7 @@ siguientePregunta(): void {
 
 
 terminarExamen(): void {
+  clearInterval(this.temporizadorInterval); // ⛔ Detiene el temporizador al finalizar manualmente
   const usuario = this.estudianteService.getUsuario();
   if (!usuario) {
     console.error('No se pudo obtener el usuario');
@@ -276,6 +281,28 @@ crearExamenPresentado(): ExamenPresentadoDTO | null {
 
   console.log('ExamenPresentadoDTO creado:', examenPresentado);
   return examenPresentado;
+}
+iniciarTemporizador(minutos: number): void {
+  let duracion = minutos * 60; // Tiempo total en segundos
+
+  this.temporizadorInterval = setInterval(() => {
+    const min = Math.floor(duracion / 60);       // Calcula minutos restantes
+    const seg = duracion % 60;                   // Calcula segundos restantes
+
+    // Formatea y actualiza la propiedad ligada al HTML
+    this.tiempoRestante = `${this.formatearTiempo(min)}:${this.formatearTiempo(seg)}`;
+
+    duracion--;
+
+    if (duracion < 0) {
+      clearInterval(this.temporizadorInterval);  // Detiene el temporizador al llegar a 0
+      this.tiempoRestante = '00:00';
+      // Aquí puedes agregar lógica adicional si lo deseas (e.g., forzar terminar examen)
+    }
+  }, 1000); // Cada segundo
+}
+formatearTiempo(valor: number): string {
+  return valor < 10 ? `0${valor}` : `${valor}`;
 }
 
 }
