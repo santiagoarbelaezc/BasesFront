@@ -1,3 +1,5 @@
+// Representa un examen con todos sus atributos, 
+// incluyendo detalles adicionales como el nombre del curso asociado.
 export interface ExamenDetalladoDTO {
   id?: number;
   examen: string;
@@ -14,3 +16,4 @@ export interface ExamenDetalladoDTO {
   // Detalles adicionales agregados manualmente
   cursoNombre?: string;
 }
+
