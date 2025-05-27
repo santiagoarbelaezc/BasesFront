@@ -151,7 +151,7 @@
           <ng-container *ngFor="let pregunta of preguntasCargadas; let i = index">
   <!-- Fila de la pregunta -->
   <tr>
-    <td>{{ i + 1 }}</td>
+    <td>{{ pregunta.id }}</td>
     <td>{{ pregunta.texto }}</td>
     <td>{{ obtenerNombreExamen(pregunta.examen_id) }}</td>
     <td class="actions-cell">

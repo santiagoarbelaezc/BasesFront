@@ -20,6 +20,7 @@ exports.insertarRespuesta = async (req, res) => {
         pregunta_id: parseInt(pregunta_id)
       }
     );
+
     await connection.commit();
     res.status(201).json({ mensaje: 'Respuesta insertada correctamente' });
   } catch (err) {

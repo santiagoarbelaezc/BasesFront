@@ -287,6 +287,8 @@ agregarRespuesta(): void {
     pregunta_id: this.idPregunta
   };
 
+  console.log('Objeto nuevaRespuesta que se enviará al backend:', nuevaRespuesta);
+
   this.respuestaService.insertarRespuesta(nuevaRespuesta).subscribe({
     next: (respuestaCreada) => {
       console.log('Respuesta insertada exitosamente:', respuestaCreada);

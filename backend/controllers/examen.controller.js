@@ -1,10 +1,8 @@
-const oracledb = require('oracledb');
-const dbConfig = require('../db-config');
+
 
 const oracledb = require('oracledb');
 const dbConfig = require('../db-config');
 
-// Insertar examen
 exports.insertarExamen = async (req, res) => {
   const {
     examen,
@@ -20,62 +18,43 @@ exports.insertarExamen = async (req, res) => {
   } = req.body;
 
   const parametros = {
-    p_examen_num: examen,
+    p_examen_num: Number(examen),
     p_nombre: nombre,
     p_cantidad_preguntas: Number(cantidad_preguntas),
     p_fecha: new Date(fecha),
-    p_tiempo: Number(tiempo),
+    p_tiempo: new Date(fecha), // Usa el mismo valor que `fecha` si no tienes otro TIMESTAMP
     p_pesoCurso: Number(pesoCurso),
     p_umbral: Number(umbralDeAprobacion),
-    p_asignacion: asignacion,
+    p_asignacion: Number(asignacion),
     p_tema_id: Number(tema_id),
     p_categoria_id: Number(categoria_id)
   };
 
-  console.log('📤 Parámetros a enviar al procedimiento:', parametros);
+  // LOG: tipos
+  console.log("📦 Parámetros enviados a Oracle:");
+  for (const [key, value] of Object.entries(parametros)) {
+    console.log(`🔹 ${key}:`, value, '| tipo:', typeof value);
+  }
 
   try {
     const connection = await oracledb.getConnection(dbConfig);
-
-    // Habilitar buffer para capturar DBMS_OUTPUT
-    await connection.execute(`BEGIN DBMS_OUTPUT.ENABLE(NULL); END;`);
-
     await connection.execute(
-      `BEGIN 
-         INSERTAR_EXAMEN(
-           :p_examen_num, :p_nombre, :p_cantidad_preguntas, :p_fecha, :p_tiempo,
-           :p_pesoCurso, :p_umbral, :p_asignacion, :p_tema_id, :p_categoria_id
-         ); 
-       END;`,
+      `BEGIN INSERTAR_EXAMEN(
+        :p_examen_num, :p_nombre, :p_cantidad_preguntas, :p_fecha, :p_tiempo,
+        :p_pesoCurso, :p_umbral, :p_asignacion, :p_tema_id, :p_categoria_id
+      ); END;`,
       parametros
     );
 
-    // Leer lo que se haya impreso con DBMS_OUTPUT.PUT_LINE en PL/SQL
-    const result = await connection.execute(
-      `BEGIN 
-         FOR i IN 1..10 LOOP
-           DBMS_OUTPUT.GET_LINE(:line, :status);
-           EXIT WHEN :status != 0;
-         END LOOP;
-       END;`,
-      {
-        line: { dir: oracledb.BIND_OUT, type: oracledb.STRING, maxSize: 500 },
-        status: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER }
-      },
-      { outFormat: oracledb.OUT_FORMAT_OBJECT }
-    );
-
-    console.log('🧾 DBMS_OUTPUT:', result.outBinds?.line || 'Sin salida');
-
     await connection.commit();
     await connection.close();
-
-    res.status(201).json({ mensaje: 'Examen insertado correctamente' });
+    res.status(201).json({ mensaje: '✅ Examen insertado correctamente' });
   } catch (err) {
-    console.error('❌ Error al insertar examen:', err);
+    console.error("❌ Error al insertar examen:", err);
     res.status(500).json({ error: err.message });
   }
 };
+
 
 // Actualizar examen
 exports.actualizarExamen = async (req, res) => {
