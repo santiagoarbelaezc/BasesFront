@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Información Académica - School Bases</title>
+  <link rel="stylesheet" href="info-academica.component.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body>
+
+  <app-navbar></app-navbar>
+
+  <main class="gestion-examenes-wrapper">
+
+    <section class="titulo-calificaciones">
+      <h1 class="titulo-seccion">📚 Información Académica del Estudiante</h1>
+    </section>
+
+    <!-- 📋 Tabla con info académica -->
+    <section class="contenedor-info-academica" *ngIf="infoAcademica.length > 0">
+      <div class="tabla-calificaciones-container">
+        <div class="tabla-responsive">
+          <table class="tabla-examenes">
+            <thead>
+              <tr>
+                <th>Grupo</th>
+                <th>Curso</th>
+                <th>Unidad</th>
+                <th>Contenido</th>
+                <th>Tema</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of infoAcademica">
+                <td>{{ item.GRUPO }}</td>
+                <td>{{ item.CURSO }}</td>
+                <td>{{ item.UNIDAD }}</td>
+                <td>{{ item.CONTENIDO }}</td>
+                <td>{{ item.TEMA }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Mensajes de carga o error -->
+    <div *ngIf="cargando" class="loading-message">
+      <i class="fas fa-spinner fa-spin"></i> Cargando información académica...
+    </div>
+
+    <div *ngIf="errorCarga" class="error-message">
+      <i class="fas fa-exclamation-triangle"></i> Error al cargar la información académica
+    </div>
+
+    <div *ngIf="!cargando && infoAcademica.length === 0 && !errorCarga" class="empty-message">
+      <i class="fas fa-info-circle"></i> No se encontró información académica asociada al estudiante.
+    </div>
+
+  </main>
+
+</body>
+</html>

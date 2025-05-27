@@ -14,7 +14,6 @@ export class NavbarEstudianteComponent {
   showPreguntas = false;
   showPerfiles = false;
 
-
   isLoading: boolean = false;
   progressValue: number = 0;
 
@@ -33,35 +32,35 @@ export class NavbarEstudianteComponent {
     }
   }
 
+  accionInfo() {
+    console.log('Acción seleccionada para Información Académica');
+    this.router.navigate(['/info-academica']);
+  }
 
   accionCalificaciones() {
-    console.log('Acción seleccionada para Reportes');
+    console.log('Acción seleccionada para Calificaciones');
     this.router.navigate(['/calificaciones']);
   }
 
-
-
   accionPresentar() {
-    console.log('Acción seleccionada para Reportes');
+    console.log('Acción seleccionada para Presentar Examen');
     this.router.navigate(['/presentar']);
   }
 
-
   accionSalir() {
-  console.log('Acción seleccionada para Salir');
-  this.isLoading = true;
-  this.progressValue = 0;
+    console.log('Acción seleccionada para Salir');
+    this.isLoading = true;
+    this.progressValue = 0;
 
-  const interval = setInterval(() => {
-    this.progressValue += 1;
-    if (this.progressValue >= 100) {
-      clearInterval(interval);
-      setTimeout(() => {
-        this.isLoading = false; // Oculta el indicador después del redireccionamiento
-        this.router.navigate(['/login']);
-      }, 500);
-    }
-  }, 30);
-}
-
+    const interval = setInterval(() => {
+      this.progressValue += 1;
+      if (this.progressValue >= 100) {
+        clearInterval(interval);
+        setTimeout(() => {
+          this.isLoading = false;
+          this.router.navigate(['/login']);
+        }, 500);
+      }
+    }, 30);
+  }
 }

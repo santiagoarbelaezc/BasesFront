@@ -1,0 +1,84 @@
+/* REUTILIZA ESTILOS GLOBALES */
+@import url('calificaciones.component.css');
+
+/* 📚 Personalización del módulo de información académica */
+.titulo-seccion {
+  font-size: 1.8rem;
+  font-weight: bold;
+  text-align: center;
+  color: #222;
+  margin-bottom: 25px;
+}
+
+.contenedor-info-academica {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.tabla-calificaciones-container {
+  width: 100%;
+  max-width: 1000px;
+  background: #fdfdfd;
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  overflow-x: auto;
+}
+
+.tabla-examenes {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+th, td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+thead {
+  background-color: #f1f1f1;
+}
+
+tbody tr:hover {
+  background-color: #fafafa;
+}
+
+/* 🌀 Estado de carga y errores */
+.loading-message,
+.error-message,
+.empty-message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin: 20px 0;
+  font-size: 1rem;
+  color: #e74c3c;
+  text-align: center;
+}
+
+.loading-message i,
+.error-message i,
+.empty-message i {
+  font-size: 1.2rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .tabla-calificaciones-container {
+    padding: 10px;
+  }
+
+  th, td {
+    font-size: 13px;
+    padding: 10px;
+  }
+
+  .titulo-seccion {
+    font-size: 1.4rem;
+  }
+}
