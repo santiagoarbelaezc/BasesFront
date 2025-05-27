@@ -98,29 +98,38 @@ graficoNotasCurso: ChartData<'bar'> = {
   }
 
   // 📊 Estadísticas por Pregunta
-  cargarEstadisticas(): void {
-    if (!this.examenIdSeleccionado) return;
+cargarEstadisticas(): void {
+  if (!this.examenIdSeleccionado) return;
 
-    this.reportesService.getEstadisticasPorPregunta(this.examenIdSeleccionado).subscribe(data => {
-      this.estadisticasPregunta = data;
-
-      this.graficoEstadisticas = {
-        labels: data.map((d: any) => d.pregunta.slice(0, 30) + '...'),
-        datasets: [
-          {
-            label: 'Correctas',
-            data: data.map((d: any) => d.correctas),
-            backgroundColor: '#2ecc71'
-          },
-          {
-            label: 'Incorrectas',
-            data: data.map((d: any) => d.incorrectas),
-            backgroundColor: '#e74c3c'
-          }
-        ]
+  this.reportesService.getEstadisticasPorPregunta(this.examenIdSeleccionado).subscribe(data => {
+    // Calcular el porcentaje de aciertos por pregunta
+    this.estadisticasPregunta = data.map((p: any) => {
+      const total = p.correctas + p.incorrectas;
+      const porcentaje = total > 0 ? Math.round((p.correctas / total) * 100) : 0;
+      return {
+        ...p,
+        porcentaje_aciertos: porcentaje
       };
     });
-  }
+
+    // Preparar el gráfico con los datos
+    this.graficoEstadisticas = {
+      labels: this.estadisticasPregunta.map((d: any) => d.pregunta.slice(0, 30) + '...'),
+      datasets: [
+        {
+          label: 'Correctas',
+          data: this.estadisticasPregunta.map((d: any) => d.correctas),
+          backgroundColor: '#2ecc71'
+        },
+        {
+          label: 'Incorrectas',
+          data: this.estadisticasPregunta.map((d: any) => d.incorrectas),
+          backgroundColor: '#e74c3c'
+        }
+      ]
+    };
+  });
+}
 
   // 📚 Resumen del Curso
   cargarResumenCurso(): void {
@@ -140,6 +149,13 @@ graficoNotasCurso: ChartData<'bar'> = {
     };
   });
   }
+  getPreguntasPeorDesempeno(limit: number = 5): any[] {
+  return this.estadisticasPregunta
+    .slice()
+    .sort((a, b) => a.porcentaje_aciertos - b.porcentaje_aciertos)
+    .slice(0, limit);
+}
+
 
 // 📝 Notas por Curso
 cargarNotasCurso(): void {
