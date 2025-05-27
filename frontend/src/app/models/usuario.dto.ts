@@ -1,3 +1,5 @@
+// Representa un usuario registrado en el sistema
+// con sus datos personales y rol asignado.
 export interface UsuarioDTO {
   id?: number;
   nombre: string;
@@ -6,3 +8,4 @@ export interface UsuarioDTO {
   contrasena: string;
   rol_id: number;
 }
+
