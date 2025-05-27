@@ -4,6 +4,8 @@ const cors = require('cors');
 const app = express();
 app.use(cors());
 app.use(express.json());
+const express = require('express');
+
 
 // Importar rutas
 const rolRoutes = require('./routes/rol.routes');
@@ -25,6 +27,7 @@ const bancoPreguntasRoutes = require('./routes/bancoPreguntas.routes');
 // Modulos que no tienen CRUD, solo logica del negocio 
 const asignacionRoutes = require('./routes/asignacion.routes');
 const reportesRoutes = require('./routes/reportes.routes');
+const horarioRoutes = require('./routes/horario.routes'); // ✅ Aquí importas las rutas
 
 // Usar rutas
 app.use('/api/roles', rolRoutes);
@@ -46,6 +49,8 @@ app.use('/api/cursos', cursoRoutes);
 // Modulos que no tienen CRUD, solo logica del negocio 
 app.use('/api', asignacionRoutes);
 app.use('/api/reportes', reportesRoutes); // → Esto hace que los endpoints queden disponibles en: /api/examenes, etc.
+app.use('/api/horarios', horarioRoutes); // ✅ Aquí registras el endpoint
+
 
 // Puerto de escucha
 app.listen(3000, () => console.log('✅ Backend corriendo en http://localhost:3000'));
