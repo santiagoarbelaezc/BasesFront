@@ -3,14 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { HorarioDTO } from '../models/horario.dto';
 
-export interface Horario {
-  horario_id?: number;
-  grupo_id: number;
-  dia: string;
-  hora_inicio: string;
-  hora_fin: string;
-  aula: string;
-}
+
 
 @Injectable({
   providedIn: 'root'
@@ -21,15 +14,15 @@ export class HorarioService {
 
   constructor(private http: HttpClient) {}
 
-  crearHorario(horario: Horario): Observable<any> {
+  crearHorario(horario: HorarioDTO): Observable<any> {
     return this.http.post(this.apiUrl, horario);
   }
 
-  obtenerHorariosPorGrupo(grupo_id: number): Observable<Horario[]> {
-    return this.http.get<Horario[]>(`${this.apiUrl}/${grupo_id}`);
+  obtenerHorariosPorGrupo(grupo_id: number): Observable<HorarioDTO[]> {
+    return this.http.get<HorarioDTO[]>(`${this.apiUrl}/${grupo_id}`);
   }
 
-  actualizarHorario(id: number, horario: Partial<Horario>): Observable<any> {
+  actualizarHorario(id: number, horario: Partial<HorarioDTO>): Observable<any> {
     return this.http.put(`${this.apiUrl}/${id}`, horario);
   }
 
@@ -37,8 +30,9 @@ export class HorarioService {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }
 
-  obtenerTodosLosHorarios(): Observable<Horario[]> {
-    return this.http.get<HorarioDTO[]>(this.apiUrl);
-  }
-  
+obtenerTodosLosHorarios(): Observable<HorarioDTO[]> {
+  return this.http.get<HorarioDTO[]>(`${this.apiUrl}`);
+}
+
+
 }
