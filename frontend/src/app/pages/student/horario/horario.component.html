@@ -1,0 +1,94 @@
+<app-navbar></app-navbar>
+
+<div class="gestion-examenes-wrapper">
+
+  <!-- Formulario de horario -->
+  <div class="formulario-examen-container">
+    <div class="formulario-examen-box">
+      <h1 class="titulo-seccion">Registro de Horario</h1>
+
+      <div class="input-group">
+        <select id="grupo_id" [(ngModel)]="horario.grupo_id" name="grupo_id" required>
+          <option *ngFor="let grupo of grupos" [value]="grupo.id">{{ grupo.nombre }}</option>
+        </select>
+        <label for="grupo_id">Grupo:</label>
+      </div>
+
+      <div class="input-group">
+        <select id="dia" [(ngModel)]="horario.dia" name="dia" required>
+          <option *ngFor="let dia of dias" [value]="dia">{{ dia }}</option>
+        </select>
+        <label for="dia">Día:</label>
+      </div>
+
+      <div class="input-group">
+        <select id="hora_inicio" [(ngModel)]="horario.hora_inicio" name="hora_inicio" required>
+          <option *ngFor="let hora of horas" [value]="hora">{{ hora }}</option>
+        </select>
+        <label for="hora_inicio">Hora de Inicio:</label>
+      </div>
+
+      <div class="input-group">
+        <input type="text" id="aula" [(ngModel)]="horario.aula" name="aula" required />
+        <label for="aula">Aula:</label>
+      </div>
+
+      <div class="button-group">
+        <button class="btn-primary" (click)="onSubmit()" [disabled]="!horario.grupo_id || !horario.dia || !horario.hora_inicio || !horario.aula">
+          Registrar Horario
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+
+  <div class="filtro-horario">
+  <div class="input-group">
+    <select [(ngModel)]="grupoSeleccionadoId" name="grupoSeleccionadoId" required>
+      <option *ngFor="let grupo of grupos" [value]="grupo.id">{{ grupo.nombre }}</option>
+    </select>
+    <label>Filtrar por grupo</label>
+  </div>
+
+  <div class="button-group">
+    <button class="btn-secondary" (click)="cargarHorariosPorGrupo()" [disabled]="!grupoSeleccionadoId">
+      Listar Horario
+    </button>
+  </div>
+</div>
+
+
+  <!-- Vista previa del horario -->
+  <div class="lista-examenes-container">
+    <h2 class="titulo-seccion-secundario">Vista Previa del Horario</h2>
+
+    <div *ngIf="horarios.length === 0">
+      No hay horarios registrados.
+    </div>
+
+    <div class="tabla-responsive" *ngIf="horarios.length > 0">
+      <table class="tabla-examenes">
+        <thead>
+          <tr>
+            <th>Hora</th>
+            <th *ngFor="let dia of dias">{{ dia }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let hora of horas">
+            <td>{{ hora }}</td>
+            <td *ngFor="let dia of dias">
+              <div *ngFor="let h of horarios">
+                <span *ngIf="h.dia === dia && h.hora_inicio === hora">
+                  Aula {{ h.aula }}<br />Grupo {{ h.grupo_id }}
+                </span>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>

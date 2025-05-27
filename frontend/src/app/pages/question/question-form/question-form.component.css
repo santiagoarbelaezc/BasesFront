@@ -164,36 +164,15 @@ select:valid + label {
   border-radius: 4px;
   margin-bottom: 20px;
 }
-
-.table-responsive {
-  max-height: 600px;
-  overflow-x: auto;
-  overflow-y: auto;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  width: 100%;
+/* Contenedor general de las dos tablas */
+.tablas-container {
+  display: flex;
+  flex-direction: column;
+  gap: 30px; /* Espacio entre las tablas */
+  align-items: flex-end; /* Alinea las tablas hacia la derecha */
 }
 
-
-/* Estilo para mantener el encabezado fijo opcionalmente */
-.user-table {
-  width: max-content; /* Esto permite que la tabla sea más ancha que el contenedor */
-  border-collapse: collapse;
-  table-layout: auto; /* Cambia a 'auto' si quieres que las columnas crezcan naturalmente */
-}
-
-
-.user-table thead th {
-  position: sticky;
-  top: 0;
-  background-color: #f1f1f1;
-  z-index: 1;
-}
-
-
-
-
-/* Contenedor tabla */
+/* Contenedor individual de cada tabla */
 .user-list-container {
   flex: 0 0 55%;
   max-width: 700px;
@@ -202,6 +181,14 @@ select:valid + label {
   border-radius: 12px;
   border: 1px solid #ddd;
   overflow-x: auto;
+  margin-left: auto; /* Por si se usa fuera de flex */
+}
+
+/* Tabla con scroll vertical */
+.table-responsive {
+  max-height: 300px;
+  overflow-y: auto;
+  overflow-x: auto;
 }
 
 /* Tabla */
@@ -209,10 +196,14 @@ table {
   width: 100%;
   border-collapse: collapse;
   font-size: 14px;
+  min-width: 800px;
 }
 
 thead {
   background-color: #f1f1f1;
+  position: sticky;
+  top: 0;
+  z-index: 1;
 }
 
 th, td {
@@ -229,6 +220,49 @@ th {
   font-weight: bold;
   color: #222;
 }
+
+
+/* Fila de respuestas expandida */
+.respuestas-expandida-row td {
+  background-color: #f9f9f9;
+  padding: 16px 24px;
+  border-bottom: 1px solid #ddd;
+}
+
+/* Lista de respuestas */
+.respuestas-expandida-row ul {
+  margin: 0;
+  padding-left: 20px; /* indentación para la lista */
+  font-size: 14px;
+  color: #444;
+  list-style-type: disc;
+}
+
+/* Elementos de la lista */
+.respuestas-expandida-row li {
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+/* Texto para la respuesta correcta */
+.respuestas-expandida-row strong {
+  color: #2a9d8f; /* un verde suave y agradable */
+  margin-left: 8px;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+
+
+/* Botón eliminar */
+.btn-eliminar {
+  background-color: transparent;
+  border: none;
+  color: #d9534f;
+  cursor: pointer;
+}
+
+
 
 /* Botón Eliminar */
 .btn-eliminar {

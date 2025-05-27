@@ -392,3 +392,21 @@ tbody tr:hover {
 .btn-filtro:hover i {
   transform: scale(1.2);
 }
+
+
+.contenedor-calificaciones {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  margin-top: 30px;
+}
+
+.tabla-calificaciones-container {
+  width: 100%;
+}
+
+.grafico-calificaciones {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}

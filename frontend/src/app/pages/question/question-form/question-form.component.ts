@@ -14,6 +14,8 @@ import { ExamService } from '../../../services/exam.service';
 import { PreguntaService } from '../../../services/pregunta.service';
 import { PreguntaDTO } from '../../../models/pregunta.dto';
 import { ExamenDTO } from '../../../models/exam.dto';
+import { RespuestaDTO } from '../../../models/respuesta.dto';
+import { RespuestaService } from '../../../services/respuesta.service';
 
 
 @Component({
@@ -52,6 +54,16 @@ export class QuestionFormComponent implements OnInit {
   registroExitoso: boolean = false;
   isSubmitting: boolean = false;
 
+  preguntas: PreguntaDTO[] = [];
+
+  preguntasCargadas: PreguntaDTO[] = [];
+
+
+  preguntaSeleccionadaId: number | null = null;
+  respuestasDePregunta: RespuestaDTO[] = [];
+
+
+
   constructor(
   private dificultadService: DificultadService,
   private temaService: TemaService,
@@ -59,7 +71,8 @@ export class QuestionFormComponent implements OnInit {
   private bancoService: BancoService,
   private profesorService: ProfesorService,
   private examService: ExamService,
-  private preguntaService: PreguntaService
+  private preguntaService: PreguntaService,
+  private respuestaService: RespuestaService
 
 ) {}
 
@@ -69,6 +82,7 @@ export class QuestionFormComponent implements OnInit {
   this.cargarCategorias();
   this.cargarTemas();
   this.cargarExamenes();
+  this.obtenerTodasLasPreguntas();
 
   const profesor = this.profesorService.getProfesor();
   if (profesor) {
@@ -80,6 +94,28 @@ export class QuestionFormComponent implements OnInit {
     console.warn('No se encontró profesor actual');
   }
 }
+
+
+verRespuestas(preguntaId: number): void {
+  if (this.preguntaSeleccionadaId === preguntaId) {
+    // Si la misma pregunta está seleccionada, ocultar respuestas
+    this.preguntaSeleccionadaId = null;
+    this.respuestasDePregunta = [];
+    return;
+  }
+
+  this.preguntaSeleccionadaId = preguntaId;
+  this.respuestaService.obtenerRespuestasPorPreguntaId(preguntaId).subscribe({
+    next: (data: RespuestaDTO[]) => {
+      this.respuestasDePregunta = data;
+      console.log(`Respuestas para la pregunta ${preguntaId}:`, data);
+    },
+    error: (err) => {
+      console.error(`Error al obtener respuestas para la pregunta ${preguntaId}:`, err);
+    }
+  });
+}
+
 
 
 cargarPreguntasPorUsuario(usuarioId: number): void {
@@ -215,13 +251,18 @@ cargarExamenes(): void {
 // Propiedades necesarias
 examenId: number | null = null; // Se usa en el HTML
 examenes: any[] = [];           // Por si estás cargando opciones de examen en un select
-preguntas: any[] = [];          // Lista de preguntas (si aplica)
+         // Lista de preguntas (si aplica)
 respuestas: any[] = [];         // Lista de respuestas para una pregunta
 
 // Propiedades auxiliares
 textoPregunta: string = '';
 textoRespuesta: string = '';
 esCorrecto: boolean = false;
+
+
+
+idPregunta: number | null = null;  // Puede ser null al inicio
+
 
 // Método para registrar pregunta y respuestas
 onRegistrarPreguntaRespuesta(): void {
@@ -230,6 +271,37 @@ onRegistrarPreguntaRespuesta(): void {
 
 
 agregarRespuesta(): void {
+  if (this.idPregunta === null) {
+    console.warn('No se ha seleccionado una pregunta para agregar la respuesta');
+    return;
+  }
+
+  if (!this.textoRespuesta.trim()) {
+    console.warn('El texto de la respuesta está vacío');
+    return;
+  }
+
+  const nuevaRespuesta: RespuestaDTO = {
+    texto: this.textoRespuesta.trim(),
+    esCorrecto: this.esCorrecto ? 1 : 0,  // Si tu backend espera number (1/0)
+    pregunta_id: this.idPregunta
+  };
+
+  this.respuestaService.insertarRespuesta(nuevaRespuesta).subscribe({
+    next: (respuestaCreada) => {
+      console.log('Respuesta insertada exitosamente:', respuestaCreada);
+
+      // Si quieres, actualiza la lista local de respuestas para mostrarla
+      this.respuestasDePregunta.push(respuestaCreada);
+
+      // Limpia los campos para nueva respuesta
+      this.textoRespuesta = '';
+      this.esCorrecto = false;
+    },
+    error: (error) => {
+      console.error('Error al insertar respuesta:', error);
+    }
+  });
 }
 
 
@@ -238,8 +310,14 @@ agregarPregunta(): void {
   console.log('Texto de la pregunta:', this.textoPregunta);
   console.log('Examen seleccionado:', this.examenSeleccionado);
 
-  if (!this.textoPregunta.trim() || !this.examenSeleccionado || this.examenSeleccionado.id == null) {
-    console.warn('Texto de la pregunta o examen no proporcionado');
+  // Validación de entrada
+  if (!this.textoPregunta?.trim()) {
+    console.warn('El texto de la pregunta está vacío');
+    return;
+  }
+
+  if (!this.examenSeleccionado || this.examenSeleccionado.id == null) {
+    console.warn('No se ha seleccionado un examen válido');
     return;
   }
 
@@ -251,22 +329,20 @@ agregarPregunta(): void {
   console.log('Objeto nuevaPregunta que se enviará al backend:', nuevaPregunta);
 
   this.preguntaService.insertarPregunta(nuevaPregunta).subscribe({
-    next: (response) => {
-      console.log('Pregunta insertada exitosamente:', response);
+    next: (preguntaInsertada) => {
+      console.log('Pregunta insertada exitosamente:', preguntaInsertada);
 
-      // Opcional: actualiza lista local
-      this.preguntas.push(nuevaPregunta);
-      console.log('Pregunta agregada localmente a la lista:', nuevaPregunta);
+      // Agregar la respuesta insertada (con ID generado) a la lista local
+      this.preguntasCargadas.push(preguntaInsertada);
 
-      // Limpiar campos
-      this.textoPregunta = '';
-      this.examenSeleccionado = null;
+
     },
-    error: (err) => {
-      console.error('Error al insertar pregunta:', err);
+    error: (error) => {
+      console.error('Error al insertar pregunta:', error);
     }
   });
 }
+
 
 
 // Método para eliminar una respuesta por índice
@@ -275,6 +351,27 @@ eliminarRespuesta(): void {
 }
 
 
+obtenerTodasLasPreguntas(): void {
+  this.preguntaService.obtenerPreguntas().subscribe({
+    next: (data: PreguntaDTO[]) => {
+      this.preguntasCargadas = data;  // <--- Aquí está el cambio
+      console.log('Preguntas obtenidas:', this.preguntasCargadas);
+    },
+    error: (err) => {
+      console.error('Error al obtener preguntas:', err);
+    }
+  });
+}
 
+
+eliminarPreguntaTemporal(index: number) {
+  this.preguntasCargadas.splice(index, 1);
+}
+
+// Devuelve el nombre del examen a partir de su ID
+obtenerNombreExamen(id: number): string {
+  const examen = this.examenes.find(e => e.id === id);
+  return examen ? examen.nombre : 'Desconocido';
+}
 
 }

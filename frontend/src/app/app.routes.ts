@@ -24,6 +24,7 @@ import { VistaProfesorComponent } from './pages/subjects/vista-profesor/vista-pr
 import { CursoComponent } from './pages/subjects/curso/curso.component';
 import { GrupoComponent } from './pages/subjects/grupo/grupo.component';
 import { EstudianteComponent } from './pages/subjects/estudiante/estudiante.component';
+import { HorarioComponent } from './pages/student/horario/horario.component';
 
 export const routes: Routes = [
 
@@ -53,6 +54,7 @@ export const routes: Routes = [
     { path: 'curso', component: CursoComponent },
     { path: 'grupo', component: GrupoComponent },
     { path: 'estudiantes', component: EstudianteComponent },
+    { path: 'horario', component: HorarioComponent },
 
 
 
