@@ -1,3 +1,5 @@
+// Representa un examen académico con sus 
+// propiedades clave como fecha, duración, tema y requisitos de aprobación.
 export interface ExamenDTO {
   id?: number; // opcional para cuando creas un examen nuevo (aún no tiene id)
   examen: string;
@@ -11,3 +13,4 @@ export interface ExamenDTO {
   tema_id: number;
   categoria_id: number;
 }
+
