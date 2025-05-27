@@ -3,18 +3,21 @@ import { NavbarEstudianteComponent } from '../../shared/navbar-estudiante/navbar
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
-
 import { forkJoin, map } from 'rxjs';
 import { UsuarioDTO } from '../../../models/usuario.dto';
 import { ExamenPresentadoVistaDTO } from '../../../models/examenPresentadoVista.dto';
 import { ExamenPresentadoService } from '../../../services/examenPresentado.service';
 import { ExamService } from '../../../services/exam.service';
+import { CursoService } from '../../../services/curso.service';
 import { ExamenPresentadoDTO } from '../../../models/examenPresentado.dto';
+import { ChartData } from 'chart.js';
+import { NgChartsModule } from 'ng2-charts';
+
 
 @Component({
   selector: 'app-calificaciones',
   standalone: true,
-  imports: [NavbarEstudianteComponent, CommonModule, FormsModule],
+  imports: [NavbarEstudianteComponent, CommonModule, FormsModule, NgChartsModule],
   templateUrl: './calificaciones.component.html',
   styleUrls: ['./calificaciones.component.css']
 })
@@ -27,14 +30,20 @@ export class CalificacionesComponent implements OnInit {
   errorCargaCalificaciones: boolean = false;
 
   listaCalificaciones: any[] = [];
+  listaCalificacionesOriginal: any[] = [];
+
+  graficoCalificaciones: ChartData<'bar'> = {
+  labels: [],
+  datasets: []
+};
 
   constructor(
     private examenPresentadoService: ExamenPresentadoService,
-    private examenService: ExamService
+    private examenService: ExamService,
+    private cursoService: CursoService
   ) {}
 
   ngOnInit(): void {
-    // Aquí puedes cargar el usuario desde donde lo tengas guardado (ej: localStorage)
     const usuarioJson = localStorage.getItem('usuario');
     if (usuarioJson) {
       this.usuario = JSON.parse(usuarioJson);
@@ -55,12 +64,10 @@ export class CalificacionesComponent implements OnInit {
 
     this.examenPresentadoService.obtenerExamenesPresentados().subscribe({
       next: (examenes: ExamenPresentadoDTO[]) => {
-        // Filtrar los exámenes del usuario actual
         const exPresentadosUsuario = examenes.filter(
           examen => examen.usuarioId === this.usuario?.id
         );
 
-        // Obtener todos los ExamenDTO asociados por examenId
         const observables = exPresentadosUsuario.map(examenPresentado =>
           this.examenService.obtenerExamenPorId(examenPresentado.examenId!).pipe(
             map(examenDTO => ({
@@ -69,20 +76,16 @@ export class CalificacionesComponent implements OnInit {
               horaInicio: examenPresentado.horaInicio,
               horaFin: examenPresentado.horaFin,
               porcentaje: examenPresentado.porcentaje,
-              usuario: this.usuario!,         // Usuario completo
-              examen: examenDTO               // ExamenDTO obtenido
+              usuario: this.usuario!,
+              examen: examenDTO
             }))
           )
         );
 
         forkJoin(observables).subscribe({
           next: (resultadoConExamenes) => {
-            console.log('Resultado con exámenes detallados:', resultadoConExamenes); // 👈 Verifica la estructura recibida
             this.examenesPresentados = resultadoConExamenes;
-
-            this.transformarExamenesAListaCalificaciones(resultadoConExamenes); // 👈 Aquí se genera la lista de calificaciones
-
-            this.cargandoCalificaciones = false;
+            this.transformarExamenesAListaCalificaciones(resultadoConExamenes);
           },
           error: (err) => {
             console.error('Error al cargar exámenes detallados:', err);
@@ -90,8 +93,6 @@ export class CalificacionesComponent implements OnInit {
             this.errorCargaCalificaciones = true;
           }
         });
-
-
       },
       error: (err) => {
         console.error('Error al cargar exámenes presentados:', err);
@@ -101,9 +102,64 @@ export class CalificacionesComponent implements OnInit {
     });
   }
 
-  // Métodos de filtrado (puedes implementarlos luego)
+private transformarExamenesAListaCalificaciones(examenes: ExamenPresentadoVistaDTO[]): void {
+  const observables = examenes.map(ex =>
+    this.cursoService.obtenerCursoPorTemaId(ex.examen.tema_id).pipe(
+      map(cursoNombre => ({
+        fecha: ex.fecha,
+        horaInicio: ex.horaInicio,
+        horaFin: ex.horaFin,
+        porcentaje: ex.porcentaje,
+        examen: {
+          ...ex.examen,
+          cursoNombre: cursoNombre
+        },
+        nota: this.convertirPorcentajeANota(ex.porcentaje ?? 0)
+      }))
+    )
+  );
+
+  forkJoin(observables).subscribe({
+    next: (resultados) => {
+      this.listaCalificacionesOriginal = resultados;
+      this.listaCalificaciones = [...resultados];
+      this.cargandoCalificaciones = false;
+
+      // ✅ Generar gráfico una vez cargados los datos
+      this.graficoCalificaciones = {
+        labels: this.listaCalificaciones.map(c => c.examen.nombre),
+        datasets: [
+          {
+            label: 'Nota (0-5)',
+            data: this.listaCalificaciones.map(c => c.nota),
+            backgroundColor: '#4CAF50'
+          }
+        ]
+      };
+
+      console.log('Lista Calificaciones con curso:', this.listaCalificaciones);
+    },
+    error: (err) => {
+      console.error('Error al obtener cursos por tema:', err);
+      this.cargandoCalificaciones = false;
+      this.errorCargaCalificaciones = true;
+    }
+  });
+}
+
   filtrarPorCurso(): void {
-    console.log('Filtrar por curso');
+    const cursos = this.listaCalificacionesOriginal.map(c =>
+      c.examen?.cursoNombre
+    ).filter(Boolean);
+
+    const cursosUnicos = [...new Set(cursos)];
+    const cursoElegido = prompt(`Seleccione curso:\n${cursosUnicos.join('\n')}`);
+
+    if (cursoElegido) {
+      this.listaCalificaciones = this.listaCalificacionesOriginal.filter(c =>
+        c.examen?.cursoNombre === cursoElegido
+      );
+    }
   }
 
   filtrarPorTema(): void {
@@ -111,44 +167,23 @@ export class CalificacionesComponent implements OnInit {
   }
 
   listarCalificaciones(): void {
-    // TODO: Implementar lógica para obtener todas las calificaciones
-    console.log('Listar calificaciones');
+    this.listaCalificaciones = [...this.listaCalificacionesOriginal];
   }
 
   filtrarPorCategoria(): void {
     console.log('Filtrar por categoría');
   }
 
-
-  private transformarExamenesAListaCalificaciones(examenes: ExamenPresentadoVistaDTO[]): void {
-  this.listaCalificaciones = examenes.map(ex => ({
-    fecha: ex.fecha,
-    horaInicio: ex.horaInicio,
-    horaFin: ex.horaFin,
-    porcentaje: ex.porcentaje,
-    examen: ex.examen,
-    nota: this.convertirPorcentajeANota(ex.porcentaje ?? 0)
-  }));
-  console.log('Lista Calificaciones:', this.listaCalificaciones);
-}
-
-
-
   private convertirPorcentajeANota(porcentaje: number): number {
-  // Convierte porcentaje (0-100) a nota (0.0 - 5.0) con 1 decimal
-  const nota = (porcentaje / 100) * 5;
-  return Math.round(nota * 10) / 10;
-}
+    const nota = (porcentaje / 100) * 5;
+    return Math.round(nota * 10) / 10;
+  }
 
-calcularTiempoEnMinutos(inicio?: Date | string, fin?: Date | string): number {
-  if (!inicio || !fin) return 0;
-  const inicioMs = Date.parse(inicio.toString());
-  const finMs = Date.parse(fin.toString());
-  const diffMs = finMs - inicioMs;
-  return Math.round(diffMs / 60000); // milisegundos a minutos, redondeando correctamente
-}
-
-
-
-
+  calcularTiempoEnMinutos(inicio?: Date | string, fin?: Date | string): number {
+    if (!inicio || !fin) return 0;
+    const inicioMs = Date.parse(inicio.toString());
+    const finMs = Date.parse(fin.toString());
+    const diffMs = finMs - inicioMs;
+    return Math.round(diffMs / 60000);
+  }
 }
