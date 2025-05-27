@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { NavbarEstudianteComponent } from '../../shared/navbar-estudiante/navbar-estudiante.component';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-
 import { forkJoin, map } from 'rxjs';
 import { UsuarioDTO } from '../../../models/usuario.dto';
 import { ExamenPresentadoVistaDTO } from '../../../models/examenPresentadoVista.dto';
@@ -12,7 +11,7 @@ import { CursoService } from '../../../services/curso.service';
 import { ExamenPresentadoDTO } from '../../../models/examenPresentado.dto';
 import { ChartData } from 'chart.js';
 import { NgChartsModule } from 'ng2-charts';
-
+import { CalificacionesService } from '../../../services/calificaciones.service';
 
 @Component({
   selector: 'app-calificaciones',
@@ -33,14 +32,17 @@ export class CalificacionesComponent implements OnInit {
   listaCalificacionesOriginal: any[] = [];
 
   graficoCalificaciones: ChartData<'bar'> = {
-  labels: [],
-  datasets: []
-};
+    labels: [],
+    datasets: []
+  };
+
+  notaFinal: number = 0;
 
   constructor(
     private examenPresentadoService: ExamenPresentadoService,
     private examenService: ExamService,
-    private cursoService: CursoService
+    private cursoService: CursoService,
+    private calificacionesService: CalificacionesService
   ) {}
 
   ngOnInit(): void {
@@ -102,50 +104,63 @@ export class CalificacionesComponent implements OnInit {
     });
   }
 
-private transformarExamenesAListaCalificaciones(examenes: ExamenPresentadoVistaDTO[]): void {
-  const observables = examenes.map(ex =>
-    this.cursoService.obtenerCursoPorTemaId(ex.examen.tema_id).pipe(
-      map(cursoNombre => ({
-        fecha: ex.fecha,
-        horaInicio: ex.horaInicio,
-        horaFin: ex.horaFin,
-        porcentaje: ex.porcentaje,
-        examen: {
-          ...ex.examen,
-          cursoNombre: cursoNombre
-        },
-        nota: this.convertirPorcentajeANota(ex.porcentaje ?? 0)
-      }))
-    )
-  );
+  private transformarExamenesAListaCalificaciones(examenes: ExamenPresentadoVistaDTO[]): void {
+    const observables = examenes.map(ex =>
+      this.cursoService.obtenerCursoPorTemaId(ex.examen.tema_id).pipe(
+        map(cursoNombre => ({
+          fecha: ex.fecha,
+          horaInicio: ex.horaInicio,
+          horaFin: ex.horaFin,
+          porcentaje: ex.porcentaje,
+          examen: {
+            ...ex.examen,
+            cursoNombre: cursoNombre
+          },
+          nota: this.convertirPorcentajeANota(ex.porcentaje ?? 0)
+        }))
+      )
+    );
 
-  forkJoin(observables).subscribe({
-    next: (resultados) => {
-      this.listaCalificacionesOriginal = resultados;
-      this.listaCalificaciones = [...resultados];
-      this.cargandoCalificaciones = false;
+    forkJoin(observables).subscribe({
+      next: (resultados) => {
+        this.listaCalificacionesOriginal = resultados;
+        this.listaCalificaciones = [...resultados];
+        this.cargandoCalificaciones = false;
 
-      // ✅ Generar gráfico una vez cargados los datos
-      this.graficoCalificaciones = {
-        labels: this.listaCalificaciones.map(c => c.examen.nombre),
-        datasets: [
-          {
-            label: 'Nota (0-5)',
-            data: this.listaCalificaciones.map(c => c.nota),
-            backgroundColor: '#4CAF50'
-          }
-        ]
-      };
+        this.graficoCalificaciones = {
+          labels: this.listaCalificaciones.map(c => c.examen.nombre),
+          datasets: [
+            {
+              label: 'Nota (0-5)',
+              data: this.listaCalificaciones.map(c => c.nota),
+              backgroundColor: '#4CAF50'
+            }
+          ]
+        };
 
-      console.log('Lista Calificaciones con curso:', this.listaCalificaciones);
-    },
-    error: (err) => {
-      console.error('Error al obtener cursos por tema:', err);
-      this.cargandoCalificaciones = false;
-      this.errorCargaCalificaciones = true;
-    }
-  });
-}
+        console.log('Lista Calificaciones con curso:', this.listaCalificaciones);
+        this.obtenerNotaFinalDesdeBackend();
+      },
+      error: (err) => {
+        console.error('Error al obtener cursos por tema:', err);
+        this.cargandoCalificaciones = false;
+        this.errorCargaCalificaciones = true;
+      }
+    });
+  }
+
+  obtenerNotaFinalDesdeBackend(): void {
+    if (!this.usuario?.id) return;
+
+    this.calificacionesService.obtenerNotaFinal(this.usuario.id).subscribe({
+      next: (data) => {
+        this.notaFinal = data.NOTAFINAL || 0;
+      },
+      error: (error) => {
+        console.error('Error al obtener nota final desde backend:', error);
+      }
+    });
+  }
 
   filtrarPorCurso(): void {
     const cursos = this.listaCalificacionesOriginal.map(c =>

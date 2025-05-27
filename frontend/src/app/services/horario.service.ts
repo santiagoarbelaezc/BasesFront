@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { HorarioDTO } from '../models/horario.dto';
 
 export interface Horario {
   horario_id?: number;
@@ -15,6 +16,7 @@ export interface Horario {
   providedIn: 'root'
 })
 export class HorarioService {
+
   private apiUrl = 'http://localhost:3000/api/horarios'; // Ajusta el puerto según tu backend
 
   constructor(private http: HttpClient) {}
@@ -33,6 +35,10 @@ export class HorarioService {
 
   eliminarHorario(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${id}`);
+  }
+
+  obtenerTodosLosHorarios(): Observable<Horario[]> {
+    return this.http.get<HorarioDTO[]>(this.apiUrl);
   }
   
 }
