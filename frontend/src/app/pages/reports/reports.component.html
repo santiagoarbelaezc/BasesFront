@@ -19,7 +19,6 @@
     <!-- 1️⃣ Exámenes Presentados -->
     <div *ngIf="tabActiva === 'examenes'">
       <h3>Listado de Exámenes Presentados</h3>
-      <!-- Filtro de examen -->
       <div style="margin-bottom: 15px;">
         <label for="filtroExamen">Filtrar por examen:</label>
         <select id="filtroExamen" [(ngModel)]="examenSeleccionadoId" (change)="actualizarExamenesFiltrados()">
@@ -29,11 +28,9 @@
           </option>
         </select>
       </div>
-      <!-- Botón para exportar PDF -->
       <div style="margin: 20px 0;">
         <button (click)="generarPDF()" class="btn-update">📥 Descargar informe PDF</button>
       </div>
-      <!-- Contenedor para captura PDF -->
       <div id="reporteExamenes">
         <table class="user-table">
           <thead>
@@ -55,7 +52,6 @@
             </tr>
           </tbody>
         </table>
-        <!-- Gráfico -->
         <div style="max-width: 600px; margin-top: 30px;">
           <canvas baseChart
                   [data]="graficoExamenes"
@@ -66,124 +62,134 @@
       </div>
     </div>
 
-  <!-- 2️⃣ Estadísticas por Pregunta -->
-  <div *ngIf="tabActiva === 'estadisticas'">
-    <h3>Estadísticas por Pregunta</h3>
-    <label for="examenId">ID del Examen:</label>
-    <input id="examenId" [(ngModel)]="examenIdSeleccionado" placeholder="Ingrese ID" />
-    <button (click)="cargarEstadisticas()">Consultar</button>
-    <!-- Botón para exportar PDF -->
-    <div style="margin: 20px 0;" *ngIf="estadisticasPregunta.length > 0">
-      <button (click)="generarPDFEstadisticas()" class="btn-update">📥 Descargar estadísticas PDF</button>
-    </div>
-    <!-- Contenedor PDF -->
-    <div id="reporteEstadisticas" *ngIf="estadisticasPregunta.length > 0">
-      <!-- Tabla -->
-      <table class="user-table" style="margin-top: 20px;">
-        <thead>
-          <tr>
-            <th>Pregunta</th>
-            <th>Respondidas</th>
-            <th>Correctas</th>
-            <th>Incorrectas</th>
-            <th>% Aciertos</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let item of estadisticasPregunta">
-            <td>{{ item.pregunta }}</td>
-            <td>{{ item.vecesRespondida }}</td>
-            <td>{{ item.correctas }}</td>
-            <td>{{ item.incorrectas }}</td>
-            <td>{{ item.porcentajeCorrectas }}%</td>
-          </tr>
-        </tbody>
-      </table>
-      <!-- Gráfico -->
-      <div style="max-width: 600px; margin-top: 30px;">
-        <canvas baseChart
-                [data]="graficoEstadisticas"
-                [type]="'bar'"
-                [options]="{ responsive: true, plugins: { legend: { position: 'bottom' } } }">
-        </canvas>
+    <!-- 2️⃣ Estadísticas por Pregunta -->
+    <div *ngIf="tabActiva === 'estadisticas'">
+      <h3>Estadísticas por Pregunta</h3>
+      <label for="examenId">ID del Examen:</label>
+      <input id="examenId" [(ngModel)]="examenIdSeleccionado" placeholder="Ingrese ID" />
+      <button (click)="cargarEstadisticas()">Consultar</button>
+      <div style="margin: 20px 0;" *ngIf="estadisticasPregunta.length > 0">
+        <button (click)="generarPDFEstadisticas()" class="btn-update">📥 Descargar estadísticas PDF</button>
       </div>
-    </div>
-  </div>
+      <div id="reporteEstadisticas" *ngIf="estadisticasPregunta.length > 0">
+        <table class="user-table" style="margin-top: 20px;">
+          <thead>
+            <tr>
+              <th>Pregunta</th>
+              <th>Respondidas</th>
+              <th>Correctas</th>
+              <th>Incorrectas</th>
+              <th>% Aciertos</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of estadisticasPregunta">
+              <td>{{ item.pregunta }}</td>
+              <td>{{ item.vecesRespondida }}</td>
+              <td>{{ item.correctas }}</td>
+              <td>{{ item.incorrectas }}</td>
+              <td>{{ item.porcentaje_aciertos }}%</td>
+            </tr>
+          </tbody>
+        </table>
+        <div style="max-width: 600px; margin-top: 30px;">
+          <canvas baseChart
+                  [data]="graficoEstadisticas"
+                  [type]="'bar'"
+                  [options]="{ responsive: true, plugins: { legend: { position: 'bottom' } } }">
+          </canvas>
+        </div>
 
-  <!-- 3️⃣ Resumen del Curso -->
-  <div *ngIf="tabActiva === 'resumen'">
-    <h3>Resumen del Curso</h3>
-    <!-- Filtro por ID del curso -->
-    <label for="cursoResumenId">ID del Curso:</label>
-    <input id="cursoResumenId" [(ngModel)]="cursoIdResumen" placeholder="Ingrese ID" />
-    <button (click)="cargarResumenCurso()">Consultar</button>
-    <!-- Botón para exportar PDF -->
-    <div style="margin: 20px 0;">
-      <button (click)="generarPDFResumen()" class="btn-update">📥 Descargar resumen PDF</button>
-    </div>
-    <!-- Contenido del resumen -->
-    <div id="reporteResumenCurso" *ngIf="resumenCurso">
-      <div class="resumen-card-container">
-        <div class="resumen-card">Curso: {{ resumenCurso.CURSO }}</div>
-        <div class="resumen-card">Grupo: {{ resumenCurso.GRUPO }}</div>
-        <div class="resumen-card">Promedio: {{ resumenCurso.PROMEDIO }}%</div>
-        <div class="resumen-card">Mínima: {{ resumenCurso.MINIMA }}%</div>
-        <div class="resumen-card">Máxima: {{ resumenCurso.MAXIMA }}%</div>
-        <div class="resumen-card">Aprobados: {{ resumenCurso.APROBADOS }}</div>
-        <div class="resumen-card">Reprobados: {{ resumenCurso.REPROBADOS }}</div>
-      </div>
-      <!-- Gráfico -->
-      <div style="max-width: 400px; margin-top: 30px;">
-        <canvas baseChart
-                [data]="graficoResumenCurso"
-                [type]="'bar'"
-                [options]="{ responsive: true }">
-        </canvas>
+        <!-- 🔻 Preguntas con peor desempeño -->
+        <div *ngIf="estadisticasPregunta.length > 0" style="margin-top: 40px;">
+          <h3 style="color: #e74c3c;">🔻 Preguntas con peor desempeño</h3>
+          <table class="user-table">
+            <thead>
+              <tr>
+                <th>Pregunta</th>
+                <th>Correctas</th>
+                <th>Incorrectas</th>
+                <th>% Aciertos</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let pregunta of getPreguntasPeorDesempeno()">
+                <td>{{ pregunta.pregunta }}</td>
+                <td>{{ pregunta.correctas }}</td>
+                <td>{{ pregunta.incorrectas }}</td>
+                <td>{{ pregunta.porcentaje_aciertos }}%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- 4️⃣ Notas por Curso -->
-  <div *ngIf="tabActiva === 'notas'">
-    <h3>Notas por Curso</h3>
-    <!-- Filtro por ID -->
-    <label for="cursoNotasId">ID del Curso:</label>
-    <input id="cursoNotasId" [(ngModel)]="cursoIdNotas" placeholder="Ingrese ID" />
-    <button (click)="cargarNotasCurso()">Consultar</button>
-    <!-- Botón PDF -->
-    <div style="margin: 20px 0;">
-      <button (click)="generarPDFNotas()" class="btn-update">📥 Descargar reporte PDF</button>
-    </div>
-    <!-- Contenedor para PDF -->
-    <div id="reporteNotasCurso" *ngIf="notasCurso.length > 0">
-      <!-- Tabla -->
-      <table class="user-table" style="margin-top: 20px;">
-        <thead>
-          <tr>
-            <th>Estudiante</th>
-            <th>Grupo</th>
-            <th>Examen</th>
-            <th>Nota</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let nota of notasCurso">
-            <td>{{ nota.ESTUDIANTE }}</td>
-            <td>{{ nota.GRUPO }}</td>
-            <td>{{ nota.EXAMEN }}</td>
-            <td>{{ nota.NOTA }}%</td>
-          </tr>
-        </tbody>
-      </table>
-      <!-- Gráfico -->
-      <div style="max-width: 600px; margin-top: 30px;">
-        <canvas baseChart
-                [data]="graficoNotasCurso"
-                [type]="'bar'"
-                [options]="{ responsive: true }">
-        </canvas>
+    <!-- 3️⃣ Resumen del Curso -->
+    <div *ngIf="tabActiva === 'resumen'">
+      <h3>Resumen del Curso</h3>
+      <label for="cursoResumenId">ID del Curso:</label>
+      <input id="cursoResumenId" [(ngModel)]="cursoIdResumen" placeholder="Ingrese ID" />
+      <button (click)="cargarResumenCurso()">Consultar</button>
+      <div style="margin: 20px 0;">
+        <button (click)="generarPDFResumen()" class="btn-update">📥 Descargar resumen PDF</button>
+      </div>
+      <div id="reporteResumenCurso" *ngIf="resumenCurso">
+        <div class="resumen-card-container">
+          <div class="resumen-card">Curso: {{ resumenCurso.CURSO }}</div>
+          <div class="resumen-card">Grupo: {{ resumenCurso.GRUPO }}</div>
+          <div class="resumen-card">Promedio: {{ resumenCurso.PROMEDIO }}%</div>
+          <div class="resumen-card">Mínima: {{ resumenCurso.MINIMA }}%</div>
+          <div class="resumen-card">Máxima: {{ resumenCurso.MAXIMA }}%</div>
+          <div class="resumen-card">Aprobados: {{ resumenCurso.APROBADOS }}</div>
+          <div class="resumen-card">Reprobados: {{ resumenCurso.REPROBADOS }}</div>
+        </div>
+        <div style="max-width: 400px; margin-top: 30px;">
+          <canvas baseChart
+                  [data]="graficoResumenCurso"
+                  [type]="'bar'"
+                  [options]="{ responsive: true }">
+          </canvas>
+        </div>
       </div>
     </div>
-  </div>
+
+    <!-- 4️⃣ Notas por Curso -->
+    <div *ngIf="tabActiva === 'notas'">
+      <h3>Notas por Curso</h3>
+      <label for="cursoNotasId">ID del Curso:</label>
+      <input id="cursoNotasId" [(ngModel)]="cursoIdNotas" placeholder="Ingrese ID" />
+      <button (click)="cargarNotasCurso()">Consultar</button>
+      <div style="margin: 20px 0;">
+        <button (click)="generarPDFNotas()" class="btn-update">📥 Descargar reporte PDF</button>
+      </div>
+      <div id="reporteNotasCurso" *ngIf="notasCurso.length > 0">
+        <table class="user-table" style="margin-top: 20px;">
+          <thead>
+            <tr>
+              <th>Estudiante</th>
+              <th>Grupo</th>
+              <th>Examen</th>
+              <th>Nota</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let nota of notasCurso">
+              <td>{{ nota.ESTUDIANTE }}</td>
+              <td>{{ nota.GRUPO }}</td>
+              <td>{{ nota.EXAMEN }}</td>
+              <td>{{ nota.NOTA }}%</td>
+            </tr>
+          </tbody>
+        </table>
+        <div style="max-width: 600px; margin-top: 30px;">
+          <canvas baseChart
+                  [data]="graficoNotasCurso"
+                  [type]="'bar'"
+                  [options]="{ responsive: true }">
+          </canvas>
+        </div>
+      </div>
+    </div>
   </section>
 </div>
