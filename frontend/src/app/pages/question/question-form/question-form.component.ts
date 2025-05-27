@@ -13,6 +13,7 @@ import { BancoPreguntaDTO } from '../../../models/bancoPregunta.dto';
 import { ExamService } from '../../../services/exam.service';
 import { PreguntaService } from '../../../services/pregunta.service';
 import { PreguntaDTO } from '../../../models/pregunta.dto';
+import { ExamenDTO } from '../../../models/exam.dto';
 
 
 @Component({
@@ -37,6 +38,10 @@ export class QuestionFormComponent implements OnInit {
   categorias: any[] = [];
   temas: any[] = [];
   usuarios: any[] = [];
+
+
+  examenSeleccionado: ExamenDTO | null = null;
+
 
   // Estados y control
   preguntaSeleccionada: any = null;
@@ -228,31 +233,34 @@ agregarRespuesta(): void {
 }
 
 
-// Método para agregar una respuesta
 agregarPregunta(): void {
-  if (!this.textoPregunta.trim() || this.examenId === null) {
+  console.log('=== Iniciando método agregarPregunta ===');
+  console.log('Texto de la pregunta:', this.textoPregunta);
+  console.log('Examen seleccionado:', this.examenSeleccionado);
+
+  if (!this.textoPregunta.trim() || !this.examenSeleccionado || this.examenSeleccionado.id == null) {
     console.warn('Texto de la pregunta o examen no proporcionado');
     return;
   }
 
   const nuevaPregunta: PreguntaDTO = {
     texto: this.textoPregunta.trim(),
-    examen_id: this.examenId
+    examen_id: this.examenSeleccionado.id
   };
+
+  console.log('Objeto nuevaPregunta que se enviará al backend:', nuevaPregunta);
 
   this.preguntaService.insertarPregunta(nuevaPregunta).subscribe({
     next: (response) => {
       console.log('Pregunta insertada exitosamente:', response);
 
-      // Opcional: puedes actualizar una lista local si lo deseas
-      this.preguntas.push({
-        texto: this.textoPregunta,
-        examen_id: this.examenId
-      });
+      // Opcional: actualiza lista local
+      this.preguntas.push(nuevaPregunta);
+      console.log('Pregunta agregada localmente a la lista:', nuevaPregunta);
 
       // Limpiar campos
       this.textoPregunta = '';
-      this.examenId = null;
+      this.examenSeleccionado = null;
     },
     error: (err) => {
       console.error('Error al insertar pregunta:', err);
