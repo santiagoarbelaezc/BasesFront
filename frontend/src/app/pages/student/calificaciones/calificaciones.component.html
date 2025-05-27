@@ -37,7 +37,7 @@
     <section class="nota-final-curso" *ngIf="notaFinal > 0">
       <h2 class="titulo-seccion">Nota Final del Curso</h2>
       <div class="card-nota-final">
-        <p><strong>Nota Ponderada:</strong> {{ notaFinal | number:'1.1-2' }}</p>
+        <p><strong>Nota Ponderada:</strong> {{ notaFinal | number:'1.1-2' }} / 5.0</p>
       </div>
     </section>
 
@@ -51,12 +51,13 @@
             <thead>
               <tr>
                 <th>Nombre del Examen</th>
-                <th>Codigo</th>
-                <th>Asignacion</th>
+                <th>Código</th>
+                <th>Asignación</th>
                 <th>Cant. Preguntas</th>
                 <th>Tiempo (min)</th>
                 <th>Porcentaje</th>
-                <th>Calificación</th>
+                <th>Peso (%)</th>
+                <th>Nota (0-5)</th>
               </tr>
             </thead>
             <tbody>
@@ -67,7 +68,8 @@
                 <td>{{ calificacion.examen.cantidad_preguntas }}</td>
                 <td>{{ calcularTiempoEnMinutos(calificacion.horaInicio, calificacion.horaFin) }}</td>
                 <td>{{ calificacion.porcentaje }}%</td>
-                <td>{{ calificacion.nota }}</td>
+                <td>{{ calificacion.examen.pesocurso }}%</td>
+                <td>{{ calificacion.nota | number:'1.1-2' }}</td>
               </tr>
             </tbody>
           </table>
