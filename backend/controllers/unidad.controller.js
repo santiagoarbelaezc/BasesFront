@@ -3,19 +3,26 @@ const dbConfig = require('../db-config');
 
 // Insertar unidad
 exports.insertarUnidad = async (req, res) => {
-  const { nombre, curso_id } = req.body;
+  const { nombre, cursoId } = req.body;
+  const curso_id = cursoId;
+
   try {
     const connection = await oracledb.getConnection(dbConfig);
+
     await connection.execute(
       `BEGIN INSERTAR_UNIDAD(:nombre, :curso_id); END;`,
       { nombre, curso_id }
     );
+
     await connection.close();
+
     res.status(201).json({ mensaje: 'Unidad insertada correctamente' });
   } catch (err) {
+  
     res.status(500).json({ error: err.message });
   }
 };
+
 
 // Actualizar unidad
 exports.actualizarUnidad = async (req, res) => {

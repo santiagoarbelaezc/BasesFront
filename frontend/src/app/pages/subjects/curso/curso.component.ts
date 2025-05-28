@@ -43,6 +43,8 @@ export class CursoComponent {
       descripcion: this.descripcionCurso
     };
 
+    console.log('Nuevo curso a crear:', nuevoCurso);
+
     this.cursoService.insertarCurso(nuevoCurso).subscribe({  // ✅ Método correcto
       next: () => {
         this.cursoCreado = true;

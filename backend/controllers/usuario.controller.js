@@ -132,7 +132,6 @@ exports.obtenerUsuarioPorCorreo = async (req, res) => {
   }
 };
 
-
 exports.obtenerUsuariosPorRol = async (req, res) => {
   const rol_id = parseInt(req.params.rol_id);
   let connection;
@@ -158,8 +157,9 @@ exports.obtenerUsuariosPorRol = async (req, res) => {
   } finally {
     if (connection) await connection.close();
   }
+};
 
-  exports.obtenerInfoAcademica = async (req, res) => {
+exports.obtenerInfoAcademica = async (req, res) => {
   const usuarioId = req.params.id;
   let connection;
 
@@ -171,12 +171,12 @@ exports.obtenerUsuariosPorRol = async (req, res) => {
       co.nombre AS contenido,
       t.nombre AS tema
     FROM usuario_grupo ug
-    JOIN grupo g ON ug.grupo_grupo_id = g.grupo_id
-    JOIN curso c ON g.curso_curso_id = c.curso_id
-    JOIN unidad u ON u.curso_curso_id = c.curso_id
-    JOIN contenido co ON co.unidad_unidad_id = u.unidad_id
-    JOIN tema t ON t.contenido_contenido_id = co.contenido_id
-    WHERE ug.usuario_usuario_id = :usuarioId
+    JOIN grupo g ON ug.grupo_id = g.grupo_id
+    JOIN curso c ON g.curso_id = c.curso_id
+    JOIN unidad u ON u.curso_id = c.curso_id
+    JOIN contenido co ON co.unidad_id = u.unidad_id
+    JOIN tema t ON t.contenido_id = co.contenido_id
+    WHERE ug.usuario_id = :usuarioId
   `;
 
   try {
@@ -191,6 +191,4 @@ exports.obtenerUsuariosPorRol = async (req, res) => {
   } finally {
     if (connection) await connection.close();
   }
-};
-
 };

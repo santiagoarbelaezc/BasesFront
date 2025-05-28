@@ -4,12 +4,13 @@ import { FormsModule } from '@angular/forms';
 import { NavbarComponent } from '../../shared/navbar/navbar.component';
 import { CategoriaService } from '../../../services/categoria.service';
 import { CategoriaDTO } from '../../../models/categoria.dto';
+import { NavbarProfesorComponent } from '../../shared/navbar-profesor/navbar-profesor.component';
 
 
 @Component({
   selector: 'app-categoria',
   standalone: true,
-  imports: [CommonModule, FormsModule, NavbarComponent],
+  imports: [CommonModule, FormsModule, NavbarProfesorComponent],
   templateUrl: './categoria.component.html',
   styleUrl: './categoria.component.css'
 })

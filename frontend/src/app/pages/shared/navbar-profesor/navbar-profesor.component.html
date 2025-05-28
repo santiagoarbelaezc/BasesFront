@@ -20,12 +20,9 @@
       <button class="btn-nav" (click)="toggleSubMenu('examen')">Gestionar Examenes</button>
       <div class="sub-menu" *ngIf="showExamen">
         <button (click)="accionExamen('crear')">Crear Examen</button>
-        <button (click)="accionExamen('detalles')">Detalles Examen</button>
-        <button (click)="accionExamen('lista')">Lista Exámenes</button>
+       
         <button (click)="accionExamen('presentados')">Exámenes Presentados</button>
-        <button (click)="accionExamen('resultados')">Resultados Exámenes</button>
         
-      
       </div>
     </div>
 
@@ -36,10 +33,7 @@
         <button (click)="accionPreguntas('banco')">Banco de Preguntas</button>
         <button (click)="accionPreguntas('crear')">Crear Preguntas</button>
         <button (click)="accionPreguntas('vista')">Vista Previa Preguntas</button>
-        <button (click)="accionPreguntas('categoria')">Categorias</button>
-        <button (click)="accionPreguntas('tema')">Temas</button>
-        <button (click)="accionPreguntas('unidad')">Unidades</button>
-        <button (click)="accionPreguntas('contenido')">Contenidos</button>
+        
       </div>
     </div>
 
@@ -50,8 +44,7 @@
         <button (click)="accionContenidoEducativo('curso')"> Gestionar Cursos</button>
         <button (click)="accionContenidoEducativo('categoria')"> Gestionar Categorias</button>
         <button (click)="accionContenidoEducativo('unidad')">Gestionar Unidades</button>
-        <button (click)="accionContenidoEducativo('contenido')">Gestionar Contenidos</button>
-        <button (click)="accionContenidoEducativo('tema')">Gestionar Temas</button>
+       
       </div>
     </div>
 

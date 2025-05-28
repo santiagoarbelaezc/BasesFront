@@ -5,11 +5,13 @@ import { UnidadService } from "../../../services/unidad.service";
 import { NavbarComponent } from '../../shared/navbar/navbar.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { NavbarProfesorComponent } from '../../shared/navbar-profesor/navbar-profesor.component';
+import { UnidadDTO } from '../../../models/unidad.dto';
 
 @Component({
   standalone: true,
   selector: 'app-unidad',
-  imports: [CommonModule, FormsModule, NavbarComponent],
+  imports: [CommonModule, FormsModule, NavbarProfesorComponent],
   templateUrl: './unidad.component.html',
   styleUrls: ['./unidad.component.css']
 })
@@ -57,13 +59,23 @@ export class UnidadComponent implements OnInit {
   }
 
   crearUnidad(): void {
-    const nueva = { nombre: this.nombreUnidad, cursoId: 1 }; // Ajusta si cursoId es dinámico
-    this.unidadService.insertarUnidad(nueva).subscribe(() => {
-      this.nombreUnidad = '';
-      this.cargarUnidadesConTodo();
-    });
+  if (!this.nombreUnidad.trim()) {
+    console.warn('Nombre de unidad vacío, no se creará.');
+    return;
   }
 
+  const nueva: UnidadDTO = {
+    nombre: this.nombreUnidad,
+    cursoId: 1 // Puedes hacer que esto sea dinámico más adelante
+  };
+
+  console.log('Creando nueva unidad:', nueva);
+
+  this.unidadService.insertarUnidad(nueva).subscribe(() => {
+    this.nombreUnidad = '';
+    this.cargarUnidadesConTodo();
+  });
+}
   crearContenido(): void {
     if (!this.unidadSeleccionadaId) return;
     const nuevo = { nombre: this.nombreContenido, unidad_id: this.unidadSeleccionadaId };

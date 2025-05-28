@@ -299,6 +299,7 @@ agregarRespuesta(): void {
       // Limpia los campos para nueva respuesta
       this.textoRespuesta = '';
       this.esCorrecto = false;
+      this.verRespuestas(this.idPregunta!); // Actualiza la vista de respuestas
     },
     error: (error) => {
       console.error('Error al insertar respuesta:', error);

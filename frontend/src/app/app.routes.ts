@@ -26,38 +26,39 @@ import { GrupoComponent } from './pages/subjects/grupo/grupo.component';
 import { EstudianteComponent } from './pages/subjects/estudiante/estudiante.component';
 import { HorarioComponent } from './pages/student/horario/horario.component';
 import { InfoAcademicaComponent } from './pages/student/info-academica/info-academica.component';
+import { AuthGuard } from './guards/auth.guard';
 
 
 export const routes: Routes = [
 
     {path: '', redirectTo: 'login', pathMatch: 'full'},
-    { path: 'home', component: HomeComponent },
+    { path: 'home', component: HomeComponent, canActivate: [AuthGuard]},
     { path: 'login', component: LoginComponent },
-    { path: 'register', component: RegisterComponent },
+    { path: 'register', component: RegisterComponent , canActivate: [AuthGuard]},
     { path: 'exam-detail', component: ExamDetailComponent },
     { path: 'exam-list', component: ExamListComponent },
     { path: 'exam-presentation', component: ExamPresentationComponent },
     { path: 'exam-result', component: ExamResultComponent },
-    { path: 'ques-bank', component: QuestionBankComponent },
-    { path: 'ques-create', component: QuestionFormComponent },
+    { path: 'ques-bank', component: QuestionBankComponent , canActivate: [AuthGuard]},
+    { path: 'ques-create', component: QuestionFormComponent , canActivate: [AuthGuard]},
     { path: 'ques-prev', component: QuestionPreviewComponent},
-    { path: 'reports', component: ReportsComponent },
-    { path: 'profile', component: ProfileComponent },
-    { path: 'rol', component: RolComponent },
-    { path: 'exam-create', component: ExamCreateComponent },
-    { path: 'categoria', component: CategoriaComponent },
-    { path: 'unidad', component: UnidadComponent },
-    { path: 'contenido', component: ContenidoComponent },
-    { path: 'tema', component: TemaComponent },
+    { path: 'reports', component: ReportsComponent, canActivate: [AuthGuard]},
+    { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
+    { path: 'rol', component: RolComponent , canActivate: [AuthGuard]},
+    { path: 'exam-create', component: ExamCreateComponent , canActivate: [AuthGuard]},
+    { path: 'categoria', component: CategoriaComponent , canActivate: [AuthGuard]},
+    { path: 'unidad', component: UnidadComponent , canActivate: [AuthGuard]},
+    { path: 'contenido', component: ContenidoComponent , canActivate: [AuthGuard]},
+    { path: 'tema', component: TemaComponent , canActivate: [AuthGuard]},
     { path: 'info-academica', component: InfoAcademicaComponent },
     { path: 'presentar', component: PresentarComponent },
     { path: 'calificaciones', component: CalificacionesComponent },
     { path: 'presentando', component: PresentandoComponent },
-    { path: 'profesor', component: VistaProfesorComponent },
-    { path: 'curso', component: CursoComponent },
+    { path: 'profesor', component: VistaProfesorComponent , canActivate: [AuthGuard]},
+    { path: 'curso', component: CursoComponent , canActivate: [AuthGuard]},
     { path: 'grupo', component: GrupoComponent },
-    { path: 'estudiantes', component: EstudianteComponent },
-    { path: 'horario', component: HorarioComponent },
+    { path: 'estudiantes', component: EstudianteComponent , canActivate: [AuthGuard]},
+    { path: 'horario', component: HorarioComponent , canActivate: [AuthGuard]},
     
 
 

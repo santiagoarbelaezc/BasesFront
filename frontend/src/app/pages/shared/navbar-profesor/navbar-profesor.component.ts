@@ -77,13 +77,13 @@ export class NavbarProfesorComponent {
       case 'Gestionar Contenido':
         this.router.navigate(['/exam-create']);
         break;
-      case 'Gestionar Unidad':
+      case 'unidad':
         this.router.navigate(['/unidad']);
         break;
       case 'Gestionar Tema':
         this.router.navigate(['/exam-list']);
         break;
-      case 'Gestionar Categoria':
+      case 'categoria':
         this.router.navigate(['/categoria']);
         break;
       default:
